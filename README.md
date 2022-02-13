@@ -2,4 +2,4 @@
 
 wX port to GTK written in Vala
 
-## Mar 2022
+## plan to release before Mar 2022
