@@ -1,0 +1,9 @@
+wxvala
+wxvala.exe
+wxgtk
+wxgtk.exe
+resourceCreation/*.c
+resourceCreation/*.xml
+meson.build
+.vscode/
+build/
