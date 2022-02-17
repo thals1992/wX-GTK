@@ -11,8 +11,6 @@ class WXGLNexrad {
     public const string[] radarProductList = {
         "N0Q: Base Reflectivity",
         "N0U: Base Velocity",
-        "N0B: Base Reflectivity super-res",
-        "N0G: Base Velocity super-res",
         "EET: Enhanced Echo Tops",
         "DVL: Vertically Integrated Liquid",
         "N0C: Correlation Coefficient",
