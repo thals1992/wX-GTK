@@ -33,12 +33,12 @@ class UtilityHourlyOldApi {
         var temp4List = UtilityString.parseXmlValue(rawData[3]);
         var temp5List = UtilityString.parseXmlValue(rawData[4]);
         var sb = "";
-        var year = UtilityTime.getYear();
+        var year = ObjectDateTime.getYear();
         var temp2Len = temp2List.length;
         var temp3Len = temp3List.length;
         var temp4Len = temp4List.length;
         var temp5Len = temp5List.length;
-        foreach (var j in UtilityList.range2(1, temp2Len)) {
+        foreach (var j in range2(1, temp2Len)) {
             time2List[j] = UtilityString.replaceRegex(time2List[j], "-0[0-9]:00", "");
             time2List[j] = UtilityString.replaceRegex(time2List[j], "^.*?-", "");
             time2List[j] = time2List[j].replace("T", " ");
@@ -47,8 +47,7 @@ class UtilityHourlyOldApi {
             var timeSplit2 = timeSplit[0].split("-");
             var month = Too.Int(timeSplit2[0]);
             var day = Too.Int(timeSplit2[1]);
-            var dayOfTheWeek = "";
-            dayOfTheWeek = UtilityTime.dayOfWeek(year, month, day);
+            var dayOfTheWeek = ObjectDateTime.dayOfWeekAbbreviation(year, month, day);
             var temp3Val = ".";
             var temp4Val = ".";
             var temp5Val = ".";

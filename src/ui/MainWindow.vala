@@ -9,9 +9,9 @@ using Gee;
 public class MainWindow : Gtk.ApplicationWindow {
 
     ComboBox comboBox = new ComboBox(Location.listOfNames());
-    ObjectSevenDay objectSevenDay = new ObjectSevenDay(Location.getLatLonCurrent());
-    ObjectCurrentConditions objectCurrentConditions = new ObjectCurrentConditions(Location.getLatLonCurrent());
-    ObjectHazards objectHazards = new ObjectHazards(Location.getLatLonCurrent());
+    ObjectSevenDay objectSevenDay = new ObjectSevenDay();
+    ObjectCurrentConditions objectCurrentConditions = new ObjectCurrentConditions();
+    ObjectHazards objectHazards = new ObjectHazards();
     ObjectCardSevenDay objectCardSevenDay;
     ObjectCardCurrentConditions objectCardCurrentConditions;
     ObjectCardHazards objectCardHazards;
@@ -26,7 +26,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     VBox imageLayout = new VBox();
     VBox forecastLayout = new VBox();
     VBox rightMostLayout = new VBox();
-    /// Gtk.EventControllerKey controller;
+    #if GTK4
+        Gtk.EventControllerKey controller = new Gtk.EventControllerKey();
+    #endif
     HashMap<string, Image> imageWidgets = new HashMap<string, Image>();
     HashMap<string, Text> textWidgets = new HashMap<string, Text>();
     string tokenString = "";
@@ -40,68 +42,48 @@ public class MainWindow : Gtk.ApplicationWindow {
     ArrayList<Image> images = new ArrayList<Image>();
     HashMap<PolygonType, SevereNotice> watchesByType = new HashMap<PolygonType, SevereNotice>();
     ArrayList<WByteArray> bytesList = new ArrayList<WByteArray>();
+    Mutex mutex = Mutex();
 
     public MainWindow(Gtk.Application application) {
         GLib.Object(application: application);
         UtilityUI.maximize(this);
 
-        try { //GTK4_DELETE
-            this.icon = new Gdk.Pixbuf.from_resource("/" + GlobalVariables.imageDir + "wx_launcher.png"); //GTK4_DELETE
-        } catch (Error e) { //GTK4_DELETE
-            print("Error " + e.message + "\n"); //GTK4_DELETE
-        } //GTK4_DELETE
-
-        // controller = new Gtk.EventControllerKey(this); //GTK4_DELETE
-        /// controller = new Gtk.EventControllerKey();
-        /// ((Gtk.Widget)this).add_controller(controller);
-        /// controller.key_pressed.connect(window_key_pressed);
+        #if GTK4
+            ((Gtk.Widget)this).add_controller(controller);
+            controller.key_pressed.connect(window_key_pressed);
+        #else
+            try {
+                this.icon = new Gdk.Pixbuf.from_resource("/" + GlobalVariables.imageDir + "wx_launcher.png");
+            } catch (Error e) {
+                print("Error " + e.message + "\n");
+            }
+        #endif
 
         toolbar = new ObjectToolbar(reload);
         comboBox.setIndex(Location.getCurrentLocation());
         comboBox.connect(comboBoxChanged);
         Location.comboBox = comboBox;
 
-        watchesByType[PolygonType.watch] = new SevereNotice(PolygonType.watch);
-        watchesByType[PolygonType.mcd] = new SevereNotice(PolygonType.mcd);
-        watchesByType[PolygonType.mpd] = new SevereNotice(PolygonType.mpd);
+        watchesByType[PolygonType.Watch] = new SevereNotice(PolygonType.Watch);
+        watchesByType[PolygonType.Mcd] = new SevereNotice(PolygonType.Mcd);
+        watchesByType[PolygonType.Mpd] = new SevereNotice(PolygonType.Mpd);
 
-        //
-        // TEST init nexrad
-        //
-        if (UIPreferences.nexradMainScreen) {
-            var sb = new StatusBar( );
-            var rsb = new RadarStatusBox();
-            nexradList.add(
-                new NexradWidget(
-                    0,
-                    1,
-                    true,
-                    sb,
-                    rsb,
-                    () => {},
-                    () => {},
-                    () => {},
-                    () => {},
-                    () => {}
-                )
-            );
-        }
         addWidgets();
 
         layout.addWidget(toolbar.get());
-        if (UIPreferences.mainScreenSevereDashboard) {
-            box.addLayout(boxSevereDashboard.get());
-        }
+        box.addLayout(boxSevereDashboard.get());
+        forecastLayout.hExpand();
+
         box.addLayout(layout.get());
         layout.addLayout(imageLayout.get());
         layout.addLayout(forecastLayout.get());
-        new ScrolledWindow(this, box);
+        layout.addLayout(rightMostLayout.get());
 
         forecastLayout.addLayout(comboBox.get());
         forecastLayout.addLayout(boxCc.get());
         forecastLayout.addLayout(boxHazards.get());
         forecastLayout.addLayout(boxSevenDay.get());
-        layout.addLayout(rightMostLayout.get());
+        new ScrolledWindow(this, box);
 
         reload();
     }
@@ -118,6 +100,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     }
 
     void reload() {
+        mutex.lock();
         configChangeCheck();
         new FutureVoid(getCC, updateCc);
         new FutureVoid(getHazards, updateHazards);
@@ -135,55 +118,51 @@ public class MainWindow : Gtk.ApplicationWindow {
             }
             if (UIPreferences.nexradMainScreen) {
                 var pane = 0;
-                nexradList[pane].nexradState.radarSite = Location.radarSite();
+                nexradList[pane].nexradState.setRadar(Location.radarSite());
                 nexradList[pane].nexradState.reset();
                 nexradList[pane].nexradState.zoom = 0.6;
-                new FutureVoid(nexradList[pane].initGeom, nexradList[pane].da.draw);
+                nexradList[pane].nexradDraw.initGeom();
+
                 foreach (var nw in nexradList) {
                     new FutureVoid(nw.downloadData, nw.update);
                 }
             }
             if (UIPreferences.mainScreenSevereDashboard) {
                 new FutureVoid(downloadWatch, updateWatch);
+            } else {
+                boxSevereDashboard.removeChildren();
             }
         }
+        mutex.unlock();
     }
 
     void downloadWatch() {
         urls.clear();
-        foreach (var t in new PolygonType[]{PolygonType.mcd, PolygonType.mpd, PolygonType.watch}) {
+        foreach (var t in new PolygonType[]{PolygonType.Mcd, PolygonType.Mpd, PolygonType.Watch}) {
             ObjectPolygonWatch.polygonDataByType[t].download();
         }
         urls.add(UtilityDownload.getImageProduct("USWARN"));
         urls.add(UtilityDownload.getImageProduct("STRPT"));
-
-        foreach (var t in new PolygonType[]{PolygonType.watch, PolygonType.mcd, PolygonType.mpd}) {
+        foreach (var t in new PolygonType[]{PolygonType.Watch, PolygonType.Mcd, PolygonType.Mpd}) {
             ObjectPolygonWatch.polygonDataByType[t].download();
             watchesByType[t].getBitmaps();
             urls.add_all(watchesByType[t].urls);
         }
-        foreach (var index in UtilityList.range(urls.size)) {
-            images.add(new Image.withIndex(index));
-            images.last().imageSize = 150;
+        foreach (var index in range(urls.size)) {
             bytesList.add(new WByteArray.fromArray(UtilityIO.downloadAsByteArray(urls[index])));
         }
     }
 
     void updateWatch() {
-        foreach (var index in UtilityList.range(urls.size)) {
+        boxSevereDashboard.removeChildren();
+        images.clear();
+        foreach (var index in range(urls.size)) {
+            images.add(new Image.withIndex(index));
+            images[index].imageSize = 150;
             images[index].setBytes(bytesList[index].data);
             images[index].connect(launch);
             boxSevereDashboard.addWidget(images[index].get());
-            //  if (boxRows.size <= (int)(index / imagesAcross)) {
-            //      HBox boxRow = new HBox();
-            //      boxRows.add(boxRow);
-            //  }
-            //  boxRows.last().addWidget(images[index].get());
         }
-        //  foreach (HBox br in boxRows) {
-        //      boxImages.addLayout(br.get());
-        //  }
-        // updateStatusBar();
     }
 
     void launch(int indexFinal) {
@@ -203,18 +182,16 @@ public class MainWindow : Gtk.ApplicationWindow {
     }
 
     void get7Day() {
-        objectSevenDay = new ObjectSevenDay(Location.getLatLonCurrent());
-        objectSevenDay.process();
+        objectSevenDay.process(Location.getLatLonCurrent());
     }
 
     void getCC() {
-        objectCurrentConditions = new ObjectCurrentConditions(Location.getLatLonCurrent());
-        objectCurrentConditions.process();
+        objectCurrentConditions.process(Location.getLatLonCurrent(), 0);
+        objectCurrentConditions.timeCheck();
     }
 
     void getHazards() {
-        objectHazards = new ObjectHazards(Location.getLatLonCurrent());
-        objectHazards.process();
+        objectHazards.process(Location.getLatLonCurrent());
     }
 
     void updateCc() {
@@ -243,6 +220,25 @@ public class MainWindow : Gtk.ApplicationWindow {
     }
 
     void addWidgets() {
+        if (UIPreferences.nexradMainScreen) {
+            var sb = new StatusBar( );
+            var rsb = new RadarStatusBox();
+            nexradList.add(
+                new NexradWidget(
+                    0,
+                    1,
+                    true,
+                    Location.radarSite(),
+                    sb,
+                    rsb,
+                    () => {},
+                    () => {},
+                    () => {},
+                    () => {},
+                    () => {}
+                )
+            );
+        }
         imageLayout.removeChildren();
         rightMostLayout.removeChildren();
         imageWidgets.clear();
@@ -252,23 +248,15 @@ public class MainWindow : Gtk.ApplicationWindow {
             boxSevereDashboard.removeChildren();
         }
         //
-        // TEST - put nexrad at top
+        // nexrad
         //
         if (UIPreferences.nexradMainScreen) {
             nexradList[0].da.setSizeRequest(UIPreferences.mainScreenImageSize, UIPreferences.mainScreenImageSize);
             imageLayout.addWidget(nexradList[0].da.get());
             foreach (var nw in nexradList) {
-                //  if (useASpecificRadar) {
-                //      nw.nexradState.radarSite = radarToUse;
-                //  } else {
-                //      nw.nexradState.readPreferences();
-                //  }
-                //  if (RadarPreferences.colorLegend) {
-                //      colorLegends.add(new UIColorLegend(nw.nexradState.radarProduct));
-                //  }
-                new FutureVoid(nw.initGeom, nw.da.draw);
+                nw.nexradDraw.initGeom();
             }
-
+            tokenString += "NEXRAD_MAIN";
         }
         //
         // image setup
@@ -300,6 +288,9 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     string computeTokenString() {
         var tokenString = "";
+    	if (UIPreferences.nexradMainScreen) {
+            tokenString += "NEXRAD_MAIN";
+        }
         foreach (var item in UIPreferences.homeScreenItemsImage) {
             if (item.isEnabled()) {
                 tokenString += item.prefToken;
@@ -313,14 +304,16 @@ public class MainWindow : Gtk.ApplicationWindow {
         return tokenString;
     }
 
-    // GTK3
-    protected override bool key_press_event(Gdk.EventKey event) { //GTK4_DELETE
-        return windowKeyPressedCommon(event.keyval, event.state); //GTK4_DELETE
-    } //GTK4_DELETE
-
-    ///  bool window_key_pressed(Gtk.EventControllerKey controller, uint keyval, uint keycode, Gdk.ModifierType state) {
-    ///      return windowKeyPressedCommon(keyval, state);
-    ///  }
+    #if GTK4
+        bool window_key_pressed(Gtk.EventControllerKey controller, uint keyval, uint keycode, Gdk.ModifierType state) {
+            return windowKeyPressedCommon(keyval, state);
+        }
+    #else
+        // GTK3
+        protected override bool key_press_event(Gdk.EventKey event) {
+            return windowKeyPressedCommon(event.keyval, event.state);
+        }
+    #endif
 
     bool windowKeyPressedCommon(uint keyval, Gdk.ModifierType state) {
         if (keyval == Gdk.Key.Escape) {
@@ -367,7 +360,7 @@ public class MainWindow : Gtk.ApplicationWindow {
                     reload();
                     break;
                 case Gdk.Key.m:
-                    new RadarMosaicAwc();
+                    new RadarMosaicNws();
                     break;
                 case Gdk.Key.n:
                     new ModelViewer("NCEP");
@@ -405,7 +398,7 @@ public class MainWindow : Gtk.ApplicationWindow {
         if (token == "VISIBLE_SATELLITE") {
             new GoesViewer("");
         } else if (token == "RADAR_MOSAIC") {
-            new RadarMosaicAwc();
+            new RadarMosaicNws();
         } else if (token == "ANALYSIS_RADAR_AND_WARNINGS") {
             new NationalImages();
         } else if (token == "USWARN") {

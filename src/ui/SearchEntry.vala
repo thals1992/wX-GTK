@@ -6,22 +6,16 @@
 
 public class SearchEntry {
 
-    public delegate void delegate0();
     Gtk.SearchEntry entry = new Gtk.SearchEntry();
 
-    public void setText(string s) {
-        entry.text = s;
+    public string text {
+        get { return entry.text; }
+        set { entry.text = value; }
     }
 
-    public string getText() {
-        return entry.text;
-    }
-
-    public void connect(delegate0 fn) {
+    public void connect(FnVoid fn) {
         entry.changed.connect(() => fn());
     }
 
-    public Gtk.SearchEntry get() {
-        return entry;
-    }
+    public Gtk.SearchEntry get() { return entry; }
 }

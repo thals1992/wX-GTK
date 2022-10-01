@@ -18,6 +18,7 @@ class ObjectCardCurrentConditions : HBox {
 
         text1.setText(cc.topLine);
         text1.setBold();
+        text1.setWordWrap(false);
         text2.setText(cc.middleLine);
         text3.setText(cc.bottomLine);
 

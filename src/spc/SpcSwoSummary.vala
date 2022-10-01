@@ -26,7 +26,7 @@ class SpcSwoSummary : Window {
         box.addImageRows(urls, images, numberAcross);
         new ScrolledWindow(this, box);
 
-        foreach (var i in UtilityList.range(urls.size)) {
+        foreach (var i in range(urls.size)) {
             images[i].connect((indexFinal) => new SpcSwoDay1(Too.String(indexFinal + 1)));
             images[i].setNumberAcross(numberAcross);
             new FutureBytes(urls[i], images[i].setBytes);

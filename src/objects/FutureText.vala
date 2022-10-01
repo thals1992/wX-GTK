@@ -6,8 +6,7 @@
 
 public class FutureText {
 
-    public delegate void FTUpdateFunc(string data);
-    unowned FTUpdateFunc updateFunc;
+    unowned FnString updateFunc;
     string textData;
     string arg1;
     FutureType dataType;
@@ -16,7 +15,7 @@ public class FutureText {
         new Thread<void*>("downloadText", download);
     }
 
-    public FutureText(string arg1, FTUpdateFunc updateFunc) {
+    public FutureText(string arg1, FnString updateFunc) {
         this.updateFunc = updateFunc;
         this.arg1 = arg1;
         dataType = FutureType.text;

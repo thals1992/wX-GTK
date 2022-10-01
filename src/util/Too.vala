@@ -11,11 +11,6 @@ class Too {
         return d;
     }
 
-    public static float Float(string s) {
-        var d = float.parse(s);
-        return d;
-    }
-
     public static int Int(string s) {
         var d = int.parse(s);
         return d;
@@ -52,5 +47,9 @@ class Too {
 
     public static string StringPadLeftZeros(int i, int padAmount) {
         return ("%0" + Too.String(padAmount) + "d").printf(i);
+    }
+
+    public static string printf(double d, string format) {
+        return format.printf(d);
     }
 }

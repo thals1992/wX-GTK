@@ -10,7 +10,7 @@ class UtilityModelWpcGefsInputOutput {
 
     public static RunTimeData getRunTime() {
         var runData = new RunTimeData();
-        var currentHour = UtilityTime.getCurrentHourInUTC();
+        var currentHour = ObjectDateTime.getCurrentHourInUTC();
         runData.mostRecentRun = "00";
         if (currentHour >= 12 && currentHour < 18) {
             runData.mostRecentRun = "06";

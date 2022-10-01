@@ -13,11 +13,11 @@ class UtilityCanvasProjection {
     }
 
     public static double[] computeMercatorNumbers(double x, double y, ProjectionNumbers pn) {
-        var pnY = -1.0 * pn.yDbl();
+        var pnY = -1.0 * pn.y();
         var test1 = (180.0 / Math.PI * Math.log(Math.tan(Math.PI / 4.0 + x * (Math.PI / 180.0) / 2.0)));
-        var test2 = (180.0 / Math.PI * Math.log(Math.tan(Math.PI / 4.0 + pn.xDbl() * (Math.PI / 180.0) / 2.0)));
-        var y1 = (double)(-1.0 * ((test1 - test2) * pn.oneDegreeScaleFactor) + pn.yCenter);
-        var x1 = (double)(-1.0 * ((y - pnY) * pn.oneDegreeScaleFactor) + pn.xCenter);
+        var test2 = (180.0 / Math.PI * Math.log(Math.tan(Math.PI / 4.0 + pn.x() * (Math.PI / 180.0) / 2.0)));
+        var y1 = -1.0 * ((test1 - test2) * pn.oneDegreeScaleFactor) + pn.yCenter;
+        var x1 = -1.0 * ((y - pnY) * pn.oneDegreeScaleFactor) + pn.xCenter;
         return {x1, y1};
     }
 }

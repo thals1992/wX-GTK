@@ -8,21 +8,26 @@ using Gee;
 
 public class PopoverBox {
 
-    public delegate void ConnectFn();
-    unowned ConnectFn fnAction;
-    unowned ConnectFn fnShow;
+    unowned FnVoid fnAction;
+    unowned FnVoid fnShow;
     Gtk.Popover popover;
     MenuButton button;
 
-    public PopoverBox(string imageName, string buttonLabel, SettingsNotebook vbox, ConnectFn fnAction) {
+    public PopoverBox(string imageName, string buttonLabel, SettingsNotebook vbox, FnVoid fnAction) {
         this.fnAction = fnAction;
         button = new MenuButton(imageName, buttonLabel);
-        popover = new Gtk.Popover(button.get()); //GTK4_DELETE
-        /// popover = new Gtk.Popover();
+        #if GTK4
+            popover = new Gtk.Popover();
+        #else
+            popover = new Gtk.Popover(button.get());
+        #endif
         popover.closed.connect(() => this.fnAction());
-        popover.add(vbox.get()); //GTK4_DELETE
+        #if GTK4
+            popover.set_child(vbox.get());
+        #else
+            popover.add(vbox.get());
+        #endif
         button.setPopover(popover);
-        /// popover.set_child(vbox.get());
         popover.set_position(Gtk.PositionType.BOTTOM);
     }
 
@@ -30,16 +35,14 @@ public class PopoverBox {
         popover.popup();
     }
 
-    public void connect(ConnectFn fnShow) {
+    public void connect(FnVoid fnShow) {
         this.fnShow = fnShow;
         popover.show.connect(() => fnShow());
     }
 
-    public void connectClosed(ConnectFn fnShow) {
+    public void connectClosed(FnVoid fnShow) {
         popover.closed.connect(() => fnShow());
     }
 
-    public Gtk.MenuButton get() {
-        return button.get();
-    }
+    public Gtk.MenuButton get() { return button.get(); }
 }

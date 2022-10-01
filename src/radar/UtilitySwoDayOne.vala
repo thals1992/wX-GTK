@@ -32,7 +32,7 @@ class UtilitySwoDayOne {
             var html = UtilityIO.getHtml(GlobalVariables.nwsSPCwebsitePrefix + "/products/outlook/KWNSPTSDY" + Too.String(day) + ".txt");
             html = html.replace(GlobalVariables.newline, GlobalVariables.sep);
             var htmlBlob = UtilityString.parse(html, "... CATEGORICAL ...(.*?&)&").replace(GlobalVariables.sep, " ").replace("   ", " ").replace("  ", " ");
-            foreach (var index in UtilityList.range(threatList.length)) {
+            foreach (var index in range(threatList.length)) {
                 var data = "";
                 var threatLevelCode = threatList[index];
                 var htmlList = UtilityString.parseColumn(htmlBlob, threatLevelCode.substring(1) + "(.*?)[A-Z&]");
@@ -52,7 +52,7 @@ class UtilitySwoDayOne {
                             var x = new ArrayList<double?>();
                             var y = new ArrayList<double?>();
                             var numbers = polygon.split(" ");
-                            foreach (var index1 in UtilityList.range(numbers.length)) {
+                            foreach (var index1 in range(numbers.length)) {
                                 if (index1 % 2 == 0) {
                                     x.add(Too.Double(numbers[index1]));
                                 } else {
@@ -62,7 +62,7 @@ class UtilitySwoDayOne {
                             if (!x.is_empty && !y.is_empty) {
                                 warningList.add(x[0]);
                                 warningList.add(y[0]);
-                                foreach (var j in UtilityList.range3(1, x.size - 1, 1)) {
+                                foreach (var j in range3(1, x.size - 1, 1)) {
                                     if (x[j] < 99.0) {
                                         warningList.add(x[j]);
                                         warningList.add(y[j]);

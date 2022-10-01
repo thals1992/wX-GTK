@@ -7,10 +7,6 @@
 public class Route {
 
     public static void lightning() {
-        if (UIPreferences.lightningUseGoes) {
-            new GoesViewer("", "GLM", "CONUS");
-        } else {
-            new Lightning();
-        }
+        new GoesViewer("", "GLM", "CONUS");
     }
 }

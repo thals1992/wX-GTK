@@ -21,14 +21,14 @@ class UtilityWpcFronts {
             startIndex = 1;
             indexIncrement = 2;
         }
-        foreach (var index in UtilityList.range3(startIndex, tokens.length, indexIncrement)) {
+        foreach (var index in range3(startIndex, tokens.length, indexIncrement)) {
             var coordinates = parseLatLon(tokens[index]);
             if (index < (tokens.length - 1)) {
                 var coordinates2 = parseLatLon(tokens[index + 1]);
                 var distance = UtilityMath.distanceOfLine(coordinates[0], coordinates[1], coordinates2[0], coordinates2[1]);
                 var numberOfTriangles = (int)Math.floor(distance / length);
                 // construct two lines which will consist of adding 4 points
-                foreach (var pointNumber in UtilityList.range3(1, numberOfTriangles, 2)) {
+                foreach (var pointNumber in range3(1, numberOfTriangles, 2)) {
                     var x1 = coordinates[0] + ((coordinates2[0] - coordinates[0]) * length * pointNumber) / distance;
                     var y1 = coordinates[1] + ((coordinates2[1] - coordinates[1]) * length * pointNumber) / distance;
                     var x3 = coordinates[0] + ((coordinates2[0] - coordinates[0]) * length * (pointNumber + 1)) / distance;
@@ -54,14 +54,14 @@ class UtilityWpcFronts {
             indexIncrement = 2;
             length = 0.2;
         }
-        foreach (var index in UtilityList.range3(startIndex, tokens.length, indexIncrement)) {
+        foreach (var index in range3(startIndex, tokens.length, indexIncrement)) {
             var coordinates = parseLatLon(tokens[index]);
             if (index < (tokens.length - 1)) {
                 var coordinates2 = parseLatLon(tokens[index + 1]);
                 var distance = UtilityMath.distanceOfLine(coordinates[0], coordinates[1], coordinates2[0], coordinates2[1]);
                 var numberOfTriangles = (int)Math.floor(distance / length);
                 // construct two lines which will consist of adding 4 points
-                foreach (var pointNumber in UtilityList.range3(1, numberOfTriangles, 4)) {
+                foreach (var pointNumber in range3(1, numberOfTriangles, 4)) {
                     var x1 = coordinates[0] + ((coordinates2[0] - coordinates[0]) * length * pointNumber) / distance;
                     var y1 = coordinates[1] + ((coordinates2[1] - coordinates[1]) * length * pointNumber) / distance;
                     var center1 = coordinates[0] + ((coordinates2[0] - coordinates[0]) * length * (pointNumber + 0.5)) / distance;
@@ -76,7 +76,7 @@ class UtilityWpcFronts {
                     var yDiff = y3 - y1;
                     var angle = Math.atan2(yDiff, xDiff) * 180.0 / Math.PI;
                     var sliceStart = slices * (int)(angle / 180.0);
-                    foreach (var i in UtilityList.range3(sliceStart, 1 + slices + sliceStart, 1)) {
+                    foreach (var i in range3(sliceStart, 1 + slices + sliceStart, 1)) {
                         var x = rotation * length * Math.cos(step * i) + center1;
                         var y = rotation * length * Math.sin(step * i) + center2;
                         front.coordinates.add(new LatLon.fromDouble(x, y));
@@ -89,7 +89,7 @@ class UtilityWpcFronts {
     }
 
     public static void addFrontDataStnryWarm(Fronts front, string[] tokens) {
-        foreach (var index in UtilityList.range3(0, tokens.length, 1)) {
+        foreach (var index in range3(0, tokens.length, 1)) {
             var coordinates = parseLatLon(tokens[index]);
             if (index != 0 && index != (tokens.length - 1)) {
                 front.coordinates.add(new LatLon.fromDouble(coordinates[0], coordinates[1]));
@@ -99,7 +99,7 @@ class UtilityWpcFronts {
 
     public static void addFrontDataTrof(Fronts front, string[] tokens) {
         var fraction = 0.8;
-        foreach (var index in UtilityList.range3(0, tokens.length - 1, 1)) {
+        foreach (var index in range3(0, tokens.length - 1, 1)) {
             var coordinates = parseLatLon(tokens[index]);
             front.coordinates.add(new LatLon.fromDouble(coordinates[0], coordinates[1]));
             var oldCoordinates = parseLatLon(tokens[index + 1]);
@@ -109,7 +109,7 @@ class UtilityWpcFronts {
     }
 
     public static void addFrontData(Fronts front, string[] tokens) {
-        foreach (var index in UtilityList.range3(0, tokens.length, 1)) {
+        foreach (var index in range3(0, tokens.length, 1)) {
             var coordinates = parseLatLon(tokens[index]);
             front.coordinates.add(new LatLon.fromDouble(coordinates[0], coordinates[1]));
             if (index != 0 && index != (tokens.length - 1)) {
@@ -151,7 +151,7 @@ class UtilityWpcFronts {
             html = UtilityString.parse(html, "SURFACE PROG VALID [0-9]{12}Z(.*?)" + GlobalVariables.sep + " " + GlobalVariables.sep);
             html = html.replace(GlobalVariables.sep, GlobalVariables.newline);
             var lines = html.split(GlobalVariables.newline);
-            foreach (var lineIndex in UtilityList.range(lines.length)) {
+            foreach (var lineIndex in range(lines.length)) {
                 var data = lines[lineIndex];
                 if (lineIndex < lines.length - 1) {
                     if (lines[lineIndex + 1][0] != 'H' &&
@@ -181,7 +181,7 @@ class UtilityWpcFronts {
                     var tokens = tokensList.to_array();
                     switch (type) {
                         case "HIGHS":
-                            foreach (var index in UtilityList.range3(0, tokens.length, 2)) {
+                            foreach (var index in range3(0, tokens.length, 2)) {
                                 if (tokens.length > index + 2) {
                                     var coordinates = parseLatLon(tokens[index + 1]);
                                     pressureCenters.add(new PressureCenter(PressureCenterTypeEnum.high, tokens[index], coordinates[0], coordinates[1]));
@@ -189,7 +189,7 @@ class UtilityWpcFronts {
                             }
                             break;
                         case "LOWS":
-                            foreach (var index in UtilityList.range3(0, tokens.length, 2)) {
+                            foreach (var index in range3(0, tokens.length, 2)) {
                                 if (tokens.length > index + 2) {
                                     var coordinates = parseLatLon(tokens[index + 1]);
                                     pressureCenters.add(new PressureCenter(PressureCenterTypeEnum.low, tokens[index], coordinates[0], coordinates[1]));

@@ -39,11 +39,6 @@ class UsAlerts : Window {
         foreach (var alert in alerts) {
             capAlerts.add(new CapAlertXml(alert));
         }
-        var filter = new ArrayList<string>();
-        filter.add_all(defaultFilter);
-        foreach (var item in filter) {
-            filterCount[item] = 0;
-        }
         foreach (var cap in capAlerts) {
             rawEvents.add(cap.event1);
             if (filterCount.has_key(cap.event1)) {
@@ -51,7 +46,7 @@ class UsAlerts : Window {
             } else {
                 filterCount[cap.event1] = 1;
             }
-            if (filter.contains(cap.event1)) {
+            if (defaultFilter.contains(cap.event1)) {
                 boxText.addWidget(new ObjectCardAlertDetail(cap).get());
             }
         }
@@ -70,7 +65,7 @@ class UsAlerts : Window {
         boxText.removeChildren();
         var filter = eventList[index].split(":")[0];
         if (index == 0) {
-            filter = ":" + UtilityList.join(defaultFilter, ":");
+            filter = ":" + join(defaultFilter, ":");
             foreach (var cap in capAlerts) {
                 if (filter.contains(":" + cap.event1 + ":")) {
                     boxText.addWidget(new ObjectCardAlertDetail(cap).get());

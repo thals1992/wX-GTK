@@ -11,13 +11,14 @@ class ObjectSwitch {
     bool defaultValue = false;
     HBox hbox = new HBox();
     Gtk.Switch sw = new Gtk.Switch();
+    Text text = new Text();
 
     public ObjectSwitch(string label, string pref, bool defaultValue) {
         this.label = label;
         this.pref = pref;
         this.defaultValue = defaultValue;
-        var text = new Text();
         text.setText(label);
+        text.setWordWrap(false);
         sw.notify["active"].connect(() => {
             if (sw.get_active()) {
                 Utility.writePref(pref, "true");
@@ -42,7 +43,5 @@ class ObjectSwitch {
         sw.set_active(d);
     }
 
-    public Gtk.Widget get() {
-        return hbox.get();
-    }
+    public Gtk.Widget get() { return hbox.get(); }
 }

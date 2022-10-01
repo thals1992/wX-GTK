@@ -40,7 +40,7 @@ class ColorPalettes {
 
     public static void refreshPref() {
         ObjectColorPalette.radarColorPalette.clear();
-        const int[] radarProductCodes = {94, 99, 134, 135, 159, 161, 163, 165, 172};
+        var radarProductCodes = new int[]{94, 99, 134, 135, 159, 161, 163, 165, 172};
         foreach (var data in radarProductCodes) {
             ObjectColorPalette.radarColorPalette[data] = Utility.readPref("RADAR_COLOR_PALETTE_" + Too.String(data), "CODENH");
         }

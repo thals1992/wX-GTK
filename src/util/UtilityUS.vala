@@ -9,7 +9,6 @@ using Gee;
 class UtilityUS {
 
     public static ArrayList<string> getCurrentConditionsUS(string x, string y) {
-        var result = new ArrayList<string>();
         var html = getLocationHtml(x, y);
         var regexpList = new string[]{
             "<temperature type=.apparent. units=.Fahrenheit..*?>(.*?)</temperature>",
@@ -36,6 +35,7 @@ class UtilityUS {
             "<humidity type=.relative..*?>(.*?)</humidity>"
         };
         var rawData = UtilityString.parseXmlExt(regexpList, html);
+        var result = new ArrayList<string>();
         result.add(rawData[10]);
         result.add(get7DayExt(rawData));
         return result;
@@ -54,7 +54,7 @@ class UtilityUS {
         timeP12n13List = UtilityString.parseColumn(rawData[15], GlobalVariables.utilUsPeriodNamePattern);
         timeP12n13List.insert(0, "");
         var forecastString = "";
-        foreach (var j in UtilityList.range3(1, forecast.length, 1)) {
+        foreach (var j in range3(1, forecast.length, 1)) {
             forecastString += timeP12n13List[j];
             forecastString += ": ";
             forecastString += forecast[j];

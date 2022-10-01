@@ -23,7 +23,7 @@ class WXGLDownload {
         }
         if (radarSite == "JUA") {
             return "t";
-        } else if (UtilityList.inIt(radarSite, pacRids)) {
+        } else if (radarSite in pacRids) {
             return "p";
         }
         return "k";
@@ -49,25 +49,31 @@ class WXGLDownload {
 
     public static void getRadarFilesForAnimation(int frameCount, string product, string radarSite, FileStorage fileStorage) {
         var isTdwr = false;
-        var listOfFiles = new ArrayList<string>();
         var html = UtilityIO.getHtml(getRadarDirectoryUrl(radarSite, product, isTdwr));
         var snFiles = UtilityString.parseColumn(html, pattern1);
         var snDates = UtilityString.parseColumn(html, pattern2);
+
         if (snDates.size == 0) {
             html = UtilityIO.getHtml(getRadarDirectoryUrl(radarSite, product, isTdwr));
             snFiles = UtilityString.parseColumn(html, pattern1);
             snDates = UtilityString.parseColumn(html, pattern2);
         }
+        if (snDates.size == 0) {
+            return;
+        }
+
         var mostRecentSn = "";
         var mostRecentTime = snDates[snDates.size - 1];
-        foreach (var index in UtilityList.range((snDates.size - 1))) {
+
+        foreach (var index in range((snDates.size - 1))) {
             if (snDates[index] == mostRecentTime) {
                 mostRecentSn = snFiles[index];
             }
         }
+        var listOfFiles = new ArrayList<string>();
         var seq = Too.Int(mostRecentSn.replace("sn.", ""));
         var index = seq - frameCount + 1;
-        UtilityList.range(frameCount).foreach((unused) => {
+        range(frameCount).foreach((unused) => {
             var tmpK = index;
             if (tmpK < 0) {
                 tmpK += 251;
@@ -78,7 +84,7 @@ class WXGLDownload {
             return true;
         });
         var urlList = new ArrayList<string>();
-        foreach (var i in UtilityList.range(frameCount)) {
+        foreach (var i in range(frameCount)) {
             urlList.add(getRadarDirectoryUrl(radarSite, product, isTdwr) + listOfFiles[i]);
         }
         new DownloadParallel(fileStorage, urlList);

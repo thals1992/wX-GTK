@@ -12,6 +12,7 @@ class Color {
     public const int greenInt = -16711936;
     public const int yellowInt = -256;
     public const int magentaInt = -65281;
+    public const int blueInt = -65281;
 
     public static int rgb(int red, int green, int blue) {
         int retVal = 0xFF << 24;
@@ -34,30 +35,6 @@ class Color {
     public static void setCairoColor(Cairo.Context ctx, int color) {
         ctx.set_source_rgb((double)Color.red(color) / 255.0, (double)Color.green(color) / 255.0, (double)Color.blue(color) / 255.0);
     }
-
-    //  public static double[] colorToHsvOld(int color) {
-    //      double h;  //GTK4_DELETE
-    //      double s;  //GTK4_DELETE
-    //      double v;  //GTK4_DELETE
-    //      /// float h;
-    //      /// float s;
-    //      /// float v;
-    //      Gtk.rgb_to_hsv((double)red(color) / 255.0, (double)green(color) / 255.0, (double)blue(color) / 255.0, out h, out s, out v); //GTK4_DELETE
-    //      /// Gtk.rgb_to_hsv(red(color) / 255.0f, green(color) / 255.0f, blue(color) / 255.0f, out h, out s, out v);
-    //      return {h, s, v};
-    //  }
-
-    //  public static int hsvToColorOld(double[] hsv) {
-    //      double r;
-    //      double g;
-    //      double b;
-    //      Gtk.HSV.to_rgb(hsv[0], hsv[1], hsv[2], out r, out g, out b);  //GTK4_DELETE
-    //      /// Gtk.hsv_to_rgb((float)hsv[0], (float)hsv[1], (float)hsv[2], out r, out g, out b);
-    //      int redI = (int)(r * 255.0);
-    //      int greenI = (int)(g * 255.0);
-    //      int blueI = (int)(b * 255.0);
-    //      return rgb(redI, greenI, blueI);
-    //  }
 
     public static double[] colorToHsv(int color) {
         // https://www.cs.rit.edu/~ncs/color/t_convert.html

@@ -6,17 +6,22 @@
 
 public class Window : Gtk.Window {
 
-    /// Gtk.EventControllerKey controller = new Gtk.EventControllerKey();
+    #if GTK4
+    Gtk.EventControllerKey controller = new Gtk.EventControllerKey();
+    #endif
 
     protected Window() {
-        // controller = new Gtk.EventControllerKey(this); //GTK4_DELETE
-        /// ((Gtk.Widget)this).add_controller(controller);
-        /// controller.key_pressed.connect(window_key_pressed);
-        try { //GTK4_DELETE
-            this.icon = new Gdk.Pixbuf.from_resource("/" + GlobalVariables.imageDir + "wx_launcher.png"); //GTK4_DELETE
-        } catch (Error e) { //GTK4_DELETE
-            print("Error " + e.message + "\n"); //GTK4_DELETE
-        } //GTK4_DELETE
+        #if GTK4
+        ((Gtk.Widget)this).add_controller(controller);
+        controller.key_pressed.connect(window_key_pressed);
+        #else
+        // controller = new Gtk.EventControllerKey(this);
+        try {
+            this.icon = new Gdk.Pixbuf.from_resource("/" + GlobalVariables.imageDir + "wx_launcher.png");
+        } catch (Error e) {
+            print("Error " + e.message + "\n");
+        }
+        #endif
     }
 
     protected void setSize(int w, int h) {
@@ -31,32 +36,34 @@ public class Window : Gtk.Window {
         UtilityUI.maximize(this);
     }
 
+    #if GTK4
+    bool window_key_pressed(Gtk.EventControllerKey controller, uint keyval, uint keycode, Gdk.ModifierType state) {
+        if (keyval == Gdk.Key.Escape) {
+            processEscape();
+            close();
+            return true;
+        }
+        var default_modifiers = Gtk.accelerator_get_default_mod_mask();
+        if ((state & default_modifiers) == Gdk.ModifierType.CONTROL_MASK) {
+            processKey(keyval);
+        }
+        return true;
+    }
+    #else
     // GTK3
-    protected override bool key_press_event(Gdk.EventKey event) { //GTK4_DELETE
-        if (event.keyval == Gdk.Key.Escape) { //GTK4_DELETE
-            processEscape(); //GTK4_DELETE
-            close(); //GTK4_DELETE
-            return true; //GTK4_DELETE
-        } //GTK4_DELETE
-        var default_modifiers = Gtk.accelerator_get_default_mod_mask(); //GTK4_DELETE
-        if ((event.state & default_modifiers) == Gdk.ModifierType.CONTROL_MASK) { //GTK4_DELETE
-            processKey(event.keyval); //GTK4_DELETE
-        } //GTK4_DELETE
-        return true; //GTK4_DELETE
-    } //GTK4_DELETE
-
-    ///  bool window_key_pressed(Gtk.EventControllerKey controller, uint keyval, uint keycode, Gdk.ModifierType state) {
-    ///      if (keyval == Gdk.Key.Escape) {
-    ///          processEscape();
-    ///          close();
-    ///          return true;
-    ///      }
-    ///      var default_modifiers = Gtk.accelerator_get_default_mod_mask();
-    ///      if ((state & default_modifiers) == Gdk.ModifierType.CONTROL_MASK) {
-    ///          processKey(keyval);
-    ///      }
-    ///      return true;
-    ///  }
+    protected override bool key_press_event(Gdk.EventKey event) {
+        if (event.keyval == Gdk.Key.Escape) {
+            processEscape();
+            close();
+            return true;
+        }
+        var default_modifiers = Gtk.accelerator_get_default_mod_mask();
+        if ((event.state & default_modifiers) == Gdk.ModifierType.CONTROL_MASK) {
+            processKey(event.keyval);
+        }
+        return true;
+    }
+    #endif
 
     protected virtual void processEscape() {
     }

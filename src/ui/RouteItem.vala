@@ -6,12 +6,11 @@
 
 public class RouteItem {
 
-    public delegate void ConnectFn();
     public string iconString;
     public string toolTip;
-    public unowned ConnectFn fn;
+    public unowned FnVoid fn;
 
-    public RouteItem(string iconString, string toolTip, ConnectFn fn) {
+    public RouteItem(string iconString, string toolTip, FnVoid fn) {
         this.iconString = iconString;
         this.toolTip = toolTip;
         this.fn = fn;

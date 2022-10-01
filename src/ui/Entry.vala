@@ -6,22 +6,17 @@
 
 public class Entry {
 
-    public delegate void ConnectFn();
     Gtk.Entry entry = new Gtk.Entry();
 
-    public void connect(ConnectFn fn) {
+    public void connect(FnVoid fn) {
+        //  entry.set_focusable(true);
         entry.changed.connect(() => fn());
     }
 
-    public void setText(string s) {
-        entry.set_text(s);
+    public string text {
+        get { return entry.text; }
+        set { entry.text = value; }
     }
 
-    public string getText() {
-        return entry.get_text();
-    }
-
-    public Gtk.Entry get() {
-        return entry;
-    }
+    public Gtk.Entry get() { return entry; }
 }

@@ -280,13 +280,15 @@ class UtilityDownload {
             case "VISCONUS":
                 return UtilityGoes.getImage("GEOCOLOR", "CONUS");
             case "VISIBLE_SATELLITE":
-                var sector = UtilityGoes.getNearestGoesLocation(Location.getLatLonCurrent());
+                var sector = UtilityGoes.getNearest(Location.getLatLonCurrent());
                 return UtilityGoes.getImage("GEOCOLOR", sector);
             case "ANALYSIS_RADAR_AND_WARNINGS":
                 return GlobalVariables.nwsWPCwebsitePrefix + "/images/wwd/radnat/NATRAD_24.gif";
             case "RADAR_MOSAIC":
-                var radarMosaicSector = UtilityAwcRadarMosaic.getNearestMosaic(Location.getLatLonCurrent());
-                return UtilityAwcRadarMosaic.get("rad_rala", radarMosaicSector);
+                var radarMosaicSector = UtilityNwsRadarMosaic.getNearestMosaic(Location.getLatLonCurrent());
+                return UtilityNwsRadarMosaic.get(radarMosaicSector);
+                //  var radarMosaicSector = UtilityAwcRadarMosaic.getNearestMosaic(Location.getLatLonCurrent());
+                //  return UtilityAwcRadarMosaic.get("rad_rala", radarMosaicSector);
             //  case "WEATHERSTORY":
             //      var url = "https://www.weather.gov/images/" + Location.office.ascii_down() + "/wxstory/Tab2FileL.png";
             //      print(url);

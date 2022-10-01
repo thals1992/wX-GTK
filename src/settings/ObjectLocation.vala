@@ -17,25 +17,17 @@ class ObjectLocation {
     string observation;
     string prefNumberstring;
 
-    public string getLat() {
-        return lat;
-    }
+    public string getLat() { return lat; }
 
-    public string getLon() {
-        return lon;
-    }
+    public string getLon() { return lon; }
 
-    public string getName() {
-        return name;
-    }
+    public LatLon getLatLon() { return new LatLon(getLat(), getLon()); }
 
-    public string getWfo() {
-        return wfo;
-    }
+    public string getName() { return name; }
 
-    public string getRadarSite() {
-        return rid;
-    }
+    public string getWfo() { return wfo; }
+
+    public string getRadarSite() { return rid; }
 
     public ObjectLocation(int locNumInt) {
         var jStr = Too.String(locNumInt + 1);

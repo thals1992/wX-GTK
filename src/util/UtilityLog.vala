@@ -7,6 +7,6 @@
 class UtilityLog {
 
     public static void d(string logMessage) {
-        print(UtilityTime.getCurrentLocalTimeAsStringForLogging() + " " + logMessage + "\n");
+        print(ObjectDateTime.getLocalTimeAsStringForLogging() + " " + logMessage + "\n");
     }
 }

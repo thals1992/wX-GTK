@@ -8,37 +8,43 @@ using Gee;
 
 public class PopoverMenu {
 
-    public delegate void ConnectFn(string s);
-    unowned ConnectFn fnAction;
+    unowned FnString fnAction;
     Gtk.Popover popover;
     VBox vbox = new VBox();
     Gtk.MenuButton button = new Gtk.MenuButton();
     ArrayList<Button> buttons = new ArrayList<Button>();
 
-    public PopoverMenu(string buttonLabel, Gee.List<string> buttonList, ConnectFn fnAction) {
+    public PopoverMenu(string buttonLabel, Gee.List<string> buttonList, FnString fnAction) {
         this.fnAction = fnAction;
-        popover = new Gtk.Popover(button); //GTK4_DELETE
-        /// popover = new Gtk.Popover();
+        #if GTK4
+            popover = new Gtk.Popover();
+        #else
+            popover = new Gtk.Popover(button);
+        #endif
         button.set_label(buttonLabel);
-        foreach (var index in UtilityList.range(buttonList.size)) {
+        foreach (var index in range(buttonList.size)) {
             var url = buttonList[index];
             buttons.add(new Button(Icon.None, buttonList[index]));
             buttons.last().connectString(buttonClick, url);
             vbox.addWidget(buttons.last().get());
         }
-        popover.add(vbox.get()); //GTK4_DELETE
+        #if GTK4
+            popover.set_child(vbox.get());
+        #else
+            popover.add(vbox.get());
+        #endif
         button.set_popover(popover);
-        /// popover.set_child(vbox.get());
         popover.set_position(Gtk.PositionType.BOTTOM);
     }
 
     public void buttonClick(string s) {
-        popover.set_visible(true); //GTK4_DELETE
+        #if GTK4
+        #else
+            popover.set_visible(true);
+        #endif
         popover.hide();
         fnAction(s);
     }
 
-    public Gtk.MenuButton get() {
-        return button;
-    }
+    public Gtk.MenuButton get() { return button; }
 }

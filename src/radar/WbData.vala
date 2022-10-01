@@ -4,7 +4,7 @@
 // * Refer to the COPYING file of the official project for license.
 // *****************************************************************************
 
-class WbData {
+public class WbData {
 
     public double[] data;
 

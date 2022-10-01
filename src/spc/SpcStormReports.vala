@@ -42,9 +42,9 @@ class SpcStormReports : Window {
     }
 
     void getData() {
-        var year = calendar.getYear();
-        var month = calendar.getMonth() + 1;
-        var day = calendar.getDayOfMonth();
+        var year = calendar.year;
+        var month = calendar.month + 1;
+        var day = calendar.dayOfMonth;
         var dayStr = Too.StringPadLeftZeros(day, 2);
         var monthStr = Too.StringPadLeftZeros(month, 2);
         var yearStr = Too.String(year).substring(2, 2);
@@ -80,7 +80,9 @@ class SpcStormReports : Window {
         comboBox = new ComboBox.fromList(states);
         comboBox.connect(filterReports);
         comboBox.setIndex(0);
-        /// filterReports();
+        #if GTK4
+            filterReports();
+        #endif
         boxCombo.addWidget(comboBox.get());
     }
 

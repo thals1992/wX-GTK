@@ -8,18 +8,15 @@ using Gee;
 
 class ObjectSevenDay {
 
-    ArrayList<string> shortForecastAl = new ArrayList<string>();
+    ArrayList<string> shortForecast = new ArrayList<string>();
     public ArrayList<string> detailedForecasts = new ArrayList<string>();
     public ArrayList<string> icons = new ArrayList<string>();
     ArrayList<ObjectForecast> forecasts = new ArrayList<ObjectForecast>();
     public LatLon latLon;
 
-    public ObjectSevenDay(LatLon latLon) {
+    public void process(LatLon latLon) {
         this.latLon = latLon;
-    }
-
-    public void process() {
-        shortForecastAl.clear();
+        shortForecast.clear();
         detailedForecasts.clear();
         icons.clear();
         forecasts.clear();
@@ -32,7 +29,7 @@ class ObjectSevenDay {
             var detailedForecastsLocal = UtilityString.parseColumn(html, "\"detailedForecast\": \"(.*?)\"");
             icons = UtilityString.parseColumn(html, "\"icon\": \"(.*?)\",");
             var shortForecastsLocal = UtilityString.parseColumn(html, "\"shortForecast\": \"(.*?)\",");
-            foreach (var i in UtilityList.range(names.size)) {
+            foreach (var i in range(names.size)) {
                 var name = Utility.safeGet(names, i);
                 var temperature = Utility.safeGet(temperatures, i);
                 var windSpeed = Utility.safeGet(windSpeeds, i);
@@ -44,7 +41,7 @@ class ObjectSevenDay {
             }
             foreach (var item in forecasts) {
                 detailedForecasts.add(item.name + ": " + item.detailedForecast);
-                shortForecastAl.add(item.name + ": " + item.shortForecast);
+                shortForecast.add(item.name + ": " + item.shortForecast);
             }
         } else {
             var forecastStringList = UtilityUS.getCurrentConditionsUS(latLon.latStr(), latLon.lonStr());
@@ -52,7 +49,7 @@ class ObjectSevenDay {
             var iconString = forecastStringList[0];
             var forecasts = forecastString.split("\n");
             var iconList = UtilityString.parseColumn(iconString, "<icon-link>(.*?)</icon-link>");
-            foreach (var index in UtilityList.range(forecasts.length)) {
+            foreach (var index in range(forecasts.length)) {
                 if (forecasts[index] != "") {
                     detailedForecasts.add(forecasts[index].strip());
                     if (iconList.size > index) {

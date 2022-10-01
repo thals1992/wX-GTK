@@ -46,7 +46,16 @@ class UtilityHourly {
 
     static ArrayList<string> getHourlyString(int locNumber) {
         var html = UtilityDownloadNws.getHourlyData(Location.getLatLon(locNumber));
-        if (html == "") {
+        //  HOURLY: {
+        //      "correlationId": "52b2bbff",
+        //      "title": "Unexpected Problem",
+        //      "type": "https://api.weather.gov/problems/UnexpectedProblem",
+        //      "status": 500,
+        //      "detail": "An unexpected problem has occurred.",
+        //      "instance": "https://api.weather.gov/requests/52b2bbff"
+        //  }:
+        if (html.length < 300) {
+            print(@"HOURLY: $html:\n");
             print("hourly 2nd download attempt\n");
             html = UtilityDownloadNws.getHourlyData(Location.getLatLon(locNumber));
         }
@@ -62,7 +71,7 @@ class UtilityHourly {
         var windDirections = UtilityString.parseColumn(html, "\"windDirection\": \"(.*?)\"");
         var shortForecasts = UtilityString.parseColumn(html, "\"shortForecast\": \"(.*?)\"");
         var stringValue = "";
-        foreach (var index in UtilityList.range(startTime.size)) {
+        foreach (var index in range(startTime.size)) {
             var time = translateTime(startTime[index]);
             var temperature = Utility.safeGet(temperatures, index);
             var windSpeed = Utility.safeGet(windSpeeds, index).replace(" to ", "-");
@@ -78,8 +87,8 @@ class UtilityHourly {
         return stringValue;
     }
 
-    static string shortenConditions(string str) {
-        var hourly = str;
+    static string shortenConditions(string s) {
+        var hourly = s;
         foreach (var data in abbreviations.keys) {
             hourly = hourly.replace(data, abbreviations[data]);
         }
@@ -90,7 +99,16 @@ class UtilityHourly {
         var originalTimeComponents = originalTime.replace("T", "-").split("-");
         var hour = Too.Int(originalTimeComponents[3].replace(":00:00", ""));
         var hourString = Too.String(hour);
-        var dayOfTheWeek = UtilityTime.hourlyDayOfWeek(originalTime);
+        var dayOfTheWeek = getDayOfWeek(originalTime);
         return dayOfTheWeek + " " + hourString;
+    }
+
+    public static string getDayOfWeek(string originalTime) {
+        var originalTimeComponents = originalTime.replace("T", "-").split("-");
+        var year = Too.Int(originalTimeComponents[0]);
+        var month = Too.Int(originalTimeComponents[1]);
+        var day = Too.Int(originalTimeComponents[2]);
+        var hour = Too.Int(originalTimeComponents[3].replace(":00:00", ""));
+        return ObjectDateTime.dayOfWeekAbbreviation(year, month, day, hour);
     }
 }

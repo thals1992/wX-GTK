@@ -13,7 +13,5 @@ public class ButtonLink {
         button.set_halign(Gtk.Align.START);
     }
 
-    public Gtk.Widget get() {
-        return button;
-    }
+    public Gtk.Widget get() { return button; }
 }

@@ -11,30 +11,14 @@ class SpcMcdWatchMpdViewer : Window {
     VBox boxText = new VBox();
     Button button = new Button(Icon.None, "");
     Text text = new Text();
-    //  string url = "";
     string token = "";
     Photo photo = new Photo.scaled();
 
     public SpcMcdWatchMpdViewer(string url) {
-        //  this.url = url;
         maximize();
-        var items = url.split("/");
-        token = items[items.length - 1];
-        token = token.replace(".gif", "");
-        token = token.ascii_up();
-
-        if (url.contains("www.wpc.ncep.noaa.gov")) {
-            token = "WPCMPD" + token[token.length - 4:token.length];
-        } else if (url.contains("www.spc.noaa.gov") && url.contains("mcd")) {
-            token = "SPCMCD" + token[token.length - 4:token.length];
-        } else {
-            var items1 = url.split("/");
-            token = items1[items1.length - 1];
-            token = token.replace("_radar.gif", "");
-            token = token.replace("ww", "");
-            token = "SPCWAT" + token[token.length - 4:token.length];
-        }
+        token = getToken(url);
         setTitle(token);
+        text.hExpand();
         boxText.addWidget(button.get());
         boxText.addWidget(text.get());
 
@@ -57,5 +41,24 @@ class SpcMcdWatchMpdViewer : Window {
         var buttonRadarText = "Show Radar - " + radarSite.name;
         button.setText(buttonRadarText);
         button.connectString((r) => new Nexrad(1, true, r), radarSite.name);
+    }
+
+    string getToken(string url) {
+        var items = url.split("/");
+        var s = items[items.length - 1];
+        s = s.replace(".gif", "");
+        s = s.ascii_up();
+        if (url.contains("www.wpc.ncep.noaa.gov")) {
+            s = "WPCMPD" + s[s.length - 4:s.length];
+        } else if (url.contains("www.spc.noaa.gov") && url.contains("mcd")) {
+            s = "SPCMCD" + s[s.length - 4:s.length];
+        } else {
+            var items1 = url.split("/");
+            s = items1[items1.length - 1];
+            s = s.replace("_radar.gif", "");
+            s = s.replace("ww", "");
+            s = "SPCWAT" + s[s.length - 4:s.length];
+        }
+        return s;
     }
 }

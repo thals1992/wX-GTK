@@ -6,14 +6,9 @@
 
 class ObjectHazards {
 
-    public LatLon latLon;
     public string data = "";
 
-    public ObjectHazards(LatLon latLon) {
-        this.latLon = latLon;
-    }
-
-    public void process() {
+    public void process(LatLon latLon) {
         data = UtilityIO.getHtml("https://api.weather.gov/alerts?point=" + latLon.latStr() + "," + latLon.lonStr() + "&active=1");
     }
 }

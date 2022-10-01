@@ -8,20 +8,24 @@ class UtilityUI {
 
     public static void maximize(Gtk.Window win) {
         var bounds = getScreenBounds();
-        //  win.set_default_size(bounds[0], bounds[1] - 100); //GTK4_DELETE
-        win.set_default_size(bounds[0], bounds[1]); //GTK4_DELETE
-        /// win.set_size_request(bounds[0], bounds[1] - 100);
+        #if GTK4
+            win.set_size_request(bounds[0], bounds[1] - 100);
+        #else
+            //  win.set_default_size(bounds[0], bounds[1] - 100);
+            win.set_default_size(bounds[0], bounds[1]);
+        #endif
     }
 
     public static int[] getScreenBounds() {
         var display = Gdk.Display.get_default();
-        Gdk.Monitor firstMonitor = display.get_monitor(0);  //GTK4_DELETE
-        /// var firstMonitor = display.get_monitors().get_object(0) as Gdk.Monitor;
+        #if GTK4
+            var firstMonitor = display.get_monitors().get_object(0) as Gdk.Monitor;
+        #else
+            Gdk.Monitor firstMonitor = display.get_monitor(0);
+        #endif
         Gdk.Rectangle rect = firstMonitor.geometry;
         // Gdk.Rectangle rect = firstMonitor.workarea;
-        var width = rect.width;
-        var height = rect.height;
-        return {width, height};
+        return {rect.width, rect.height};
     }
 
     public static int getImageWidth(int numberOfImages) {
@@ -30,15 +34,18 @@ class UtilityUI {
     }
 
     public static void removeChildren(Gtk.Box c) {
-        foreach (Gtk.Widget element in c.get_children()) { //GTK4_DELETE
-            c.remove(element); //GTK4_DELETE
-        } //GTK4_DELETE
-        /// Gtk.Widget w;
-        /// w = c.get_first_child();
-        /// while (w != null) {
-        ///     c.remove(w);
-        /// w = c.get_first_child();
-        /// }
+        #if GTK4
+            Gtk.Widget w;
+            w = c.get_first_child();
+            while (w != null) {
+                c.remove(w);
+            w = c.get_first_child();
+            }
+        #else
+            foreach (Gtk.Widget element in c.get_children()) {
+                c.remove(element);
+            }
+        #endif
     }
 
     public static bool isScreenSmall() {

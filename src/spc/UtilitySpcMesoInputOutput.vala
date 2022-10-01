@@ -19,7 +19,6 @@ class UtilitySpcMesoInputOutput {
                 urls.add(imgUrl);
             }
         }
-        var stringArray = UtilityList.listToArray(urls);
-        return stringArray;
+        return urls.to_array();
     }
 }

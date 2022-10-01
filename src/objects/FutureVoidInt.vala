@@ -6,14 +6,12 @@
 
 public class FutureVoidInt {
 
-    public delegate void DownloadFuncVoid1(int i);
-    public delegate void UpdateFuncVoid1(int i);
-    unowned DownloadFuncVoid1 downloadFuncVoid1;
-    unowned UpdateFuncVoid1 updateFuncVoid1;
+    unowned FnInt downloadFuncVoid1;
+    unowned FnInt updateFuncVoid1;
     int index;
     bool finished = false;
 
-    public FutureVoidInt(DownloadFuncVoid1 downloadFuncVoid1, UpdateFuncVoid1 updateFuncVoid1, int i) {
+    public FutureVoidInt(FnInt downloadFuncVoid1, FnInt updateFuncVoid1, int i) {
         this.downloadFuncVoid1 = downloadFuncVoid1;
         this.updateFuncVoid1 = updateFuncVoid1;
         index = i;

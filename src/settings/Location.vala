@@ -14,44 +14,28 @@ class Location {
     static string currentLocationStr = "1";
     public static ComboBox comboBox;
 
-    public static int getNumLocations() {
-        return numberOfLocations;
-    }
+    public static int getNumLocations() { return numberOfLocations; }
 
     public static void setNumLocations(int newValue) {
         numberOfLocations = newValue;
         Utility.writePrefInt("LOCNUMINT", newValue);
     }
 
-    public static string getRadarSite(int locNum) {
-        return locations[locNum].getRadarSite();
-    }
+    public static string getRadarSite(int locNum) { return locations[locNum].getRadarSite(); }
 
-    public static string radarSite() {
-        return locations[currentLocationIndex].getRadarSite();
-    }
+    public static string radarSite() { return locations[currentLocationIndex].getRadarSite(); }
 
-    public static string getWfo(int locNum) {
-        return locations[locNum].getWfo();
-    }
+    public static string getWfo(int locNum) { return locations[locNum].getWfo(); }
 
-    public static string office() {
-        return locations[currentLocationIndex].getWfo();
-    }
+    public static string office() { return locations[currentLocationIndex].getWfo(); }
 
     // from py
-    public static string wfo() {
-        return locations[currentLocationIndex].getWfo();
-    }
+    public static string wfo() { return locations[currentLocationIndex].getWfo(); }
 
     // from py
-    public static string name() {
-        return locations[currentLocationIndex].getName();
-    }
+    public static string name() { return locations[currentLocationIndex].getName(); }
 
-    public static string locationName() {
-        return locations[currentLocationIndex].getName();
-    }
+    public static string locationName() { return locations[currentLocationIndex].getName(); }
 
     public static string getName(int locNum) {
         return (locNum >= locations.size) ? "" : locations[locNum].getName();
@@ -62,9 +46,7 @@ class Location {
         Utility.writePref("LOC" + iStr + "LABEL", newName);
     }
 
-    public static LatLon getLatLonCurrent() {
-        return new LatLon(locations[currentLocationIndex].getLat(), locations[currentLocationIndex].getLon());
-    }
+    public static LatLon getLatLonCurrent() { return locations[currentLocationIndex].getLatLon(); }
 
     static string[] getWfoRadarSiteFromPoint(LatLon latLon) {
         var url = "https://api.weather.gov/points/" + latLon.latStr() + "," + latLon.lonStr();
@@ -92,6 +74,7 @@ class Location {
         }
         if (radarSite == "") {
             radarSite = UtilityLocation.getNearestOffice("RADAR", latLon);
+            radarSite = UtilityString.getLastXChars(radarSite, 3);
         }
         Utility.writePref("RID" + locNum, radarSite.ascii_up());
         Utility.writePref("NWS" + locNum, wfo.ascii_up());
@@ -108,7 +91,7 @@ class Location {
         if (locToDeleteInt == locNumIntCurrent) {
             setNumLocations(locNumIntCurrent - 1);
         } else {
-            foreach (var index in UtilityList.range2(locToDeleteInt, locNumIntCurrent)) {
+            foreach (var index in range2(locToDeleteInt, locNumIntCurrent)) {
                 var jIndex = index + 1;
                 var jStr = Too.String(jIndex);
                 var iStr = Too.String(index);
@@ -142,29 +125,19 @@ class Location {
             Utility.writePref("CURRENTLOCFRAGMENT", shiftNum);
             setCurrentLocationStr(shiftNum);
         }
-        var widgetLocNum = Utility.readPref("WIDGETLOCATION", "1");
-        var widgetLocNumInt = Too.Int(widgetLocNum);
-        if (locToDeleteInt == widgetLocNumInt) {
-            Utility.writePref("WIDGETLOCATION", "1");
-        } else if (widgetLocNumInt > locToDeleteInt) {
-            var shiftNum = Too.String(widgetLocNumInt - 1);
-            Utility.writePref("WIDGETLOCATION", shiftNum);
-        }
         refresh();
     }
 
-    public static LatLon getLatLon(int index) {
-        return new LatLon(locations[index].getLat(), locations[index].getLon());
-    }
+    public static LatLon getLatLon(int index) { return locations[index].getLatLon(); }
 
     public static string getObs() {
-        return UtilityLocation.findClosestObservation(getLatLonCurrent()).name;
+        return UtilityMetar.findClosestObservation(getLatLonCurrent(), 0).name;
     }
 
     public static void refresh() {
         initNumLocations();
         locations = new ArrayList<ObjectLocation>();
-        foreach (var index in UtilityList.range(getNumLocations())) {
+        foreach (var index in range(getNumLocations())) {
             locations.add(new ObjectLocation(index));
         }
         setCurrentLocationStr(Utility.readPref("CURRENTLOCFRAGMENT", "1"));
@@ -196,13 +169,11 @@ class Location {
         Utility.writePref("LOCNUMINT", Too.String(getNumLocations()));
     }
 
-    public static int getCurrentLocation() {
-        return currentLocationIndex;
-    }
+    public static int getCurrentLocation() { return currentLocationIndex; }
 
     public static ArrayList<LatLon> getListLatLons() {
         var latLons = new ArrayList<LatLon>();
-        foreach (var index in UtilityList.range(locations.size)) {
+        foreach (var index in range(locations.size)) {
             latLons.add(getLatLon(index));
         }
         return latLons;
@@ -213,7 +184,7 @@ class Location {
         foreach (var location in locations) {
             names.add(location.getName());
         }
-        return UtilityList.listToArray(names);
+        return names.to_array();
     }
 
     public static void setMainScreenComboBox() {

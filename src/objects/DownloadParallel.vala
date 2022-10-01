@@ -22,9 +22,8 @@ public class DownloadParallel {
             downloadComplete.add(false);
             return true;
         });
-        foreach (var i in UtilityList.range(urls.size)) {
-            var indexFinal = i;
-            new FutureVoidInt((idx) => download(idx), (idx) => update(idx), indexFinal);
+        foreach (var i in range(urls.size)) {
+            new FutureVoidInt((idx) => download(idx), (idx) => update(idx), i);
         }
         while (true) {
             // time.sleep(0.001);

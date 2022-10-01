@@ -10,35 +10,43 @@ public class HBox {
 
     Gtk.Box box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
 
-    public Gtk.Box get() {
-        return box;
-    }
-
     public void getAndShow(Gtk.Window w) {
-        /// w.set_child(box);
-        w.add(box);  //GTK4_DELETE
-        w.show_all();  //GTK4_DELETE
+        #if GTK4
+            w.set_child(box);
+        #else
+            w.add(box);
+            w.show_all();
+        #endif
         w.show();
     }
 
     public void addLayout(Gtk.Widget w) {
-        /// box.append(w);
-        box.add(w); //GTK4_DELETE
-        box.show_all(); //GTK4_DELETE
+        #if GTK4
+            box.append(w);
+        #else
+            box.add(w);
+            box.show_all();
+        #endif
     }
 
     public void addWidgetFirst(Gtk.Widget w) {
-        /// box.append(w);
-        box.add(w); //GTK4_DELETE
-        box.reorder_child(w, 0); //GTK4_DELETE
-        /// box.reorder_child_after(w, null);
-        box.show_all(); //GTK4_DELETE
+        #if GTK4
+            box.append(w);
+            box.reorder_child_after(w, null);
+        #else
+            box.add(w);
+            box.reorder_child(w, 0);
+            box.show_all();
+        #endif
     }
 
     public void addWidget(Gtk.Widget w) {
-        /// box.append(w);
-        box.add(w); //GTK4_DELETE
-        box.show_all(); //GTK4_DELETE
+        #if GTK4
+            box.append(w);
+        #else
+            box.add(w);
+            box.show_all();
+        #endif
     }
 
     public void setSpacing(int o) {
@@ -58,9 +66,11 @@ public class HBox {
     }
 
     public void addImageRow(string[] urls, ArrayList<Image> images) {
-        foreach (var index in UtilityList.range(urls.length)) {
+        foreach (var index in range(urls.length)) {
             images.add(new Image.withIndex(index));
             addWidget(images.last().get());
         }
     }
+
+    public Gtk.Box get() { return box; }
 }

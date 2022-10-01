@@ -20,9 +20,8 @@ class DownloadParallelBytes {
             byteList.add(new WByteArray());
             downloadComplete.add(false);
         }
-        foreach (var i in UtilityList.range(urls.length)) {
-            var indexFinal = i;
-            new FutureVoidInt((idx) => download(idx), (idx) => update(idx), indexFinal);
+        foreach (var i in range(urls.length)) {
+            new FutureVoidInt((idx) => download(idx), (idx) => update(idx), i);
         }
         while (true) {
             // time.sleep(0.001);

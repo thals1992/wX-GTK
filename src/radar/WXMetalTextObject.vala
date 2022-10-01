@@ -34,7 +34,7 @@ public class WXMetalTextObject {
             nexradState.cities.clear();
             if (nexradState.zoom > cityMinZoom) {
                 var cityExtLength = UtilityCitiesExtended.cities.size;
-                foreach (var index in UtilityList.range(cityExtLength)) {
+                foreach (var index in range(cityExtLength)) {
                     if (nexradState.cities.size <= maxCitiesPerGlview) {
                         checkAndDrawText(nexradState.cities, UtilityCitiesExtended.cities[index].latitude, UtilityCitiesExtended.cities[index].longitude, UtilityCitiesExtended.cities[index].name, true);
                     }
@@ -44,7 +44,7 @@ public class WXMetalTextObject {
     }
 
     void checkAndDrawText(ArrayList<TextViewMetal> tvList, double lat, double lon, string text, bool checkBounds) {
-        var latLon = UtilityCanvasProjection.computeMercatorNumbers(lat, -1.0 * lon, nexradState.pn);
+        var latLon = UtilityCanvasProjection.computeMercatorNumbers(lat, -1.0 * lon, nexradState.getPn());
         var xPos = latLon[0];
         var yPos = latLon[1];
         if (checkBounds && glViewWidth / (-2.0 * nexradState.zoom) < xPos && xPos < glViewWidth / (2.0 * nexradState.zoom) && glViewHeight / (-2.0 * nexradState.zoom) < yPos && yPos < glViewHeight / (2.0 * nexradState.zoom)) {
@@ -76,7 +76,7 @@ public class WXMetalTextObject {
         if (RadarPreferences.countyLabels) {
             nexradState.countyLabels.clear();
             if (nexradState.zoom > countyMinZoom) {
-                foreach (var index in UtilityList.range(UtilityCountyLabels.names.size)) {
+                foreach (var index in range(UtilityCountyLabels.names.size)) {
                     checkAndDrawText(nexradState.countyLabels, UtilityCountyLabels.location[index].lat(), UtilityCountyLabels.location[index].lon(), UtilityCountyLabels.names[index], true);
                 }
             }
@@ -125,11 +125,11 @@ public class WXMetalTextObject {
         if (RadarPreferences.obs || RadarPreferences.obsWindbarbs) {
             nexradState.observations.clear();
             if (nexradState.zoom > obsMinZoom) {
-                foreach (var index in UtilityList.range(fileStorage.obsArr.size)) {
+                foreach (var index in range(fileStorage.obsArr.size)) {
                     if (index < fileStorage.obsArr.size && index < fileStorage.obsArrExt.size) {
                         var tmpArrObs = fileStorage.obsArr[index].split(":");
-                        var lat = Too.Float(tmpArrObs[0]);
-                        var lon = Too.Float(tmpArrObs[1]);
+                        var lat = Too.Double(tmpArrObs[0]);
+                        var lon = Too.Double(tmpArrObs[1]);
                         checkAndDrawText(nexradState.observations, lat, -1.0 * lon, tmpArrObs[2], true);
                     }
                 }

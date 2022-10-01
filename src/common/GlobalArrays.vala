@@ -10,8 +10,8 @@ class GlobalArrays {
 
     public static string[] getRadars() {
         var radarList = new ArrayList<string>();
-        radarList.add_all(UtilityList.arrayToList(radars));
-        radarList.add_all(UtilityList.arrayToList(tdwrRadars));
+        radarList.add_all(UtilityList.wrap(radars));
+        radarList.add_all(UtilityList.wrap(tdwrRadars));
         return radarList.to_array();
     }
 
@@ -22,9 +22,9 @@ class GlobalArrays {
             radar = radarPrefix.ascii_up() + radar;
         }
         var radarList = new ArrayList<string>();
-        radarList.add_all(UtilityList.arrayToList(radars));
-        radarList.add_all(UtilityList.arrayToList(tdwrRadars));
-        foreach (var index in UtilityList.range(radarList.size)) {
+        radarList.add_all(UtilityList.wrap(radars));
+        radarList.add_all(UtilityList.wrap(tdwrRadars));
+        foreach (var index in range(radarList.size)) {
             if (radarList[index].has_prefix(radar + ":")) {
                 return index;
             }
@@ -397,7 +397,7 @@ class GlobalArrays {
         "TMDW IL, Chicago Midway",
         "TORD IL, Chicago O\"Hare",
         "TIDS IN, Indianapolis",
-        "TICT KS, Wichita",
+        "TICH KS, Wichita",
         "TSDF KY, Louisville",
         "TMSY LA, New Orleans",
         "TBOS MA, Boston",
@@ -444,7 +444,7 @@ class GlobalArrays {
         "TMDW: IL, Chicago Midway",
         "TORD: IL, Chicago O\"Hare",
         "TIDS: IN, Indianapolis",
-        "TICT: KS, Wichita",
+        "TICH: KS, Wichita",
         "TSDF: KY, Louisville",
         "TMSY: LA, New Orleans",
         "TBOS: MA, Boston",

@@ -13,11 +13,11 @@ class RainfallOutlookSummary : Window {
     public RainfallOutlookSummary() {
         setTitle("Excessive Rainfall Outlook");
         maximize();
-        string[] urls = UtilityWpcRainfallOutlook.urls;
+        var urls = UtilityWpcRainfallOutlook.urls;
         ArrayList<Image> images = new ArrayList<Image>();
         box.addImageRow(urls, images);
         box.getAndShow(this);
-        foreach (var i in UtilityList.range(urls.length)) {
+        foreach (var i in range(urls.length)) {
             images[i].connect((index) => new RainfallOutlook(index));
             new FutureBytes(urls[i], images[i].setBytes);
         }

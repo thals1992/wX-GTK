@@ -13,9 +13,9 @@ class UtilityModels {
         var runInt = Too.Int(runStr);
         var timeInt = Too.Int(timeStr);
         var realTimeGmt = runInt + timeInt;
-        int offsetFromUtc = UtilityTime.secondsFromUTC();
-        double realTime = realTimeGmt + Math.floor(offsetFromUtc / 60 / 60);
-        double hourOfDay = realTime % 24;
+        int offsetFromUtc = ObjectDateTime.offsetFromUtcInSeconds();
+        var realTime = realTimeGmt + (int)(offsetFromUtc / 60 / 60);
+        var hourOfDay = realTime % 24;
         var amPm = "";
 
         if (hourOfDay > 11) {
@@ -26,6 +26,7 @@ class UtilityModels {
         } else {
             amPm = "am";
         }
+
         double day = realTime / 24;
         if (hourOfDay < 0) {
             hourOfDay = 12 + hourOfDay;
@@ -33,25 +34,12 @@ class UtilityModels {
             day -= 1;
         }
 
-        //  if (hourOfDay > 11) {
-        //      amPm = "pm";
-        //      if (hourOfDay > 12) {
-        //          hourOfDay -= 12;
-        //      }
-        //  } else {
-        //      amPm = "am";
-        //  }
-        //  double day = realTime / 24;
-        //  if (hourOfDay < 0) {
-        //      hourOfDay = 12 + hourOfDay;
-        //      amPm = "pm";
-        //      day -= 1;
-        //  }
-        var dayOfWeek = UtilityTime.getDayOfWeek();
-        //  var hourOfDayLocal = UtilityTime.getHour();
-        //  if (runInt >= 0 && runInt < -offsetFromUtc / 60 / 60 && (hourOfDayLocal - offsetFromUtc / 60 / 60) >= 24) {
-        //      day += 1;
-        //  }
+        var dayOfWeek = ObjectDateTime.getDayOfWeek();
+        var hourOfDayLocal = ObjectDateTime.getHour();
+        if (runInt >= 0 && runInt < -offsetFromUtc / 60 / 60 && (hourOfDayLocal - offsetFromUtc / 60 / 60) >= 24) {
+            day += 1;
+        }
+
         var futureDay = "";
         var dayMod = (int)(dayOfWeek + day) % 7;
         // Vala/Dart: is Monday(1)..Sunday(7), Swift is Sat(0)..Fri(6)
@@ -83,7 +71,6 @@ class UtilityModels {
             default:
                 break;
         }
-        print(futureDay + "  " + Too.StringFromD(hourOfDay) + amPm + " " + dayMod.to_string() + " " + dayOfWeek.to_string() +  "\n");
         return futureDay + "  " + Too.StringFromD(hourOfDay) + amPm;
     }
 
@@ -106,5 +93,18 @@ class UtilityModels {
             }
         }
         return listTimeNew;
+    }
+
+    // TODO FIXME
+    // wxc2 has 3rd arg , QString dateStr
+    public static ArrayList<string> generateModelRuns(string time1, int hours) {
+        //  QDateTime dateObject = QDateTime::fromString(time1, dateStr);
+        var runs = new ArrayList<string>();
+        //  for (int index = 1; index < 5; index++) {
+        //      float timeChange = 60.0 * 60.0 * float(hours) * float(index);
+        //      QDateTime newDateTime = dateObject.addSecs(-1.0 * timeChange);
+        //      runs.append(newDateTime.toString(dateStr));
+        //  }
+        return runs;
     }
 }

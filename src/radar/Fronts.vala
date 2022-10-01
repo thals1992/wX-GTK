@@ -36,7 +36,7 @@ class Fronts {
         coordinatesModified[paneIndex] = new ArrayList<double?>();
         if (coordinates.size > 3) {
             coordinatesModified[paneIndex].clear();
-            foreach (var i in UtilityList.range3(0, coordinates.size, 2)) {
+            foreach (var i in range3(0, coordinates.size, 2)) {
                 if (i + 1 < coordinates.size) {
                     var coords1 = UtilityCanvasProjection.computeMercatorNumbers(coordinates[i].lat(), -1.0 * coordinates[i].lon(), pn);
                     var coords2 = UtilityCanvasProjection.computeMercatorNumbers(coordinates[i + 1].lat(), -1.0 * coordinates[i + 1].lon(), pn);

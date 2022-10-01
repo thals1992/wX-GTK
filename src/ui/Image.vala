@@ -7,40 +7,47 @@
 public class Image {
 
     Photo image = new Photo.icon();
-    Gtk.EventBox evb = new Gtk.EventBox(); //GTK4_DELETE
-    Gtk.GestureMultiPress gesture; //GTK4_DELETE
-    ///  public Gtk.GestureClick gesture;
+    #if GTK4
+        public Gtk.GestureClick gesture;
+    #else
+        Gtk.EventBox evb = new Gtk.EventBox();
+        Gtk.GestureMultiPress gesture;
+    #endif
     int index = 0;
     public int imageSize = UtilityUI.getImageWidth(3);
-    public delegate void ConnectFn(int a);
-    public delegate void ConnectFnNoInt();
 
     public Image() {
-        gesture = new Gtk.GestureMultiPress(evb);  //GTK4_DELETE
-        /// gesture = new Gtk.GestureClick();
-        /// image.get().add_controller(gesture);
+        #if GTK4
+            gesture = new Gtk.GestureClick();
+            image.get().add_controller(gesture);
+        #else
+            evb.add(image.get());
+            gesture = new Gtk.GestureMultiPress(evb);
+        #endif
         gesture.set_propagation_phase(Gtk.PropagationPhase.CAPTURE);
-        evb.add(image.get());  //GTK4_DELETE
     }
 
     public Image.withIndex(int index) {
         this.index = index;
-        gesture = new Gtk.GestureMultiPress(evb);  //GTK4_DELETE
-        /// gesture = new Gtk.GestureClick();
-        /// image.get().add_controller(gesture);
+        #if GTK4
+            gesture = new Gtk.GestureClick();
+            image.get().add_controller(gesture);
+        #else
+            evb.add(image.get());
+            gesture = new Gtk.GestureMultiPress(evb);
+        #endif
         gesture.set_propagation_phase(Gtk.PropagationPhase.CAPTURE);
-        evb.add(image.get());  //GTK4_DELETE
     }
 
     public void setNumberAcross(int num) {
         imageSize = UtilityUI.getImageWidth(num);
     }
 
-    public void connect(ConnectFn fn) {
+    public void connect(FnInt fn) {
         gesture.pressed.connect(() => fn(index));
     }
 
-    public void connectNoInt(ConnectFnNoInt fn) {
+    public void connectNoInt(FnVoid fn) {
         gesture.pressed.connect(() => fn());
     }
 
@@ -49,7 +56,10 @@ public class Image {
     }
 
     public Gtk.Widget get() {
-        return evb;  //GTK4_DELETE
-        /// return image.get();
+        #if GTK4
+            return image.get();
+        #else
+            return evb;
+        #endif
     }
 }

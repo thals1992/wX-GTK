@@ -8,44 +8,56 @@ using Gee;
 
 public class Calendar {
 
-    public delegate void delegate0();
     Gtk.Calendar cal = new Gtk.Calendar();
 
-    public void connect(delegate0 fn) {
+    public void connect(FnVoid fn) {
         cal.day_selected.connect(() => fn());
     }
 
-    public int getYear() {
-        uint year;  //GTK4_DELETE
-        uint month;  //GTK4_DELETE
-        uint day;  //GTK4_DELETE
-        cal.get_date(out year, out month, out day);  //GTK4_DELETE
-        /// var dateTime = cal.get_date();
-        /// int year = dateTime.get_year();
-        return (int)year;
+    public int year {
+        get {
+            #if GTK4
+                var dateTime = cal.get_date();
+                int year = dateTime.get_year();
+            #else
+                uint year;
+                uint month;
+                uint day;
+                cal.get_date(out year, out month, out day);
+            #endif
+            return (int)year;
+        }
     }
 
-    public int getMonth() {
-        uint year;  //GTK4_DELETE
-        uint month;  //GTK4_DELETE
-        uint day;  //GTK4_DELETE
-        cal.get_date(out year, out month, out day);  //GTK4_DELETE
-        /// var dateTime = cal.get_date();
-        /// int month = dateTime.get_month() - 1;
-        return (int)month;
+    public int month {
+        get {
+            #if GTK4
+                var dateTime = cal.get_date();
+                int month = dateTime.get_month() - 1;
+            #else
+                uint year;
+                uint month;
+                uint day;
+                cal.get_date(out year, out month, out day);
+            #endif
+            return (int)month;
+        }
     }
 
-    public int getDayOfMonth() {
-        uint year;  //GTK4_DELETE
-        uint month;  //GTK4_DELETE
-        uint day;  //GTK4_DELETE
-        cal.get_date(out year, out month, out day);  //GTK4_DELETE
-        /// var dateTime = cal.get_date();
-        /// int day = dateTime.get_day_of_month();
-        return (int)day;
+    public int dayOfMonth {
+        get  {
+            #if GTK4
+                var dateTime = cal.get_date();
+                int day = dateTime.get_day_of_month();
+            #else
+                uint year;
+                uint month;
+                uint day;
+                cal.get_date(out year, out month, out day);
+            #endif
+            return (int)day;
+        }
     }
 
-    public Gtk.Widget get() {
-        return cal;
-    }
+    public Gtk.Widget get() { return cal; }
 }

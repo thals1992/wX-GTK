@@ -7,15 +7,14 @@
 public class Timer {
 
     // in Gtk with Glib if the delegate returns false the timer will end
-    public delegate void DelegateType(int i);
     int speed;
     int count;
-    unowned DelegateType fn;
+    unowned FnInt fn;
     bool autoUpdateOn = false;
     int animationIndex = 0;
     uint timerId = 0;
 
-    public Timer(int speed, int count, DelegateType fn) {
+    public Timer(int speed, int count, FnInt fn) {
         this.speed = speed;
         this.fn = fn;
         this.count = count;
@@ -54,10 +53,6 @@ public class Timer {
     public void setCount(int i) {
         count = i;
     }
-
-    //  int getCount() {
-    //      return count;
-    //  }
 
     public bool isRunning() {
         return autoUpdateOn;

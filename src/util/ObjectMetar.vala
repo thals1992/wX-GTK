@@ -18,6 +18,7 @@ class ObjectMetar {
     public string windChill = "";
     public string heatIndex = "";
     public string conditionsTimeStr = "";
+    public string timeStringUtc = "";
     public string icon = "";
     public string metarSkyCondition = "";
     public string metarWeatherCondition = "";
@@ -26,9 +27,10 @@ class ObjectMetar {
     LatLon location;
     string metarData = "";
 
-    public ObjectMetar(LatLon location) {
+    public ObjectMetar(LatLon location, int order) {
+        // TODO FIXME?
         this.location = new LatLon.fromDouble(location.lat(), location.lon());
-        obsClosest = UtilityMetar.findClosestObservation(location);
+        obsClosest = UtilityMetar.findClosestObservation(location, order);
     }
 
     public void process() {
@@ -63,7 +65,8 @@ class ObjectMetar {
         if (metarDataList.length > 2) {
             var localStatus = metarDataList[1].split("/");
             if (localStatus.length > 1) {
-                conditionsTimeStr = UtilityTime.convertFromUTCForMetar(localStatus[1].replace(" UTC", "")) + " " + obsClosest.name;
+                conditionsTimeStr = ObjectDateTime.convertFromUTCForMetar(localStatus[1].replace(" UTC", "")) + " " + obsClosest.name;
+                timeStringUtc = localStatus[1].strip();
             }
         }
         seaLevelPressure = changePressureUnits(seaLevelPressure);
@@ -80,11 +83,7 @@ class ObjectMetar {
     }
 
     public string decodeIconFromMetar(string condition, RID obs) {
-        DateTime[] sunTimes = UtilityTimeSunMoon.getSunriseSunsetFromObs(obs);
-        DateTime currentTime = new DateTime.now().add_days(-1);
-        DateTime sunrise = sunTimes[0];
-        DateTime sunset = sunTimes[1];
-        var timeOfDay = (currentTime.difference(sunrise) > 0 && currentTime.difference(sunset) < 0) ? "day" : "night";
+        var timeOfDay = ObjectDateTime.isDaytime(obs) ? "day" : "night";
         var conditionModified = condition.split(";")[0];
         var shortCondition = UtilityMetarConditions.iconFromCondition[conditionModified] ?? "";
         shortCondition = translateCondition(shortCondition);

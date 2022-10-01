@@ -12,10 +12,9 @@ class SpcFireWeatherOutlook : Window {
     public SpcFireWeatherOutlook(int day) {
         setTitle("Excessive Rainfall Outlook Day " + Too.String(day + 1));
         maximize();
-
         var url = UtilitySpcFireOutlook.urls[day];
         var product = UtilitySpcFireOutlook.products[day];
-
+        text.hExpand();
         new ObjectTwoWidgetScroll(this, photo.get(), text.get());
         new FutureText(product, text.setText);
         new FutureBytes(url, photo.setBytes);

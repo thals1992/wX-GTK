@@ -6,11 +6,14 @@
 
 public class Photo {
 
-    PhotoSizeEnum size = PhotoSizeEnum.full;
+    PhotoSizeEnum size = PhotoSizeEnum.Full;
     Gtk.Window win;
     int width;
-    Gtk.Image image = new Gtk.Image(); //GTK4_DELETE
-    /// Gtk.Picture image = new Gtk.Picture();
+    #if GTK4
+        Gtk.Picture image = new Gtk.Picture();
+    #else
+        Gtk.Image image = new Gtk.Image();
+    #endif
 
     public Photo(Gtk.Window win, PhotoSizeEnum size) {
         this.win = win;
@@ -19,17 +22,17 @@ public class Photo {
     }
 
     public Photo.fullScreen() {
-        this.size = PhotoSizeEnum.full;
+        this.size = PhotoSizeEnum.Full;
         width = UtilityUI.getImageWidth(3);
     }
 
     public Photo.scaled() {
-        this.size = PhotoSizeEnum.scaled;
+        this.size = PhotoSizeEnum.Scaled;
         width = UtilityUI.getImageWidth(3);
     }
 
     public Photo.normal() {
-        this.size = PhotoSizeEnum.normal;
+        this.size = PhotoSizeEnum.Normal;
         width = UtilityUI.getImageWidth(3);
     }
 
@@ -42,16 +45,15 @@ public class Photo {
     }
 
     public void setPix(Gdk.Pixbuf p) {
-        /// image.set_keep_aspect_ratio(true);
-        /// image.can_shrink = false;
-        /// image.halign = Gtk.Align.CENTER;
-        /// image.valign = Gtk.Align.CENTER;
-        /// image.set_pixbuf(p);
-        image.set_from_pixbuf(p); //GTK4_DELETE
-    }
-
-    public Gtk.Widget get() {
-        return image;
+        #if GTK4
+            image.set_keep_aspect_ratio(true);
+            image.can_shrink = false;
+            image.halign = Gtk.Align.CENTER;
+            image.valign = Gtk.Align.CENTER;
+            image.set_pixbuf(p);
+        #else
+            image.set_from_pixbuf(p);
+        #endif
     }
 
     public void setFullScreen(Gtk.Window win, uint8[] ba) {
@@ -96,9 +98,9 @@ public class Photo {
     }
 
     public void setBytes(uint8[] ba) {
-        if (size == PhotoSizeEnum.full) {
+        if (size == PhotoSizeEnum.Full) {
             setFullScreen(win, ba);
-        } else if (size == PhotoSizeEnum.scaled) {
+        } else if (size == PhotoSizeEnum.Scaled) {
             setToWidth(ba, width);
         } else {
             setNoScale(ba);
@@ -106,6 +108,8 @@ public class Photo {
     }
 
     public void setNwsIcon(string url) {
-        setPix(UtilityNws.getIcon(url));
+        setPix(UtilityForecastIcon.getIcon(url));
     }
+
+    public Gtk.Widget get() { return image; }
 }

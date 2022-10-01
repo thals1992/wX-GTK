@@ -8,21 +8,18 @@ using Gee;
 
 public class ObjectAnimateNexrad {
 
-    public delegate void FnDownloadData();
     int frameCount;
     int animationSpeed;
     ArrayList<NexradWidget> nexradList;
-    ButtonToggle animateButton;
-    unowned FnDownloadData downloadFn;
+    unowned FnVoid downloadFn;
     Timer timeLine;
     ComboBox comboboxAnimCount;
     ComboBox comboboxAnimSpeed;
 
-    public ObjectAnimateNexrad(ArrayList<NexradWidget> nexradList, ButtonToggle animateButton, ComboBox comboboxAnimCount, ComboBox comboboxAnimSpeed, FnDownloadData downloadFn) {
+    public ObjectAnimateNexrad(ArrayList<NexradWidget> nexradList, ComboBox comboboxAnimCount, ComboBox comboboxAnimSpeed, FnVoid downloadFn) {
         this.animationSpeed = 1500;
         this.frameCount = 10;
         this.nexradList = nexradList;
-        this.animateButton = animateButton;
         this.comboboxAnimCount = comboboxAnimCount;
         this.comboboxAnimSpeed = comboboxAnimSpeed;
         this.downloadFn = downloadFn;
@@ -67,16 +64,18 @@ public class ObjectAnimateNexrad {
 
     void downloadFrames() {
         foreach (var nw in nexradList) {
-            WXGLDownload.getRadarFilesForAnimation(frameCount, nw.nexradState.radarProduct, nw.nexradState.radarSite, nw.fileStorage);
+            WXGLDownload.getRadarFilesForAnimation(frameCount, nw.nexradState.radarProduct, nw.nexradState.getRadarSite(), nw.fileStorage);
             nw.nexradState.levelDataList.clear();
             nw.nexradState.processAnimationFiles(frameCount, nw.fileStorage);
         }
     }
 
     void loadAnimationFrame(int index) {
-        print(Too.String(index) + "\n");
+        print(Too.String(index) + " ");
         foreach (var nw in nexradList) {
-            nw.downloadDataForAnimation(index);
+            if (nw.fileStorage.animationMemoryBuffer.size >= frameCount) {
+                nw.downloadDataForAnimation(index);
+            }
         }
         foreach (var nw in nexradList) {
             nw.update();
@@ -89,5 +88,11 @@ public class ObjectAnimateNexrad {
 
     public void setAnimationSpeed() {
         Utility.writePrefInt("NEXRAD_ANIM_SPEED", comboboxAnimSpeed.getIndex());
+        animationSpeed = Too.Int(comboboxAnimSpeed.getValue());
+        if (timeLine.isRunning()) {
+            timeLine.setSpeed(animationSpeed);
+            timeLine.stop();
+            timeLine.start();
+        }
     }
 }

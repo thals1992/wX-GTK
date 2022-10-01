@@ -15,7 +15,7 @@ class MyApplication {
         UtilityRadar.initStatic();
         Location.refresh();
         UtilityGoes.initStatic();
-        UtilityAwcRadarMosaic.initStatic();
+        UtilityNwsRadarMosaic.initStatic();
         RadarPreferences.initialize();
         UIPreferences.initialize();
         UIPreferences.initializeData();

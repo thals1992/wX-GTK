@@ -12,8 +12,8 @@ class UtilityFileManagement {
 
     public static void mkdir(string d) {
         try {
-            var file = File.new_for_path(d);
-            file.make_directory_with_parents ();
+            var file = GLib.File.new_for_path(d);
+            file.make_directory_with_parents();
         } catch (Error e) {
             // print ("Error: %s\n", e.message);
         }

@@ -30,19 +30,20 @@ class NhcStorm : Window {
         comboboxProduct.setIndex(0);
         comboboxProduct.connect(reload);
 
+        text.hExpand();
         boxText.addWidget(goesButton.get());
         boxText.addWidget(comboboxProduct.get());
         boxText.addWidget(text.get());
 
         urls.foreach((unused) => {
-            images.add(new Photo(this, PhotoSizeEnum.scaled));
+            images.add(new Photo(this, PhotoSizeEnum.Scaled));
             boxImages.addWidget(images.last().get());
             return true;
         });
 
         sw = new ObjectTwoWidgetScroll(this, boxImages.get(), boxText.get());
 
-        foreach (var index in UtilityList.range(urls.size)) {
+        foreach (var index in range(urls.size)) {
             new FutureBytes(urls[index], images[index].setBytes);
         }
         reload();

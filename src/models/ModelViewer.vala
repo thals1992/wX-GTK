@@ -143,7 +143,7 @@ class ModelViewer : Window {
         if (modelObj.model == "GLCFS") {
             print("");
         } else if (modelObj.model != "SREF" && modelObj.model != "HRRR" && modelObj.model != "HREF" && modelObj.model != "ESRL") {
-            foreach (var index in UtilityList.range(modelObj.times.size)) {
+            foreach (var index in range(modelObj.times.size)) {
                 var timeStr = modelObj.times[index];
                 var newValue = timeStr.split(" ")[0] + " " + UtilityModels.convertTimeRuntoTimeString(modelObj.runTimeData.timeStringConversion.replace("Z", ""), timeStr.split(" ")[0]);
                 modelObj.setTimeArr(index, newValue);
@@ -164,7 +164,7 @@ class ModelViewer : Window {
         comboboxRun.setIndexByValue(modelObj.run);
 
         comboboxProduct.setArrayList(modelObj.paramLabels);
-        var paramIndex = UtilityList.findex(modelObj.param, modelObj.paramCodes.to_array());
+        var paramIndex = findex(modelObj.param, modelObj.paramCodes.to_array());
         comboboxProduct.setIndex(paramIndex);
 
         comboboxTime.setArrayList(modelObj.times);

@@ -19,7 +19,7 @@ class UIColorLegend : DrawingArea {
     void drawRect(Cairo.Context painter, float x, float y, float width, float height) {
         Color.setCairoColor(painter, color);
         painter.set_line_width(1.0);
-        painter.rectangle(x, y, width, height);
+        painter.rectangle(x, y, width, height + 1.0);
         painter.fill();
         painter.stroke();
     }
@@ -47,12 +47,15 @@ class UIColorLegend : DrawingArea {
         draw();
     }
 
-    /// public void drawFunc(Gtk.DrawingArea da, Cairo.Context painter, int w, int h) {
-    public bool drawFunc(Cairo.Context painter) { //GTK4_DELETE
-        var width = (int) getWidth();
-        var height = (int) getHeight();
+    #if GTK4
+    public void drawFunc(Gtk.DrawingArea da, Cairo.Context painter, int w, int h) {
+    #else
+    public bool drawFunc(Cairo.Context painter) {
+    #endif
+        var width = (int)width;
+        var height = (int)height;
         screenHeight = height;
-        string units;
+        var units = "";
         var startHeight = -20.0f;
         var widthStarting = 0.0f;
         var textFromLegend = 10.0f;
@@ -63,7 +66,7 @@ class UIColorLegend : DrawingArea {
         var scaledHeightVel = ((screenHeight - scaleFudge * startHeight) / (127.0f * 2.0f));
         var unitsDrawn = false;
         if (product == "N0Q" || product == "L2REF" || product == "TZL") {
-            foreach (var index in UtilityList.range(256)) {
+            foreach (var index in range(256)) {
                 setColorWithBuffers(94, 255 - index);
                 drawRect(
                     painter,
@@ -86,7 +89,7 @@ class UIColorLegend : DrawingArea {
                 }
             }
         } else if (product == "N0U" || product == "L2VEL" || product == "TV0") {
-            foreach (var index in UtilityList.range(256)) {
+            foreach (var index in range(256)) {
                 setColorWithBuffers(99, 255 - index);
                 drawRect(
                     painter,
@@ -110,7 +113,7 @@ class UIColorLegend : DrawingArea {
                 }
             }
         } else if (product == "DVL") {
-            foreach (var index in UtilityList.range(256)) {
+            foreach (var index in range(256)) {
                 setColorWithBuffers(134, 255 - index);
                 drawRect(
                     painter,
@@ -135,7 +138,7 @@ class UIColorLegend : DrawingArea {
             }
         } else if (product == "EET") {
             scaledHeight = ((screenHeight - 1.45f * startHeight) / 70.0f);
-            foreach (var index in UtilityList.range(71)) {
+            foreach (var index in range(71)) {
                 setColorWithBuffers(135, 70 - index);
                 drawRect(
                     painter,
@@ -159,7 +162,7 @@ class UIColorLegend : DrawingArea {
                 }
             }
         } else if (product == "N0X") {
-            foreach (var index in UtilityList.range(256)) {
+            foreach (var index in range(256)) {
                 setColorWithBuffers(159, 255 - index);
                 drawRect(
                     painter,
@@ -181,7 +184,7 @@ class UIColorLegend : DrawingArea {
                 }
             }
         } else if (product == "N0C") {
-            foreach (var index in UtilityList.range(256)) {
+            foreach (var index in range(256)) {
                 setColorWithBuffers(161, 255 - index);
                 drawRect(
                     painter,
@@ -206,7 +209,7 @@ class UIColorLegend : DrawingArea {
                 }
             }
         } else if (product == "N0K") {
-            foreach (var index in UtilityList.range(256)) {
+            foreach (var index in range(256)) {
                 setColorWithBuffers(163, 255 - index);
                 drawRect(
                     painter,
@@ -230,7 +233,7 @@ class UIColorLegend : DrawingArea {
         } else if (product == "H0C") {
             scaledHeight = (screenHeight - 2.0f * startHeight) / 160.0f;
             const string[] labels = {"ND", "BI", "GC", "IC", "DS", "WS", "RA", "HR", "BD", "GR", "HA", "", "", "", "UK", "RF"};
-            foreach (var index in UtilityList.range(160)) {
+            foreach (var index in range(160)) {
                 setColorWithBuffers(165, 160 - index);
                 drawRect(
                     painter,
@@ -254,7 +257,7 @@ class UIColorLegend : DrawingArea {
                 }
             }
         } else if (product == "DSP") {
-            foreach (var index in UtilityList.range(256)) {
+            foreach (var index in range(256)) {
                 setColorWithBuffers(172, 255 - index);
                 drawRect(
                     painter,
@@ -264,11 +267,11 @@ class UIColorLegend : DrawingArea {
                     scaledHeight);
             }
             units = " IN";
-            float j = WXGLNexrad.wxoglDspLegendMax;
+            var j = WXGLNexrad.wxoglDspLegendMax;
             while (j > 0) {
-                float xVar = widthStarting + width + textFromLegend;
-                float yVar1 = (255.0f / WXGLNexrad.wxoglDspLegendMax) * scaledHeightVel * (WXGLNexrad.wxoglDspLegendMax - j);
-                float yVar = yVar1 + heightFudge + startHeight;
+                var xVar = widthStarting + width + textFromLegend;
+                var yVar1 = (255.0f / WXGLNexrad.wxoglDspLegendMax) * scaledHeightVel * (WXGLNexrad.wxoglDspLegendMax - j);
+                var yVar = yVar1 + heightFudge + startHeight;
                 drawText(painter, Too.StringF(j) + units, xVar, yVar);
                 if (!unitsDrawn) {
                     unitsDrawn = true;
@@ -277,7 +280,7 @@ class UIColorLegend : DrawingArea {
                 j -= WXGLNexrad.wxoglDspLegendMax / 16.0f;
             }
         } else if (product == "DAA") {
-            foreach (var index in UtilityList.range(256)) {
+            foreach (var index in range(256)) {
                 setColorWithBuffers(172, 255 - index);
                 drawRect(
                     painter,
@@ -287,11 +290,11 @@ class UIColorLegend : DrawingArea {
                     scaledHeight);
             }
             units = " IN";
-            float j = WXGLNexrad.wxoglDspLegendMax;
+            var j = WXGLNexrad.wxoglDspLegendMax;
             while (j > 0) {
-                float xVar = widthStarting + width + textFromLegend;
-                float yVar1 = (255.0f / WXGLNexrad.wxoglDspLegendMax) * scaledHeightVel * (WXGLNexrad.wxoglDspLegendMax - j);
-                float yVar = yVar1 + heightFudge + startHeight;
+                var xVar = widthStarting + width + textFromLegend;
+                var yVar1 = (255.0f / WXGLNexrad.wxoglDspLegendMax) * scaledHeightVel * (WXGLNexrad.wxoglDspLegendMax - j);
+                var yVar = yVar1 + heightFudge + startHeight;
                 drawText(painter, Too.StringF(j) + units, xVar, yVar);
                 if (!unitsDrawn) {
                     unitsDrawn = true;
@@ -300,6 +303,9 @@ class UIColorLegend : DrawingArea {
                 j -= WXGLNexrad.wxoglDspLegendMax / 16.0f;
             }
         }
-        return false; //GTK4_DELETE
+        #if GTK4
+        #else
+            return false;
+        #endif
     }
 }

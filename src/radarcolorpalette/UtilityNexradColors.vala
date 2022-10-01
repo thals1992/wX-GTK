@@ -9,15 +9,15 @@ using Gee;
 class UtilityNexradColors {
 
     static double interpolate(double colorA, double colorB, double proportion) {
-        return (colorA + ((colorB - colorA) * proportion));
+        return colorA + ((colorB - colorA) * proportion);
     }
 
     static double interpolateHue(double colorA, double colorB, double proportion) {
         var diff = colorB - colorA;
         var total = 1.0;
-        if (diff > total / 2) {
+        if (diff > total / 2.0) {
             var ret = (total - (colorB - colorA)) * -1.0;
-            if (ret < 0) {
+            if (ret < 0.0) {
                 return ret + total;
             }
             return ret;
@@ -28,7 +28,7 @@ class UtilityNexradColors {
     public static int interpolateColor(int colorA, int colorB, double proportion) {
         var hsva = Color.colorToHsv(colorA);
         var hsvb = Color.colorToHsv(colorB);
-        foreach (var index in UtilityList.range(3)) {
+        foreach (var index in range(3)) {
             if (index > 0) {
                 hsvb[index] = interpolate(hsva[index], hsvb[index], proportion);
             } else {

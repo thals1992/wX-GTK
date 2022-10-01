@@ -16,32 +16,21 @@ class SettingsLocationsBox : VBox {
         addLocations();
     }
 
-    public void refresh() {
-        removeChildren();
-        addLocations();
-    }
-
-    void refreshCombobox() {
-        Location.setMainScreenComboBox();
-    }
-
     void addLocations() {
-        foreach (var index in UtilityList.range(Location.getNumLocations())) {
+        foreach (var index in range(Location.getNumLocations())) {
             cards.add(new ObjectCardLocationItem(index));
-            var finalIndex = index;
-
             boxes.add(new HBox());
 
             buttons.add(new Button(Icon.Down, ""));
-            buttons.last().connectInt(moveDownClicked, finalIndex);
+            buttons.last().connectInt(moveDownClicked, index);
             boxes.last().addWidget(buttons.last().get());
 
             buttons.add(new Button(Icon.Up, ""));
-            buttons.last().connectInt(moveUpClicked, finalIndex);
+            buttons.last().connectInt(moveUpClicked, index);
             boxes.last().addWidget(buttons.last().get());
 
             buttons.add(new Button(Icon.Delete, "Delete"));
-            buttons.last().connectInt(deleteLocation, finalIndex);
+            buttons.last().connectInt(deleteLocation, index);
             boxes.last().addWidget(buttons.last().get());
 
             boxes.last().addWidget(cards.last().get());
@@ -49,17 +38,21 @@ class SettingsLocationsBox : VBox {
         }
     }
 
+    public void refresh() {
+        Location.setMainScreenComboBox();
+        removeChildren();
+        addLocations();
+    }
+
     void deleteLocation(int locationIndex) {
         if (Location.getNumLocations() > 1) {
             Location.deleteLocation(Too.String(locationIndex + 1));
-            refreshCombobox();
             refresh();
         }
     }
 
-    void moveDownClicked(int locationIndex) {
-        var position = locationIndex;
-        if (position < (Location.getNumLocations() - 1)) {
+    void moveDownClicked(int position) {
+        if (position < Location.getNumLocations() - 1) {
             var locA = new ObjectLocation(position);
             var locB = new ObjectLocation(position + 1);
             locA.saveToNewSlot(position + 1);
@@ -70,12 +63,10 @@ class SettingsLocationsBox : VBox {
             locA.saveToNewSlot(0);
             locB.saveToNewSlot(position);
         }
-        refreshCombobox();
         refresh();
     }
 
-    void moveUpClicked(int locationIndex) {
-        var position = locationIndex;
+    void moveUpClicked(int position) {
         if (position > 0) {
             var locA = new ObjectLocation(position - 1);
             var locB = new ObjectLocation(position);
@@ -87,7 +78,6 @@ class SettingsLocationsBox : VBox {
             locA.saveToNewSlot(0);
             locB.saveToNewSlot(Location.getNumLocations() - 1);
         }
-        refreshCombobox();
         refresh();
     }
 }

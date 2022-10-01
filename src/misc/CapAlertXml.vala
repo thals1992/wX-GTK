@@ -22,18 +22,18 @@ class CapAlertXml {
     string polygon = "";
     string[] points;
 
-    public CapAlertXml(string eventText) {
-        url = UtilityString.parse(eventText, "<id>(.*?)</id>");
-        title = UtilityString.parse(eventText, "<title>(.*?)</title>");
-        summary = UtilityString.parse(eventText, "<summary>(.*?)</summary>");
-        instructions = UtilityString.parse(eventText, "</description>.*?<instruction>(.*?)</instruction>.*?<areaDesc>");
-        area = UtilityString.parse(eventText, "<cap:areaDesc>(.*?)</cap:areaDesc>");
-        effective = UtilityString.parse(eventText, "<cap:effective>(.*?)</cap:effective>");
-        expires = UtilityString.parse(eventText, "<cap:expires>(.*?)</cap:expires>");
-        event1 = UtilityString.parse(eventText, "<cap:event>(.*?)</cap:event>");
-        vtec = UtilityString.parse(eventText, "<valueName>VTEC</valueName>.*?<value>(.*?)</value>");
-        zones = UtilityString.parse(eventText, "<valueName>UGC</valueName>.*?<value>(.*?)</value>");
-        polygon = UtilityString.parse(eventText, "<cap:polygon>(.*?)</cap:polygon>");
+    public CapAlertXml(string s) {
+        url = UtilityString.parse(s, "<id>(.*?)</id>");
+        title = UtilityString.parse(s, "<title>(.*?)</title>");
+        summary = UtilityString.parse(s, "<summary>(.*?)</summary>");
+        instructions = UtilityString.parse(s, "</description>.*?<instruction>(.*?)</instruction>.*?<areaDesc>");
+        area = UtilityString.parse(s, "<cap:areaDesc>(.*?)</cap:areaDesc>");
+        effective = UtilityString.parse(s, "<cap:effective>(.*?)</cap:effective>");
+        expires = UtilityString.parse(s, "<cap:expires>(.*?)</cap:expires>");
+        event1 = UtilityString.parse(s, "<cap:event>(.*?)</cap:event>");
+        vtec = UtilityString.parse(s, "<valueName>VTEC</valueName>.*?<value>(.*?)</value>");
+        zones = UtilityString.parse(s, "<valueName>UGC</valueName>.*?<value>(.*?)</value>");
+        polygon = UtilityString.parse(s, "<cap:polygon>(.*?)</cap:polygon>");
         text = "";
         text += title;
         text += GlobalVariables.newline;

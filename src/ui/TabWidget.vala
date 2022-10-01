@@ -25,7 +25,5 @@ public class TabWidget {
         tw.set_current_page(index);
     }
 
-    public Gtk.Notebook get() {
-        return tw;
-    }
+    public Gtk.Notebook get() { return tw; }
 }

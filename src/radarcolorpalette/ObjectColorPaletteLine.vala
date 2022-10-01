@@ -23,14 +23,14 @@ class ObjectColorPaletteLine {
     }
 
     public ObjectColorPaletteLine.withDbzNoList(double dbz, string red, string green, string blue) {
-        this.dbz = (int) dbz;
+        this.dbz = (int)dbz;
         this.red = Too.Int(red);
         this.green = Too.Int(green);
         this.blue = Too.Int(blue);
     }
 
     public ObjectColorPaletteLine.withDbz(double dbz, ArrayList<string> items) {
-        this.dbz = (int) dbz;
+        this.dbz = (int)dbz;
         red = Too.Int(items[2]);
         green = Too.Int(items[3]);
         blue = Too.Int(items[4]);

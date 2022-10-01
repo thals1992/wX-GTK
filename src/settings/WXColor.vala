@@ -38,14 +38,17 @@ public class WXColor {
 
     public Gdk.RGBA getRGBA() {
         var bgColor = Gdk.RGBA();
-        bgColor.red = (double)red / 255.0; //GTK4_DELETE
-        bgColor.green = (double)green / 255.0; //GTK4_DELETE
-        bgColor.blue = (double)blue / 255.0; //GTK4_DELETE
-        bgColor.alpha = 1.0; //GTK4_DELETE
-        /// bgColor.red = (float)red / 255.0f;
-        /// bgColor.green = (float)green / 255.0f;
-        /// bgColor.blue = (float)blue / 255.0f;
-        /// bgColor.alpha = 1.0f;
+        #if GTK4
+            bgColor.red = red / 255.0f;
+            bgColor.green = green / 255.0f;
+            bgColor.blue = blue / 255.0f;
+            bgColor.alpha = 1.0f;
+        #else
+            bgColor.red = red / 255.0;
+            bgColor.green = green / 255.0;
+            bgColor.blue = blue / 255.0;
+            bgColor.alpha = 1.0;
+        #endif
         return bgColor;
     }
 

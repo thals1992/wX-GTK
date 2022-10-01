@@ -29,32 +29,31 @@ class ObjectCurrentConditions {
     public string topLine = "";
     public string bottomLine = "";
     string obsStation = "";
+    string timeStringUtc = "";
 
-    public ObjectCurrentConditions(LatLon latLon) {
+    public void process(LatLon latLon, int order) {
         this.latLon = latLon;
-    }
-
-    public void process() {
         var sb = "";
-        var objMetar = new ObjectMetar(latLon);
-        objMetar.process();
-        obsStation = objMetar.obsClosest.name;
-        conditionsTimeStr = objMetar.conditionsTimeStr;
-        temperature = objMetar.temperature + GlobalVariables.degreeSymbol;
-        windChill = objMetar.windChill + GlobalVariables.degreeSymbol;
-        heatIndex = objMetar.heatIndex + GlobalVariables.degreeSymbol;
-        dewpoint = objMetar.dewpoint + GlobalVariables.degreeSymbol;
-        relativeHumidity = objMetar.relativeHumidity + "%";
-        seaLevelPressure = objMetar.seaLevelPressure;
-        windDirection = objMetar.windDirection;
-        windSpeed = objMetar.windSpeed;
-        windGust = objMetar.windGust;
-        visibility = objMetar.visibility;
-        condition = objMetar.condition;
+        var objectMetar = new ObjectMetar(latLon, order);
+        objectMetar.process();
+        obsStation = objectMetar.obsClosest.name;
+        conditionsTimeStr = objectMetar.conditionsTimeStr;
+        temperature = objectMetar.temperature + GlobalVariables.degreeSymbol;
+        windChill = objectMetar.windChill + GlobalVariables.degreeSymbol;
+        heatIndex = objectMetar.heatIndex + GlobalVariables.degreeSymbol;
+        dewpoint = objectMetar.dewpoint + GlobalVariables.degreeSymbol;
+        relativeHumidity = objectMetar.relativeHumidity + "%";
+        seaLevelPressure = objectMetar.seaLevelPressure;
+        windDirection = objectMetar.windDirection;
+        windSpeed = objectMetar.windSpeed;
+        windGust = objectMetar.windGust;
+        visibility = objectMetar.visibility;
+        condition = objectMetar.condition;
+        timeStringUtc = objectMetar.timeStringUtc;
         sb += temperature;
-        if (objMetar.windChill != "NA") {
+        if (objectMetar.windChill != "NA") {
             sb += "(" + windChill + ")";
-        } else if (objMetar.heatIndex != "NA") {
+        } else if (objectMetar.heatIndex != "NA") {
             sb += "(" + heatIndex + ")";
         }
         sb += " / " + dewpoint + "(" + relativeHumidity + ")" + " - ";
@@ -64,7 +63,7 @@ class ObjectCurrentConditions {
         }
         sb += windGust + " mph" + " - " + visibility + " mi - " + condition;
         data1 = sb;
-        iconUrl = objMetar.icon;
+        iconUrl = objectMetar.icon;
         formatCurrentConditions();
     }
 
@@ -94,5 +93,18 @@ class ObjectCurrentConditions {
             }
         }
         return "NA";
+    }
+
+    // compare the timestamp in the metar to the current time
+    // if older then a certain amount, download the 2nd closest site and process
+    public void timeCheck() {
+        var obsTime = new ObjectDateTime.fromObs(timeStringUtc);
+        var currentTime = ObjectDateTime.getCurrentTimeInUTC();
+        var isTimeCurrent = ObjectDateTime.timeDifference(currentTime, obsTime.get(), 120);
+        //  print(@"$obsTime\n");
+        //  print(@"$currentTime\n");
+        if (!isTimeCurrent) {
+            process(latLon, 1);
+        }
     }
 }

@@ -17,10 +17,9 @@ public class ObjectToolbar : VBox {
     SettingsNotebook settingsNotebook = new SettingsNotebook();
     ArrayList<RouteItem> routeItems = new ArrayList<RouteItem>();
     ArrayList<ButtonFlat> buttons = new ArrayList<ButtonFlat>();
-    public delegate void ReloadFn();
-    unowned ReloadFn fn;
+    unowned FnVoid fn;
 
-    public ObjectToolbar(ReloadFn fn) {
+    public ObjectToolbar(FnVoid fn) {
         this.fn = fn;
         button.connect(fn);
         addWidget(button.get());
@@ -50,7 +49,7 @@ public class ObjectToolbar : VBox {
         routeItems.add(new RouteItem("meso.png", "Spc Mesoanalysis, Cltr-z", () => new SpcMeso()));
         routeItems.add(new RouteItem("nwsobssites.png", "Observation Sites", () => new ObservationSites()));
         routeItems.add(new RouteItem("nwsobs.png", "Observations", () => new Observations()));
-        routeItems.add(new RouteItem("nws_sector.png", "AWC Radar Mosaic, Cltr-m", () => new RadarMosaicAwc()));
+        routeItems.add(new RouteItem("radarmosaicnws.png", "NWS Radar Mosaic, Cltr-m", () => new RadarMosaicNws()));
         routeItems.add(new RouteItem("srfd.png", "National Text", () => new NationalText("")));
         routeItems.add(new RouteItem("uswarn.png", "National Alerts", () => new UsAlerts()));
         routeItems.add(new RouteItem("wpc_rainfall.png", "Excessive Rainfall Outlook", () => new RainfallOutlookSummary()));

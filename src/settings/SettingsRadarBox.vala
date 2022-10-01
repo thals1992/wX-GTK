@@ -4,6 +4,8 @@
 // * Refer to the COPYING file of the official project for license.
 // *****************************************************************************
 
+using Gee;
+
 class SettingsRadarBox : VBox {
 
     HBox hbox = new HBox();
@@ -37,10 +39,11 @@ class SettingsRadarBox : VBox {
     ComboBox comboBoxVelPal = new ComboBox(velPalChoices);
     const string[] refPalChoices = {"CODENH", "DKenh", "NSSL", "NWSD", "GREEN", "AF", "EAK", "NWS"};
     const string[] velPalChoices = {"CODENH", "EAK", "AF"};
+    ArrayList<ObjectSwitch> configsWarnings = new ArrayList<ObjectSwitch>();
     ObjectSwitch[] configs = new ObjectSwitch[]{
         new ObjectSwitch("Colormap Legend", "RADAR_COLOR_LEGEND", false),
         new ObjectSwitch("Controls", "RADAR_SHOW_CONTROLS", false),
-        new ObjectSwitch("Cananda Borders", "RADARCANADALINES", false),
+        new ObjectSwitch("Canada Borders", "RADARCANADALINES", false),
         new ObjectSwitch("County Lines", "RADAR_SHOW_COUNTY", true),
         new ObjectSwitch("County Labels", "RADAR_COUNTY_LABELS", false),
         new ObjectSwitch("Cities", "COD_CITIES_DEFAULT", false),
@@ -58,7 +61,7 @@ class SettingsRadarBox : VBox {
         new ObjectSwitch("Status Bar", "RADAR_SHOW_STATUSBAR", true),
         new ObjectSwitch("Storm Tracks", "RADAR_SHOW_STI", false),
         new ObjectSwitch("Tornado Vortex Signature", "RADAR_SHOW_TVS", false),
-        new ObjectSwitch("Warnings", "COD_WARNINGS_DEFAULT", false),
+        //  new ObjectSwitch("Warnings", "COD_WARNINGS_DEFAULT", false),
         new ObjectSwitch("Watches", "RADAR_SHOW_WATCH", false),
         new ObjectSwitch("Wind Barbs", "WXOGL_OBS_WINDBARBS", false),
         new ObjectSwitch("WPC Fronts", "RADAR_SHOW_WPC_FRONTS", false),
@@ -69,8 +72,11 @@ class SettingsRadarBox : VBox {
         button.connect(() => {
             Gtk.Builder builder = new Gtk.Builder.from_string(Shortcuts.radar, Shortcuts.radar.length);
             var dialog = (Gtk.ShortcutsWindow) builder.get_object("shortcuts-window");
-            dialog.show_all(); //GTK4_DELETE
-            /// dialog.show();
+            #if GTK4
+                dialog.show();
+            #else
+                dialog.show_all();
+            #endif
         });
         hbox0.addWidget(button.get());
         hbox.addLayout(hbox0.get());
@@ -80,13 +86,13 @@ class SettingsRadarBox : VBox {
         hboxBottom.addLayout(vboxCenter.get());
         hboxBottom.addLayout(vboxRight.get());
 
-        comboBoxRefPal.setIndex(UtilityList.findex(Utility.readPref("RADAR_COLOR_PALETTE_94", "CODENH"), refPalChoices));
+        comboBoxRefPal.setIndex(findex(Utility.readPref("RADAR_COLOR_PALETTE_94", "CODENH"), refPalChoices));
         comboBoxRefPal.connect(changeRefPal);
         hbox1.addWidget(text1.get());
         hbox1.addWidget(comboBoxRefPal.get());
         hbox.addLayout(hbox1.get());
 
-        comboBoxVelPal.setIndex(UtilityList.findex(Utility.readPref("RADAR_COLOR_PALETTE_99", "CODENH"), velPalChoices));
+        comboBoxVelPal.setIndex(findex(Utility.readPref("RADAR_COLOR_PALETTE_99", "CODENH"), velPalChoices));
         comboBoxVelPal.connect(changeVelPal);
         hbox2.addWidget(text2.get());
         hbox2.addWidget(comboBoxVelPal.get());
@@ -94,6 +100,12 @@ class SettingsRadarBox : VBox {
 
         text1.setText("Reflectivity Palette:");
         text2.setText("Velocity Palette:");
+
+        foreach (var type1 in ObjectPolygonWarning.polygonList) {
+            var warning = ObjectPolygonWarning.polygonDataByType[type1];
+            configsWarnings.add(new ObjectSwitch(warning.name(), warning.prefTokenEnabled(), false));
+            vboxLeft.addWidget(configsWarnings.last().get());
+        }
 
         var i = 0;
         foreach (var config in configs) {

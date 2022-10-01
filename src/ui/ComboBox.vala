@@ -8,70 +8,90 @@ using Gee;
 
 public class ComboBox {
 
-    public delegate void ComboBoxFunction();
     string[] items;
-    Gtk.ComboBoxText cb = new Gtk.ComboBoxText(); //GTK4_DELETE
-    /// Gtk.DropDown cb;
+    #if GTK4
+        Gtk.DropDown cb;
+    #else
+        Gtk.ComboBoxText cb = new Gtk.ComboBoxText();
+    #endif
     ulong conn = 0;
 
     public ComboBox(string[] items) {
-        if (items != null) { //GTK4_DELETE
-            this.items = items; //GTK4_DELETE
-            foreach (var s in items) { //GTK4_DELETE
-                cb.append_text(s); //GTK4_DELETE
-            } //GTK4_DELETE
-        } //GTK4_DELETE
-        cb.set_margin_start(5); //GTK4_DELETE
-        cb.set_margin_end(5); //GTK4_DELETE
-        /// this.items = items;
-        /// cb = new Gtk.DropDown.from_strings(this.items);
-        /// cb.enable_search = true;
+        #if GTK4
+            this.items = items;
+            cb = new Gtk.DropDown.from_strings(this.items);
+            cb.enable_search = true;
+        #else
+            if (items != null) {
+                this.items = items;
+                foreach (var s in items) {
+                    cb.append_text(s);
+                }
+            }
+            cb.set_margin_start(5);
+            cb.set_margin_end(5);
+        #endif
     }
 
     public ComboBox.empty() {
-        this.items = {}; //GTK4_DELETE
-        foreach (var s in items) { //GTK4_DELETE
-            cb.append_text(s); //GTK4_DELETE
-        } //GTK4_DELETE
-        cb.set_margin_start(5); //GTK4_DELETE
-        cb.set_margin_end(5); //GTK4_DELETE
-        /// this.items = new string[]{};
-        /// cb = new Gtk.DropDown.from_strings(this.items);
-        /// cb.enable_search = true;
+        #if GTK4
+            this.items = new string[]{};
+            cb = new Gtk.DropDown.from_strings(this.items);
+            cb.enable_search = true;
+        #else
+            this.items = {};
+            foreach (var s in items) {
+                cb.append_text(s);
+            }
+            cb.set_margin_start(5);
+            cb.set_margin_end(5);
+        #endif
     }
 
     public ComboBox.fromList(ArrayList<string> items) {
-        this.items = UtilityList.listToArray(items);
-        foreach (var s in this.items) { //GTK4_DELETE
-            cb.append_text(s); //GTK4_DELETE
-        } //GTK4_DELETE
-        cb.set_margin_start(5); //GTK4_DELETE
-        cb.set_margin_end(5); //GTK4_DELETE
-        /// cb = new Gtk.DropDown.from_strings(this.items);
-        /// cb.enable_search = true;
+        this.items = items.to_array();
+        #if GTK4
+            cb = new Gtk.DropDown.from_strings(items.to_array().copy());
+            cb.enable_search = true;
+        #else
+            foreach (var s in this.items) {
+                cb.append_text(s);
+            }
+            cb.set_margin_start(5);
+            cb.set_margin_end(5);
+        #endif
     }
 
     public void setList(string[] items) {
         this.items = items;
-        removeAll(); //GTK4_DELETE
-        foreach (var s in items) { //GTK4_DELETE
-            cb.append_text(s); //GTK4_DELETE
-        } //GTK4_DELETE
-        /// cb.model = new Gtk.StringList(items);
+        #if GTK4
+            cb.model = new Gtk.StringList(items.copy());
+        #else
+            removeAll();
+            foreach (var s in items) {
+                cb.append_text(s);
+            }
+        #endif
     }
 
     public void setArrayList(ArrayList<string> items) {
-        this.items = UtilityList.listToArray(items);
-        removeAll(); //GTK4_DELETE
-        foreach (var s in items) { //GTK4_DELETE
-            cb.append_text(s); //GTK4_DELETE
-        } //GTK4_DELETE
-        /// cb.model = new Gtk.StringList(UtilityList.listToArray(items));
+        this.items = items.to_array();
+        #if GTK4
+            cb.model = new Gtk.StringList(items.to_array().copy());
+        #else
+            removeAll();
+            foreach (var s in items) {
+                cb.append_text(s);
+            }
+        #endif
     }
 
-    public void connect(ComboBoxFunction fn) {
-        conn = cb.changed.connect((c) => fn()); //GTK4_DELETE
-        /// conn = cb.notify["selected-item"].connect((c) => fn());
+    public void connect(FnVoid fn) {
+        #if GTK4
+            conn = cb.notify["selected-item"].connect((c) => fn());
+        #else
+            conn = cb.changed.connect((c) => fn());
+        #endif
     }
 
     public void setIndexByPref(string s, int i) {
@@ -79,8 +99,11 @@ public class ComboBox {
     }
 
     public void setIndex(int i) {
-        cb.set_active(i); //GTK4_DELETE
-        /// cb.set_selected(i);
+        #if GTK4
+            cb.set_selected(i);
+        #else
+            cb.set_active(i);
+        #endif
     }
 
     public void block() {
@@ -91,28 +114,40 @@ public class ComboBox {
         GLib.SignalHandler.unblock(cb, conn);
     }
 
-    void removeAll() { //GTK4_DELETE
-        cb.remove_all(); //GTK4_DELETE
-    } //GTK4_DELETE
+    #if GTK4
+    #else
+        void removeAll() {
+            cb.remove_all();
+        }
+    #endif
 
     public int getIndex() {
-        return cb.get_active(); //GTK4_DELETE
-        /// int i = (int)cb.get_selected();
-        /// return i;
+        #if GTK4
+            int i = (int)cb.get_selected();
+            return i;
+        #else
+            return cb.get_active();
+        #endif
     }
 
     public string getValue() {
-        return cb.get_active_text(); //GTK4_DELETE
-        /// string s = items[getIndex()];
-        /// return s;
+        #if GTK4
+            string s = items[getIndex()];
+            return s;
+        #else
+            return cb.get_active_text();
+        #endif
     }
 
     public void setIndexByValue(string value) {
-        setIndex(UtilityList.findex(value, items));
+        setIndex(findex(value, items));
     }
 
-    /// public Gtk.DropDown get() {
-    public Gtk.ComboBox get() { //GTK4_DELETE
-        return cb;
-    }
+    #if GTK4
+        public Gtk.DropDown get() {
+    #else
+        public Gtk.ComboBox get() {
+    #endif
+            return cb;
+        }
 }

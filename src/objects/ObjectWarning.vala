@@ -37,7 +37,7 @@ class ObjectWarning {
         this.sender = sender;
         this.polygon = polygon;
         this.vtec = vtec;
-        this.isCurrent = UtilityTime.isVtecCurrent(this.vtec);
+        this.isCurrent = WXGLNexrad.isVtecCurrent(this.vtec);
         if (vtec.has_prefix("O.EXP") || vtec.has_prefix("O.CAN")) {
             this.isCurrent = false;
         }
@@ -57,7 +57,7 @@ class ObjectWarning {
         data = data.replace(" ", "");
         var listOfPolygonRaw = UtilityString.parseColumn(data, GlobalVariables.warningLatLonPattern);
         var vtecs = UtilityString.parseColumn(html, GlobalVariables.vtecPattern);
-        foreach (var index in UtilityList.range(urlList.size)) {
+        foreach (var index in range(urlList.size)) {
             warnings.add(new ObjectWarning(Utility.safeGet(urlList, index), Utility.safeGet(titleList, index), Utility.safeGet(areaDescList, index), Utility.safeGet(effectiveList, index), Utility.safeGet(expiresList, index), Utility.safeGet(eventList, index), Utility.safeGet(senderNameList, index), Utility.safeGet(listOfPolygonRaw, index), Utility.safeGet(vtecs, index)));
         }
         return warnings;

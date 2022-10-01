@@ -9,32 +9,20 @@ class UtilityStorePreferences {
     public static void setDefaultLocation() {
         var value = Utility.readPref("LOC1LABEL", "");
         if (value == "") {
-            var stateDefault = "Oklahoma";
-            var locNumIntDefault = 1;
-            var loc1LabelDefault = "Home";
-            var zipcodeDefault = "73069";
-            var county1Default = "Cleveland";
-            var zone1Default = "OKC027";
-            var stateCodeDefault = "OK";
-            var loc1XDefault = "35.231";
-            var loc1YDefault = "-97.451";
-            var loc1NwsDefault = "OUN";
-            var nws1Default = "OUN";
-            var rid1Default = "TLX";
-            var nws1DefaultDtate = "OK";
-            Utility.writePrefInt("LOCNUMINT", locNumIntDefault);
-            Utility.writePref("LOC1X", loc1XDefault);
-            Utility.writePref("LOC1Y", loc1YDefault);
-            Utility.writePref("LOC1NWS", loc1NwsDefault);
-            Utility.writePref("LOC1LABEL", loc1LabelDefault);
-            Utility.writePref("COUNTY1", county1Default);
-            Utility.writePref("ZONE1", zone1Default);
-            Utility.writePref("STATE", stateDefault);
-            Utility.writePref("STATECODE", stateCodeDefault);
-            Utility.writePref("ZIPCODE1", zipcodeDefault);
-            Utility.writePref("NWS1", nws1Default);
-            Utility.writePref("RID1", rid1Default);
-            Utility.writePref("NWS1STATE", nws1DefaultDtate);
+            // TODO FIXME no need for COUNTY/ZONE/ZIP/STATE?
+            Utility.writePrefInt("LOCNUMINT", 1);
+            Utility.writePref("LOC1X", "35.231");
+            Utility.writePref("LOC1Y", "-97.451");
+            Utility.writePref("LOC1NWS", "OUN");
+            Utility.writePref("LOC1LABEL", "Home");
+            Utility.writePref("COUNTY1", "Cleveland");
+            Utility.writePref("ZONE1", "OKC027");
+            Utility.writePref("STATE", "Oklahoma");
+            Utility.writePref("STATECODE", "OK");
+            Utility.writePref("ZIPCODE1", "73069");
+            Utility.writePref("NWS1", "OUN");
+            Utility.writePref("RID1", "TLX");
+            Utility.writePref("NWS1STATE", "OK");
             Utility.writePref("CURRENTLOCFRAGMENT", "1");
         }
     }

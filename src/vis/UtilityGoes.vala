@@ -16,21 +16,14 @@ class UtilityGoes {
     public static string[] labels;
     public static ArrayList<string> productCodes;
 
-    public static string getNearestGoesLocation(LatLon location) {
-        var shortestDistance = 1000.00;
-        var currentDistance = 0.0;
-        var bestIndex = "";
+    public static string getNearest(LatLon latLon) {
+        ArrayList<RID> sites = new ArrayList<RID>();
         foreach (var k in sectorToLatLon.keys) {
-            currentDistance = LatLon.distance(location, sectorToLatLon[k]);
-            if (currentDistance < shortestDistance) {
-                shortestDistance = currentDistance;
-                bestIndex = k;
-            }
+            sites.add(new RID(k, sectorToLatLon[k]));
+            sites.last().distance = LatLon.distance(latLon, sectorToLatLon[k]);
         }
-        if (bestIndex == "") {
-            return "BLAH";
-        }
-        return bestIndex;
+        sites.sort((a, b) => { return a.distance > b.distance ? 1 : -1; });
+        return sites[0].name;
     }
 
     public static string getImageFileName(string sector) {
@@ -43,7 +36,6 @@ class UtilityGoes {
         var urlFinal = url;
         urlFinal = urlFinal.replace("GEOCOLOR", product);
         return urlFinal;
-
     }
 
     // https://cdn.star.nesdis.noaa.gov/GOES16/GLM/CONUS/EXTENT/20201641856GOES16-GLM-CONUS-EXTENT-2500x1500.jpg
@@ -73,28 +65,6 @@ class UtilityGoes {
 
     //  https://www.star.nesdis.noaa.gov/GOES/sectorband.php?sat=G17&sector=ak&band=GEOCOLOR&length=12
     //  https://www.star.nesdis.noaa.gov/GOES/sectorband.php?sat=G16&sector=cgl&band=GEOCOLOR&length=12
-    //  public static string[] getAnimation(string product, string sector, int frameCnt) {
-    //      var frameCount = Too.String(frameCnt);
-    //      var url = "";
-    //      var satellite = "G16";
-    //      if (sectorsInGoes17.contains(sector)) {
-    //          satellite = "G17";
-    //      }
-    //      if (sector == "FD") {
-    //          url = "https://www.star.nesdis.noaa.gov/GOES/GOES16_FullDisk_Band.php?band=" + product.replace("GLM", "EXTENT") + "&length=" + frameCount;
-    //      } else if (sector == "CONUS" || sector == "CONUS-G17") {
-    //          url = "https://www.star.nesdis.noaa.gov/GOES/conus_band.php?sat=" + satellite + "&band=" + product.replace("GLM", "EXTENT") + "&length=" + frameCount;
-    //      } else {
-    //          url = "https://www.star.nesdis.noaa.gov/GOES/sector_band.php?sat=" + satellite + "&sector=" + sector + "&band=" + product + "&length=" + frameCount;
-    //      }
-    //      var data = UtilityIO.getHtml(url);
-    //      var html = data.replace("\n", "").replace("\r", "");
-    //      var imageHtml = UtilityString.parse(html, "animationImages = \\[(.*?)\\];");
-    //      var stringList = UtilityString.parseColumn(imageHtml, "'(https.*?jpg)'");
-    //      var stringArray = UtilityList.listToArray(stringList);
-    //      return stringArray;
-    //  }
-
     public static string[] getAnimation(string product, string sector, int frameCount) {
         var baseUrl = getImage(product, sector);
         var itemsArray = baseUrl.split("/");
@@ -102,28 +72,37 @@ class UtilityGoes {
         items.remove_at(items.size - 1);
         items.remove_at(items.size - 1);
         if (product == "GLM") {
-            baseUrl = UtilityList.join(items, "/") + "/EXTENT3/";
+            baseUrl = join(items, "/") + "/EXTENT3/";
         } else {
-            baseUrl = UtilityList.join(items, "/") + "/" + product + "/";
+            baseUrl = join(items, "/") + "/" + product + "/";
         }
+
         var html = UtilityIO.getHtml(baseUrl);
         var urlList = new ArrayList<string>();
-        if (product == "GLM") {
+        //  if (product == "GLM") {
+        //      urlList = UtilityString.parseColumn(html.replace("\r\n", " "), "<a href=\"([^\\s]*?1250x750.jpg)\">");
+        //  } else {
+        //      urlList = UtilityString.parseColumn(html.replace("\r\n", " "), "<a href=\"([^\\s]*?1200x1200.jpg)\">");
+        //  }
+
+        if (product == "GLM" || sector.has_prefix("CONUS")) {
             urlList = UtilityString.parseColumn(html.replace("\r\n", " "), "<a href=\"([^\\s]*?1250x750.jpg)\">");
+        } else if (sector.has_prefix("FD")) {
+            urlList = UtilityString.parseColumn(html.replace("\r\n", " "), "<a href=\"([^\\s]*?1808x1808.jpg)\">");
         } else {
             urlList = UtilityString.parseColumn(html.replace("\r\n", " "), "<a href=\"([^\\s]*?1200x1200.jpg)\">");
         }
+
         var returnList = new ArrayList<string>();
         if (urlList.size > frameCount) {
-            UtilityList.range(frameCount).foreach((unused) => {
+            range(frameCount).foreach((unused) => {
                 var u = urlList.last();
                 urlList.remove_at(urlList.size - 1);
                 returnList.insert(0, baseUrl + u);
                 return true;
             });
         }
-        var returnVector = UtilityList.listToArray(returnList);
-        return returnVector;
+        return returnList.to_array();
         // <a href="20211842100_GOES16-ABI-FL-GEOCOLOR-AL052021-1000x1000.jpg">
     }
 
@@ -139,8 +118,7 @@ class UtilityGoes {
                 returnList.add(baseUrl + u);
             }
         }
-        var stringArray = UtilityList.listToArray(returnList);
-        return stringArray;
+        return returnList.to_array();
     }
 
     public static void initStatic() {
@@ -150,7 +128,7 @@ class UtilityGoes {
         sectorToName = new HashMap<string, string>();
         productCodes = new ArrayList<string>();
 
-        sectorToLatLon["cgl"] = new LatLon.fromDouble(39.123405, -82.532938); // cgl wellston, Oh
+        sectorToLatLon["cgl"] = new LatLon.fromDouble(39.8, -82.532938); // cgl wellston, Oh
         sectorToLatLon["ne"] = new LatLon.fromDouble(39.360611, -74.431877); // ne Atlantic City, NJ
         sectorToLatLon["umv"] = new LatLon.fromDouble(40.622777, -93.934116); // umv  Lamoni, IA
         sectorToLatLon["pnw"] = new LatLon.fromDouble(41.589703, -119.858865); // pnw Vya, NV

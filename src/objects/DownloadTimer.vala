@@ -24,7 +24,7 @@ public class DownloadTimer {
             refreshDataInMinutes = int.max(DownloadTimer.radarDataRefreshInterval, 3);
         }
         var refreshNeeded = false;
-        int64 currentTime = UtilityTime.currentTimeMillis();
+        int64 currentTime = ObjectDateTime.currentTimeMillis();
         int64 currentTimeSeconds = currentTime / 1000;
         int refreshIntervalSeconds = refreshDataInMinutes * 60;
         if ((currentTimeSeconds > (lastRefresh + refreshIntervalSeconds)) || !initialized) {

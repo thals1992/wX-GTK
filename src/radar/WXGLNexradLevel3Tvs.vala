@@ -10,11 +10,11 @@ class WXGLNexradLevel3Tvs {
 
     public static void decode(ProjectionNumbers projectionNumbers, FileStorage fileStorage) {
         var productCode = "TVS";
-        WXGLDownload.getNidsTab(productCode, projectionNumbers.radarSite, fileStorage);
+        WXGLDownload.getNidsTab(productCode, projectionNumbers.getRadarSite(), fileStorage);
         var retStr1 = fileStorage.level3TextProductMap[productCode];
         var stormList = new ArrayList<double?>();
         var tvs = UtilityString.parseColumn(retStr1, "P  TVS(.{20})");
-        foreach (var index in UtilityList.range(tvs.size)) {
+        foreach (var index in range(tvs.size)) {
             var ecc = new ExternalGeodeticCalculator();
             var stringData = UtilityString.parse(tvs[index], ".{9}(.{7})");
             var items = stringData.split("/");

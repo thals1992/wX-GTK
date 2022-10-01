@@ -22,7 +22,5 @@ public class ObjectMenuTitle {
         this.items = tmpList.slice(index, index + count);
     }
 
-    public Gee.List<string> get() {
-        return items;
-    }
+    public Gee.List<string> get() { return items; }
 }

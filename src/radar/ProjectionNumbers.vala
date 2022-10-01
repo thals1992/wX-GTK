@@ -12,7 +12,7 @@ public class ProjectionNumbers {
     string lonstring = "";
     public double xCenter = 0.0;
     public double yCenter = 0.0;
-    public string radarSite = "";
+    string radarSite = "";
 
     public ProjectionNumbers(string radarSite) {
         if (radarSite.length == 3) {
@@ -23,18 +23,25 @@ public class ProjectionNumbers {
         }
         latstring = Utility.getRadarSiteX(this.radarSite);
         lonstring = Utility.getRadarSiteY(this.radarSite);
-        oneDegreeScaleFactor = UtilityMath.pixPerDegreeLon(xDbl(), scale);
+        oneDegreeScaleFactor = UtilityMath.pixPerDegreeLon(x(), scale);
     }
 
-    public double xDbl() {
-        return Too.Double(latstring);
+    public void setRadarSite(string radarSite) {
+        if (radarSite.length == 3) {
+            string radarPrefix = WXGLDownload.getRidPrefix(radarSite, false);
+            this.radarSite = radarPrefix.ascii_up() + radarSite;
+        } else {
+            this.radarSite = radarSite;
+        }
+        latstring = Utility.getRadarSiteX(this.radarSite);
+        lonstring = Utility.getRadarSiteY(this.radarSite);
+        oneDegreeScaleFactor = UtilityMath.pixPerDegreeLon(x(), scale);
     }
 
-    public double yDbl() {
-        return Too.Double(lonstring);
+    public string getRadarSite() {
+        return radarSite;
     }
 
-    // TODO FIXME remove in favor of above
     public double x() {
         return Too.Double(latstring);
     }

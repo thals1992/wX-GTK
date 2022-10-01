@@ -22,7 +22,7 @@ class SunCalc {
     const int j2000 = 2451545;
 
     public double toJulian(DateTime date) {
-        return UtilityTime.currentTimeMillis() / dayMs - 0.5 + j1970;
+        return ObjectDateTime.currentTimeMillis() / dayMs - 0.5 + j1970;
     }
 
     public DateTime fromJulian(double j) {

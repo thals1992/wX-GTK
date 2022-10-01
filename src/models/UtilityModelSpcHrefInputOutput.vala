@@ -18,7 +18,7 @@ class UtilityModelSpcHrefInputOutput {
         time = time.replace("\"", "");
         var mostRecentRun = day + time;
         runData.appendListRun(mostRecentRun);
-        runData.appendListRunWithList(UtilityTime.generateModelRuns(mostRecentRun, 12));
+        runData.appendListRunWithList(UtilityModels.generateModelRuns(mostRecentRun, 12));
         runData.mostRecentRun = mostRecentRun;
         return runData;
     }
@@ -32,7 +32,7 @@ class UtilityModelSpcHrefInputOutput {
     //     ArrayList<string> urlArr = new ArrayList<string>();
     //     urlArr.add(GlobalVariables.nwsSPCwebsitePrefix + "/exper/href/graphics/spcwhite1050px.png");
     //     urlArr.add(GlobalVariables.nwsSPCwebsitePrefix + "/exper/href/graphics/noaaoverlay1050px.png");
-    //     int sectorIndex = UtilityList.indexOf(UtilityModelSpcHrefInterface.sectorsLong, om.sector);
+    //     int sectorIndex = indexOf(UtilityModelSpcHrefInterface.sectorsLong, om.sector);
     //     string sector = UtilityModelSpcHrefInterface.sectors[sectorIndex];
     //     foreach (string data in products) {
     //         string url = "";

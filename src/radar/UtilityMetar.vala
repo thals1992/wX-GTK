@@ -16,6 +16,8 @@ class UtilityMetar {
     const string pattern5 = "SM (.*?) M?[0-9]{2}/";
     static bool initializedObsMap = false;
     static HashMap<string, LatLon> obsLatlon;
+    static ArrayList<RID> metarSites;
+    static bool metarSitesInitialized = false;
 
     public static void getStateMetarArrayForWXOGL(string radarSite, FileStorage fileStorage) {
         if (fileStorage.obsDownloadTimer.isRefreshNeeded() || radarSite != fileStorage.obsOldRadarSite) {
@@ -83,7 +85,6 @@ class UtilityMetar {
                     var bknStr = UtilityString.parse(conditionsBlob, "BKN([0-9]{3})");
                     var ovcInt = 100000;
                     var bknInt = 100000;
-                    int lowestCig;
                     if (ovcStr != "") {
                         ovcStr += "00";
                         ovcInt = Too.Int(ovcStr);
@@ -92,6 +93,7 @@ class UtilityMetar {
                         bknStr += "00";
                         bknInt = Too.Int(bknStr);
                     }
+                    var lowestCig = 0;
                     if (bknInt < ovcInt) {
                         lowestCig = bknInt;
                     } else {
@@ -189,22 +191,17 @@ class UtilityMetar {
         }
     }
 
+    // Get nearest observations points for nexrad windbarb/obs
+    // return comma sep string
+    // TODO FIXME use stored list
     static string getObservationSites(string radarSite) {
+        loadMetarData();
         var obsListSb = "";
         var radarLocation = LatLon.fromRadarSite(radarSite);
-        var text = UtilityIO.readTextFileFromResource(GlobalVariables.resDir + metarFileName);
-        var lines = text.split(GlobalVariables.newline);
-        var obsSites = new ArrayList<RID>();
-        foreach (var line in lines) {
-            var tmpArr = line.split(" ");
-            if (tmpArr.length > 2) {
-                obsSites.add(new RID(tmpArr[0], new LatLon(tmpArr[1], tmpArr[2])));
-            }
-        }
+        var obsSites = new ArrayList<RID>.wrap(metarSites.to_array());
         var obsSiteRange = 200.0;
-        var currentDistance = 0.0;
-        foreach (var index in UtilityList.range(obsSites.size)) {
-            currentDistance = LatLon.distance(radarLocation, obsSites[index].location);
+        foreach (var index in range(obsSites.size)) {
+            var currentDistance = LatLon.distance(radarLocation, obsSites[index].location);
             if (currentDistance < obsSiteRange) {
                 obsListSb += obsSites[index].name + ",";
             }
@@ -230,30 +227,28 @@ class UtilityMetar {
         return goodObsList;
     }
 
-    public static RID findClosestObservation(LatLon location) {
-        var lines = UtilityIO.rawFileToStringArrayFromResource(GlobalVariables.resDir + metarFileName);
-        var metarSites = new ArrayList<RID>();
-        foreach (var line in lines) {
-            var tmpArr = line.split(" ");
-            if (tmpArr.length > 2) {
-                metarSites.add(new RID(tmpArr[0], new LatLon(tmpArr[1], tmpArr[2])));
+    static void loadMetarData() {
+        if (!metarSitesInitialized) {
+            metarSitesInitialized = true;
+            var lines = UtilityIO.rawFileToStringArrayFromResource(GlobalVariables.resDir + metarFileName);
+            metarSites = new ArrayList<RID>();
+            foreach (var line in lines) {
+                var tmpArr = line.split(" ");
+                if (tmpArr.length > 2) {
+                    metarSites.add(new RID(tmpArr[0], new LatLon(tmpArr[1], tmpArr[2])));
+                }
             }
         }
-        var shortestDistance = 1000.00;
-        var currentDistance = 0.0;
-        var bestIndex = -1;
-        foreach (var i in UtilityList.range(metarSites.size)) {
-            currentDistance = LatLon.distance(location, metarSites[i].location);
-            metarSites[i].distance = currentDistance;
-            if (currentDistance < shortestDistance) {
-                shortestDistance = currentDistance;
-                bestIndex = i;
-            }
+    }
+
+    // order = 0 is closest, 1 is next closest etc
+    public static RID findClosestObservation(LatLon location, int order) {
+        loadMetarData();
+        var obsSites = new ArrayList<RID>.wrap(metarSites.to_array());
+        foreach (var i in range(obsSites.size)) {
+            obsSites[i].distance = LatLon.distance(location, obsSites[i].location);
         }
-        if (bestIndex == -1) {
-            return metarSites[0];
-        } else {
-            return metarSites[bestIndex];
-        }
+        obsSites.sort((a, b) => { return a.distance > b.distance ? 1 : -1; });
+        return obsSites[order];
     }
 }

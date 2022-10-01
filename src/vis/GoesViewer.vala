@@ -24,11 +24,15 @@ class GoesViewer : Window {
             goesFloater = true;
             goesFloaterUrl = url;
         }
-        photo = new Photo(this, PhotoSizeEnum.full);
-        objectAnimate = new ObjectAnimate(photo, UtilityGoes.getAnimation, reload, animateButton);
+        photo = new Photo(this, PhotoSizeEnum.Full);
+        objectAnimate = new ObjectAnimate(photo, UtilityGoes.getAnimation, reload);
 
         if (sector == "") {
-            objectAnimate.sector = UtilityGoes.getNearestGoesLocation(Location.getLatLonCurrent());
+            if (!UIPreferences.rememberGOES) {
+                objectAnimate.sector = UtilityGoes.getNearest(Location.getLatLonCurrent());
+            } else {
+                objectAnimate.sector = Utility.readPref("REMEMBER_GOES_SECTOR", UtilityGoes.getNearest(Location.getLatLonCurrent()));
+            }
         } else {
             objectAnimate.sector = sector;
         }
@@ -41,13 +45,17 @@ class GoesViewer : Window {
             objectAnimate.getFunction = UtilityGoes.getAnimationGoesFloater;
             objectAnimate.sector = goesFloaterUrl;
         }
-        destroy.connect(objectAnimate.stopAnimate); //GTK4_DELETE
-        /// close_request.connect(() => { objectAnimate.stopAnimate(); return false; });
+
+        #if GTK4
+            close_request.connect(() => { objectAnimate.stopAnimate(); return false; });
+        #else
+            destroy.connect(objectAnimate.stopAnimate);
+        #endif
 
         comboboxSector.setIndexByValue(objectAnimate.sector);
         comboboxSector.connect(changeSector);
 
-        comboboxProduct.setIndex(UtilityList.findex(objectAnimate.product, UtilityGoes.productCodes.to_array()));
+        comboboxProduct.setIndex(findex(objectAnimate.product, UtilityGoes.productCodes.to_array()));
         comboboxProduct.connect(changeProduct);
 
         comboboxCount.setIndex(1);
@@ -82,6 +90,7 @@ class GoesViewer : Window {
 
     void reload() {
         if (!goesFloater) {
+            Utility.writePref("REMEMBER_GOES_SECTOR", objectAnimate.sector);
             new FutureBytes(UtilityGoes.getImage(objectAnimate.product, objectAnimate.sector), photo.setBytes);
         } else {
             new FutureBytes(UtilityGoes.getImageGoesFloater(goesFloaterUrl, objectAnimate.product), photo.setBytes);

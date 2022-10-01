@@ -12,26 +12,27 @@ public class WXMetalNexradLevelData {
     int productCode = 0;
     double halfword3132 = 0.0;
     int seekStart = 0;
-    string index = "0";
     int radarHeight = 0;
     double degree = 0.0;
     int operationalMode = 0;
     int volumeCoveragePattern = 0;
     public ObjectMetalRadarBuffers radarBuffers = new ObjectMetalRadarBuffers();
     FileStorage fileStorage;
+    NexradState nexradState;
     public int totalBins = 0;
     public string radarInfo = "";
     public string radarDate = "";
     public int radarAgeMilli = 0;
 
-    public WXMetalNexradLevelData(string product, string index, FileStorage fileStorage) {
-        this.index = index;
+    public WXMetalNexradLevelData(NexradState nexradState, FileStorage fileStorage) {
         this.fileStorage = fileStorage;
-        productCode = GlobalDictionaries.radarProductStringToShortInt[product];
+        this.nexradState = nexradState;
+        productCode = GlobalDictionaries.radarProductStringToShortInt[nexradState.radarProduct];
     }
 
     public void decode() {
-        if (UtilityList.inItInt(productCode, {30, 37, 38, 41, 56, 57, 78, 80, 181})) {
+        productCode = GlobalDictionaries.radarProductStringToShortInt[nexradState.radarProduct];
+        if (productCode in new int[]{30, 37, 38, 41, 56, 57, 78, 80, 181}) {
             decodeAndPlotNexradLevel3FourBit();
         } else {
             decodeAndPlotNexradLevel3();
@@ -39,9 +40,9 @@ public class WXMetalNexradLevelData {
     }
 
     public void generateRadials() {
-        if (UtilityList.inItInt(productCode, {37, 38})) {
+        if (productCode in new int[]{37, 38}) {
             totalBins = UtilityWXMetalPerfRaster.generate(radarBuffers);
-        } else if (UtilityList.inItInt(productCode, {30, 56, 78, 80, 181})) {
+        } else if (productCode in new int[]{30, 56, 78, 80, 181}) {
             totalBins = UtilityWXMetalPerf.genRadials(radarBuffers);
         } else if (productCode == 0) {
             totalBins = 0;
@@ -84,17 +85,14 @@ public class WXMetalNexradLevelData {
             var elevationAngle = dis.getShort();
             degree = elevationAngle / 10.0;
             halfword3132 = dis.getFloat();
-            dis.skipBytes(26);
-            dis.skipBytes(30);
+            dis.skipBytes(56);
             seekStart = dis.filePointer();
             binSize = WXGLNexrad.getBinSize(productCode);
-
             numberOfRangeBins = WXGLNexrad.getNumberRangeBins(productCode);
             numberOfRadials = 360;
-
-            if (productCode == 153 || productCode == 154)
+            if (productCode == 153 || productCode == 154) {
                 numberOfRadials = 720;
-
+            }
             radarBuffers.numberOfRangeBins = numberOfRangeBins;
             radarBuffers.numberOfRadials = numberOfRadials;
             radarBuffers.binSize = binSize;
@@ -161,19 +159,16 @@ public class WXMetalNexradLevelData {
     public void writeTime(int volumeScanDate, int volumeScanTime) {
         var radarInfo = "Mode: " + Too.String(operationalMode) + ", " + "VCP: " + Too.String(volumeCoveragePattern) + ", " + "Product: " + Too.String(productCode) + ", " + "Height: " + Too.String(radarHeight);
         int64 sec = (((volumeScanDate) - 1) * 3600 * 24) + volumeScanTime;
-        //  var date = new DateTime.from_unix_local(sec);
-        //  var dateString = date.format("%H:%M:%S");
-
-        var dateString = UtilityTime.getTimeFromPointAsString(sec);
+        var dateString = ObjectDateTime.getTimeFromPointAsString(sec);
         var radarInfoFinal = dateString + " " + radarInfo;
         fileStorage.radarInfo = radarInfoFinal;
         fileStorage.radarDate = dateString;
         fileStorage.radarVcp = Too.String(volumeCoveragePattern);
-        fileStorage.radarAgeMilli = (int)(UtilityTime.currentTimeMillis() - sec * 1000);
+        fileStorage.radarAgeMilli = (int)(ObjectDateTime.currentTimeMillis() - sec * 1000);
         fileStorage.radarProductId = productCode;
         this.radarInfo = radarInfoFinal;
         this.radarDate = dateString;
-        this.radarAgeMilli = (int)(UtilityTime.currentTimeMillis() - sec * 1000);
+        this.radarAgeMilli = (int)(ObjectDateTime.currentTimeMillis() - sec * 1000);
     }
 
     int decodeRadial4bit() {
@@ -196,14 +191,14 @@ public class WXMetalNexradLevelData {
             radarBuffers.radialStartAngle.position = 0;
             radarBuffers.binWord.position = 0;
             var numOfBins = 0;
-            foreach (var radial in UtilityList.range(360)) {
+            foreach (var radial in range(360)) {
                 numberOfRleHalfwords[radial] = dis.getUnsignedShort();
                 radarBuffers.radialStartAngle.putFloat((450.0 - (((float)dis.getUnsignedShort() / 10.0f))));
                 dis.skipBytes(2);
-                UtilityList.range(numberOfRleHalfwords[radial] * 2).foreach((unused1) => {
+                range(numberOfRleHalfwords[radial] * 2).foreach((unused1) => {
                     var bin = dis.get();
                     numOfBins = (int)(bin >> 4);
-                    UtilityList.range(numOfBins).foreach((unused2) => {
+                    range(numOfBins).foreach((unused2) => {
                         radarBuffers.binWord.put(bin % 16);
                         return true;
                     });
@@ -243,12 +238,12 @@ public class WXMetalNexradLevelData {
             // 464 rows in NCR
             // 232 rows in NCZ
             var numOfBins = 0;
-            UtilityList.range(numberOfRows).foreach((unused0) => {
+            range(numberOfRows).foreach((unused0) => {
                 var numberOfBytes = dis.getUnsignedShort();
-                UtilityList.range(numberOfBytes).foreach((unused1) => {
+                range(numberOfBytes).foreach((unused1) => {
                     var bin = dis.get();
                     numOfBins = (int)(bin >> 4);
-                    UtilityList.range(numOfBins).foreach((unused2) => {
+                    range(numOfBins).foreach((unused2) => {
                         radarBuffers.binWord.put(bin % 16);
                         return true;
                     });

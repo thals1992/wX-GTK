@@ -17,6 +17,7 @@ class ObjectColorLabel : HBox {
 
         text.setText(color.uiLabel);
         text.setBold();
+        text.setWordWrap(false);
         text.get().set_margin_start(10);
 
         addWidget(colorButton);

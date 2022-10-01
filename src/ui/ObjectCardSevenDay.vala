@@ -23,7 +23,7 @@ class ObjectCardSevenDay {
     }
 
     public void update(ArrayList<string> forecasts, ArrayList<string> icons) {
-        foreach (var index in UtilityList.range(forecasts.size)) {
+        foreach (var index in range(forecasts.size)) {
             var items = forecasts[index].split(":");
             if (items.length > 1 && cards.size > index && icons.size > index) {
                 var day = items[0];

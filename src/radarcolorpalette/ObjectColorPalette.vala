@@ -143,7 +143,7 @@ class ObjectColorPalette {
             }
         }
         if (productCode == 161) {
-            UtilityList.range(10).foreach((unused) => {
+            range(10).foreach((unused) => {
                 objectColorPalette.putBytesFromLine(objectColorPaletteLines[0]);
                 return true;
             });
@@ -152,14 +152,14 @@ class ObjectColorPalette {
             objectColorPalette.putBytesFromLine(objectColorPaletteLines[0]);
             objectColorPalette.putBytesFromLine(objectColorPaletteLines[0]);
         }
-        UtilityList.range3(lowerEnd, objectColorPaletteLines[0].dbz, 1).foreach((unused) => {
+        range3(lowerEnd, objectColorPaletteLines[0].dbz, 1).foreach((unused) => {
             objectColorPalette.putBytesFromLine(objectColorPaletteLines[0]);
             if (scale == 2) {
                 objectColorPalette.putBytesFromLine(objectColorPaletteLines[0]);
             }
             return true;
         });
-        foreach (var index in UtilityList.range(objectColorPaletteLines.size)) {
+        foreach (var index in range(objectColorPaletteLines.size)) {
             if (index < (objectColorPaletteLines.size - 1)) {
                 int low = objectColorPaletteLines[index].dbz;
                 var lowColor = objectColorPaletteLines[index].asInt();
@@ -173,7 +173,7 @@ class ObjectColorPalette {
                 if (diff == 0) {
                     diff = 1;
                 }
-                foreach (var j in UtilityList.range3(1, diff, 1)) {
+                foreach (var j in range3(1, diff, 1)) {
                     if (scale == 1) {
                         var amt0 = (double)j / (double)(diff * scale);
                         var colorInt = UtilityNexradColors.interpolateColor(lowColor, highColor, amt0);
@@ -225,8 +225,8 @@ class ObjectColorPalette {
             }
         }
         const int diff = 10;
-        foreach (var i in UtilityList.range(objectColorPaletteLines.size)) {
-            UtilityList.range(diff).foreach((unused) => {
+        foreach (var i in range(objectColorPaletteLines.size)) {
+            range(diff).foreach((unused) => {
                 ObjectColorPalette.colorMap[radarColorPaletteCode].putBytesFromLine(objectColorPaletteLines[i]);
                 return true;
             });

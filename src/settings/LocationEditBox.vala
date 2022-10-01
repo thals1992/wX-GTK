@@ -24,7 +24,7 @@ class LocationEditBox : HBox {
         Utility.recordAllSettings();
 
         cities = UtilityIO.rawFileToStringArrayFromResource(GlobalVariables.resDir + "cityall.txt");
-        cityEdit.connect(textChanged);
+        cityEdit.connect(() => lookupSearchTerm(cityEdit.text));
         saveButton.connect(() => saveLocation(0));
 
         table.addRow("Enter City:", cityEdit.get());
@@ -35,7 +35,7 @@ class LocationEditBox : HBox {
         box.addLayout(table.get());
         box.addWidget(saveButton.get());
 
-        foreach (var index in UtilityList.range(6)) {
+        foreach (var index in range(6)) {
             buttons.add(new Button(Icon.None, ""));
             boxResults.addWidget(buttons.last().get());
             buttons.last().connectInt(populateLabels, index);
@@ -43,11 +43,6 @@ class LocationEditBox : HBox {
         addLayout(box.get());
         addLayout(boxResults.get());
         blankOutButtons();
-    }
-
-    void textChanged() {
-        var text = cityEdit.getText();
-        lookupSearchTerm(text);
     }
 
     void lookupSearchTerm(string text) {
@@ -61,7 +56,7 @@ class LocationEditBox : HBox {
                     citiesSelected.add(city + " Radar: " + radar);
                 }
             }
-            foreach (var index in UtilityList.range(buttons.size)) {
+            foreach (var index in range(buttons.size)) {
                 if (index < citiesSelected.size) {
                     buttons[index].setText(citiesSelected[index]);
                     buttons[index].setVisible(true);
@@ -80,29 +75,29 @@ class LocationEditBox : HBox {
         var tokens = city.split(",");
         var latLon = new LatLon(tokens[1], tokens[2]);
         var radar = UtilityLocation.getNearestRadarSites(latLon, 1, false)[0].name;
-        editName.setText(tokens[0]);
-        editLat.setText(tokens[1]);
-        editLon.setText(tokens[2]);
-        editNexrad.setText(radar);
+        editName.text = tokens[0];
+        editLat.text = tokens[1];
+        editLon.text = tokens[2];
+        editNexrad.text = radar;
     }
 
     void blankOutButtons() {
-        editName.setText("");
-        editLat.setText("");
-        editLon.setText("");
-        editNexrad.setText("");
-        foreach (var index in UtilityList.range(buttons.size)) {
+        editName.text = "";
+        editLat.text = "";
+        editLon.text = "";
+        editNexrad.text = "";
+        foreach (var index in range(buttons.size)) {
             buttons[index].setText("");
             buttons[index].setVisible(false);
         }
     }
 
     void saveLocation(int i) {
-        var latLon = new LatLon(editLat.getText(), editLon.getText());
-        var nameToSave = editName.getText();
+        var latLon = new LatLon(editLat.text, editLon.text);
+        var nameToSave = editName.text;
         Location.save(latLon, nameToSave);
         Location.setMainScreenComboBox();
         blankOutButtons();
-        cityEdit.setText("");
+        cityEdit.text = "";
     }
 }

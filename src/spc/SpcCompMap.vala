@@ -34,7 +34,7 @@ class SpcCompMap : Window {
             reload();
         });
 
-        index = UtilityList.indexOf(UtilitySpcCompmap.urlIndices, product);
+        index = indexOf(UtilitySpcCompmap.urlIndices, product);
         comboboxProduct.setIndex(index);
         comboboxProduct.connect(changeProduct);
 

@@ -12,20 +12,17 @@ class Text {
     string post = "";
 
     public Text(bool selectable = true) {
-    //  public Text(string text, bool selectable = true) {
-        /// textView.set_wrap(true);
-        textView.set_line_wrap(true); //GTK4_DELETE
+        #if GTK4
+            textView.set_wrap(true);
+        #else
+            textView.set_line_wrap(true);
+        #endif
         textView.set_justify(Gtk.Justification.LEFT);
         textView.set_halign(Gtk.Align.START);
         textView.set_text(text);
         if (selectable) {
             textView.set_selectable(true);
         }
-        //  this.text = text;
-    }
-
-    public Gtk.Label get() {
-        return textView;
     }
 
     string escapeText(string text) {
@@ -39,6 +36,19 @@ class Text {
     public void setText(string text) {
         textView.set_markup(pre + escapeText(text) + post);
         this.text = text;
+    }
+
+    public string text1 {
+        get { return this.text; }
+        set { this.text = value; }
+    }
+
+    public void setWordWrap(bool b) {
+        #if GTK4
+            textView.set_wrap(b);
+        #else
+            textView.set_line_wrap(b);
+        #endif
     }
 
     public void setMargin() {
@@ -57,6 +67,11 @@ class Text {
     public void vExpand() {
         textView.set_vexpand(true);
         textView.set_valign(Gtk.Align.START);
+    }
+
+    public void hExpand() {
+        textView.set_hexpand(true);
+        textView.set_halign(Gtk.Align.START);
     }
 
     public void setBlue() {
@@ -82,4 +97,6 @@ class Text {
         post = "</b>" + post;
         textView.set_markup(pre + escapeText(text) + post);
     }
+
+    public Gtk.Label get() { return textView; }
 }

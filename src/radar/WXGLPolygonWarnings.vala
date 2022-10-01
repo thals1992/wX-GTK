@@ -11,9 +11,12 @@ class WXGLPolygonWarnings {
     public static ArrayList<double?> add(ProjectionNumbers projectionNumbers, PolygonType type) {
         var html = ObjectPolygonWarning.polygonDataByType[type].getData();
         var warnings = ObjectWarning.parseJson(html);
+        //  print(warnings.size.to_string() + "\n");
         var warningList = new ArrayList<double?>();
         foreach (var w in warnings) {
+            //  print(" is warning current?\n");
             if (w.isCurrent) {
+                //  print("current\n");
                 var latLons = w.getPolygonAsLatLons();
                 warningList.add_all(LatLon.latLonListToListOfDoubles(latLons, projectionNumbers));
             }

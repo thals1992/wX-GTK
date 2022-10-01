@@ -16,7 +16,9 @@ class SettingsBox : VBox {
         new ObjectSwitch("Use new NWS API", "USE_NWS_API_SEVEN_DAY", false),
         new ObjectSwitch("Use new NWS API - Hourly", "USE_NWS_API_HOURLY", true),
         new ObjectSwitch("Show mini SevereDashboard on main screen", "MAINSCREEN_SEVERE_DASH", false),
-        new ObjectSwitch("Toggle scroll wheel motion", "NEXRAD_SCROLLWHEEL", false)
+        new ObjectSwitch("Toggle scroll wheel motion", "NEXRAD_SCROLLWHEEL", false),
+        new ObjectSwitch("Remember last GOES image", "REMEMBER_GOES", false),
+        new ObjectSwitch("Remember last Radar Mosaic image", "REMEMBER_MOSAIC", false)
     };
     ArrayList<ObjectSwitch> homeScreenObjectSwitch = new ArrayList<ObjectSwitch>();
 
@@ -26,8 +28,11 @@ class SettingsBox : VBox {
         button.connect(() => {
             Gtk.Builder builder = new Gtk.Builder.from_string(Shortcuts.mainWindow, Shortcuts.mainWindow.length);
             var dialog = (Gtk.ShortcutsWindow) builder.get_object("shortcuts-window");
-            dialog.show_all(); //GTK4_DELETE
-            /// dialog.show();
+            #if GTK4
+                dialog.show();
+            #else
+                dialog.show_all();
+            #endif
         });
         addWidget(button.get());
 

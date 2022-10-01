@@ -30,6 +30,7 @@ class ObjectCardNhcStormReportItem : HBox {
         textView1.setBold();
         textView1.setLarge();
         textView1.setBlue();
+        textView1.hExpand ();
         textView2.setText("Moving " + UtilityMath.convertWindDir(stormData.movementDir) + " at " + stormData.movementSpeed + " mph");
         textView3.setText("Min pressure: " + stormData.pressure + " mb");
         textView4.setText("Max sustained: " + stormData.intensity + " mph");

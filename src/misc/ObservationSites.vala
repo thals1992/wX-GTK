@@ -7,7 +7,7 @@
 class ObservationSites : Window {
 
     ButtonLink button1 = new ButtonLink("https://www.wrh.noaa.gov/map/?obs=true&wfo=" + Location.wfo().ascii_down(), Location.wfo() + ": nearby current observations");
-    ButtonLink button2 = new ButtonLink("https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=" + Location.getObs(), Location.getObs() + ": recent observations");
+    ButtonLink button2 = new ButtonLink("https://www.weather.gov/wrh/timeseries?site=" + Location.getObs(), Location.getObs() + ": recent observations");
     VBox box = new VBox();
 
     public ObservationSites() {

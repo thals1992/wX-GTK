@@ -14,20 +14,25 @@ class ObjectCardLocationItem : HBox {
     public ObjectCardLocationItem(int index) {
         this.index = index;
 
-        nameEntry.setText(Location.getName(index));
+        nameEntry.text = Location.getName(index);
         nameEntry.connect(textChanged);
 
         var latLon = Location.getLatLon(index);
         text1.setText(latLon.printSpaceSeparated() + " " + Location.getWfo(index) + ", " + Location.getRadarSite(index));
         text2.setText(UtilityTimeSunMoon.getSunTimes(latLon));
 
+        setHExpand(true);
+        text1.setWordWrap(false);
+        text2.setWordWrap(false);
+        text1.hExpand();
+        text2.hExpand();
         addWidget(nameEntry.get());
         addWidget(text1.get());
         addWidget(text2.get());
     }
 
     void textChanged() {
-        Location.setName(index, nameEntry.getText());
+        Location.setName(index, nameEntry.text);
         Location.refresh();
     }
 }

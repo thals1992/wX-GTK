@@ -23,7 +23,7 @@ public class Nexrad : Window {
     Text textAnimSpeed = new Text();
     ArrayList<UIColorLegend> colorLegends = new ArrayList<UIColorLegend>();
     const int windowSize = 800;
-    int numberOfPanes = 1;
+    //  int numberOfPanes = 1;
     int currentIndex = 0;
     StatusBar statusBar = new StatusBar();
     bool useASpecificRadar = false;
@@ -45,18 +45,19 @@ public class Nexrad : Window {
     ArrayList<FutureVoid> futures = new ArrayList<FutureVoid>();
 
     public Nexrad(int numberOfPanes, bool useASpecificRadar, string radarToUse) {
-        this.numberOfPanes = numberOfPanes;
+        //  this.numberOfPanes = numberOfPanes;
         this.useASpecificRadar = useASpecificRadar;
         setTitle("Nexrad Radar");
         maximize();
 
-        foreach (var index in UtilityList.range(numberOfPanes)) {
+        foreach (var index in range(numberOfPanes)) {
             radarStatusBoxList.add(new RadarStatusBox());
             nexradList.add(
                 new NexradWidget(
                     index,
                     numberOfPanes,
                     useASpecificRadar,
+                    radarToUse,
                     statusBar,
                     radarStatusBoxList.last(),
                     changeProductFromChild,
@@ -66,31 +67,26 @@ public class Nexrad : Window {
                     syncRadarSite
                 )
             );
+            if (RadarPreferences.colorLegend) {
+                colorLegends.add(new UIColorLegend(nexradList.last().nexradState.radarProduct));
+            }
         }
         nexradLayerDownload = new NexradLayerDownload(nexradList);
-        destroy.connect(() => { //GTK4_DELETE
-            timer.stop(); //GTK4_DELETE
-            objectAnimateNexrad.stopAnimateNoDownload(); //GTK4_DELETE
-        }); //GTK4_DELETE
-        /// close_request.connect(() => { timer.stop(); objectAnimateNexrad.stopAnimateNoDownload(); return false; });
 
+        #if GTK4
+            close_request.connect(() => { timer.stop(); objectAnimateNexrad.stopAnimateNoDownload(); return false; });
+        #else
+            destroy.connect(() => {
+                timer.stop();
+                objectAnimateNexrad.stopAnimateNoDownload();
+            });
+        #endif
         timer = new Timer(RadarPreferences.radarDataRefreshInterval * 60 * 1000, 1, autoUpdate);
-        foreach (var nw in nexradList) {
-            if (useASpecificRadar) {
-                nw.nexradState.radarSite = radarToUse;
-            } else {
-                nw.nexradState.readPreferences();
-            }
-            if (RadarPreferences.colorLegend) {
-                colorLegends.add(new UIColorLegend(nw.nexradState.radarProduct));
-            }
-            futures.add(new FutureVoid(nw.initGeom, nw.da.draw));
-        }
         popoverBox = new PopoverBox(
             "baseline_settings_black_48dp.png",
             "Settings ctrl-p", settingsRadarBox,
             () => {
-                syncRadarSite(nexradList[0].nexradState.radarSite, 0, false);
+                syncRadarSite(nexradList[0].nexradState.getRadarSite(), 0, false);
                 foreach (var nw in nexradList) {
                     nw.textObject.initialize();
                 }
@@ -102,11 +98,10 @@ public class Nexrad : Window {
                     nexradBox.addWidgetFirst(colorLegends.last().get());
                 }
                 if (!RadarPreferences.colorLegend && colorLegends.size > 0) {
-                    foreach(var cl in colorLegends) {
+                    foreach (var cl in colorLegends) {
                         cl.get().set_visible(false);
                     }
                 }
-
                 //  downloadData();
                 // if auto update is on, toggle it in case of refresh interval changes
                 // this will force an update as well
@@ -123,11 +118,10 @@ public class Nexrad : Window {
         textFrameCount.setText("Frame Count:");
         textTilt.setText("Tilt:");
         textAnimSpeed.setText("Anim Speed:");
-
         //
         // Combobox  setup
         //
-        comboboxSector.setIndex(GlobalArrays.findRadarIndex(nexradList[0].nexradState.radarSite));
+        comboboxSector.setIndex(GlobalArrays.findRadarIndex(nexradList[0].nexradState.getRadarSite()));
         comboboxSector.connect(changeRadarSite);
 
         comboboxProduct.setIndex(WXGLNexrad.findRadarProductIndex(nexradList[0].nexradState.radarProduct));
@@ -139,7 +133,7 @@ public class Nexrad : Window {
         comboboxTilt.connect(changeTilt);
 
         reloadButton.connect(reloadClicked);
-        objectAnimateNexrad = new ObjectAnimateNexrad(nexradList, animateButton, comboboxAnimCount, comboboxAnimSpeed, downloadData);
+        objectAnimateNexrad = new ObjectAnimateNexrad(nexradList, comboboxAnimCount, comboboxAnimSpeed, downloadData);
         animateButton.connect(objectAnimateNexrad.animateClicked);
         comboboxAnimCount.connect(objectAnimateNexrad.setAnimationCount);
         comboboxAnimSpeed.connect(objectAnimateNexrad.setAnimationSpeed);
@@ -221,7 +215,6 @@ public class Nexrad : Window {
             boxHBottom.addWidget(statusBar.get());
         }
         box.getAndShow(this);
-
         if (!RadarPreferences.radarShowControls) {
             moveLeftButton.setVisible(false);
             moveRightButton.setVisible(false);
@@ -230,7 +223,6 @@ public class Nexrad : Window {
             zoomOutButton.setVisible(false);
             zoomInButton.setVisible(false);
         }
-
         downloadData();
     }
 
@@ -242,22 +234,23 @@ public class Nexrad : Window {
         zoomOutButton.setVisible(RadarPreferences.radarShowControls);
         zoomInButton.setVisible(RadarPreferences.radarShowControls);
 
-        statusBar.setVisible(RadarPreferences.radarShowStatusBar);
+        statusBar.visible = RadarPreferences.radarShowStatusBar;
 
         if (RadarPreferences.dualpaneshareposn) {
             foreach (var nw in nexradList) {
-                nw.nexradState.radarSite = radarSite;
+                nw.nexradState.setRadar(radarSite);
                 if (resetZoom) {
                     nw.nexradState.reset();
                 }
-                futures.add(new FutureVoid(nw.initGeom, nw.da.draw));
+                nw.nexradDraw.initGeom();
+
             }
         } else {
-            nexradList[pane].nexradState.radarSite = radarSite;
+            nexradList[pane].nexradState.setRadar(radarSite);
             if (resetZoom) {
                 nexradList[pane].nexradState.reset();
             }
-            futures.add(new FutureVoid(nexradList[pane].initGeom, nexradList[pane].da.draw));
+            nexradList[pane].nexradDraw.initGeom();
         }
     }
 
@@ -269,13 +262,14 @@ public class Nexrad : Window {
             }
         }
         if (allDone) {
+            print("Nexrad: clear futures\n");
             futures.clear();
         }
         foreach (var nw in nexradList) {
             futures.add(new FutureVoid(nw.downloadData, nw.update));
         }
         comboboxSector.block();
-        comboboxSector.setIndex(GlobalArrays.findRadarIndex(nexradList[0].nexradState.radarSite));
+        comboboxSector.setIndex(GlobalArrays.findRadarIndex(nexradList[0].nexradState.getRadarSite()));
         comboboxSector.unblock();
         nexradLayerDownload.downloadLayers();
     }
@@ -304,7 +298,9 @@ public class Nexrad : Window {
         if (currentIndex == 0 && !WXGLNexrad.isProductTdwr(product)) {
             comboboxProduct.setIndex(WXGLNexrad.findRadarProductIndex(product));
         } else {
-            // futures.add(new FutureVoid(() => { nexradList[currentIndex].changeProduct(product); }, () => { nexradList[currentIndex].update(); }));
+            if (RadarPreferences.colorLegend) {
+                colorLegends[currentIndex].update(product);
+            }
             nexradList[currentIndex].changeProduct(product);
         }
     }
@@ -331,7 +327,6 @@ public class Nexrad : Window {
         var factor = changeAmount;
         if (RadarPreferences.dualpaneshareposn) {
             foreach (var nw in nexradList) {
-                // nw.nexradState.zoom *= changeAmount;
                 var oldZoom = nw.nexradState.zoom;
                 nw.nexradState.zoom *= factor;
                 var newZoom = nw.nexradState.zoom;
@@ -340,7 +335,6 @@ public class Nexrad : Window {
                 nw.nexradState.yPos *= zoomDifference;
             }
         } else {
-            // nexradList[paneIndex].nexradState.zoom *= changeAmount;
             var oldZoom = nexradList[paneIndex].nexradState.zoom;
             nexradList[paneIndex].nexradState.zoom *= factor;
             var newZoom = nexradList[paneIndex].nexradState.zoom;
@@ -365,11 +359,12 @@ public class Nexrad : Window {
     }
 
     void reloadClicked() {
+        objectAnimateNexrad.stopAnimateNoDownload();
         if (reloadButton.getActive()) {
             UtilityLog.d("reloadClicked: auto update start");
             timer.setSpeed(RadarPreferences.radarDataRefreshInterval * 60 * 1000);
             timer.start();
-            setTitle("Auto update [on], interval " + Too.String(RadarPreferences.radarDataRefreshInterval) + ", last update: " + UtilityTime.getLocalTimeAsStringForNexradTitle());
+            setTitle("Auto update [on], interval " + Too.String(RadarPreferences.radarDataRefreshInterval) + ", last update: " + ObjectDateTime.getLocalTimeAsStringForNexradTitle());
             downloadData();
         } else {
             UtilityLog.d("reloadClicked: auto update stop\n");
@@ -379,7 +374,7 @@ public class Nexrad : Window {
     }
 
     void autoUpdate() {
-        setTitle("Auto update [on], interval " + Too.String(RadarPreferences.radarDataRefreshInterval) + ", last update: " + UtilityTime.getLocalTimeAsStringForNexradTitle());
+        setTitle("Auto update [on], interval " + Too.String(RadarPreferences.radarDataRefreshInterval) + ", last update: " + ObjectDateTime.getLocalTimeAsStringForNexradTitle());
         downloadData();
     }
 
@@ -401,7 +396,7 @@ public class Nexrad : Window {
 
     void drawAndSave() {
         foreach (var nw in nexradList) {
-            nw.da.draw();
+            nw.draw();
             nw.textObject.add();
             nw.nexradState.writePreferences();
         }
@@ -453,7 +448,9 @@ public class Nexrad : Window {
                 } else {
                     animateButton.setActive(true);
                 }
-                /// objectAnimateNexrad.animateClicked();
+                #if GTK4
+                    objectAnimateNexrad.animateClicked();
+                #endif
                 break;
             case Gdk.Key.r:
                 changeProductFromChild("N0Q", 0);

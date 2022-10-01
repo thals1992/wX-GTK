@@ -64,7 +64,7 @@ public class MemoryBuffer {
     }
 
     public void putFloat(double number) {
-        var n = (float) number;
+        var n = (float)number;
         uint8[] c = new uint8[4];
         Posix.memcpy(c, &n, 4);
         backingArray[position + 3] = c[0];
@@ -72,6 +72,64 @@ public class MemoryBuffer {
         backingArray[position + 1] = c[2];
         backingArray[position + 0] = c[3];
         position += 4;
+    }
+
+    public void put8Float(float p1x, float p1y, float p2x, float p2y, float p3x, float p3y, float p4x, float p4y) {
+        var n = (float)p1x;
+        uint8[] c = new uint8[4];
+        Posix.memcpy(c, &n, 4);
+        backingArray[position + 3] = c[0];
+        backingArray[position + 2] = c[1];
+        backingArray[position + 1] = c[2];
+        backingArray[position + 0] = c[3];
+        position += 4;
+
+        Posix.memcpy(c, &p1y, 4);
+        backingArray[position + 3] = c[0];
+        backingArray[position + 2] = c[1];
+        backingArray[position + 1] = c[2];
+        backingArray[position + 0] = c[3];
+        position += 4;
+
+        Posix.memcpy(c, &p2x, 4);
+        backingArray[position + 3] = c[0];
+        backingArray[position + 2] = c[1];
+        backingArray[position + 1] = c[2];
+        backingArray[position + 0] = c[3];
+        position += 4;
+        Posix.memcpy(c, &p2y, 4);
+        backingArray[position + 3] = c[0];
+        backingArray[position + 2] = c[1];
+        backingArray[position + 1] = c[2];
+        backingArray[position + 0] = c[3];
+        position += 4;
+
+        Posix.memcpy(c, &p3x, 4);
+        backingArray[position + 3] = c[0];
+        backingArray[position + 2] = c[1];
+        backingArray[position + 1] = c[2];
+        backingArray[position + 0] = c[3];
+        position += 4;
+        Posix.memcpy(c, &p3y, 4);
+        backingArray[position + 3] = c[0];
+        backingArray[position + 2] = c[1];
+        backingArray[position + 1] = c[2];
+        backingArray[position + 0] = c[3];
+        position += 4;
+
+        Posix.memcpy(c, &p4x, 4);
+        backingArray[position + 3] = c[0];
+        backingArray[position + 2] = c[1];
+        backingArray[position + 1] = c[2];
+        backingArray[position + 0] = c[3];
+        position += 4;
+        Posix.memcpy(c, &p4y, 4);
+        backingArray[position + 3] = c[0];
+        backingArray[position + 2] = c[1];
+        backingArray[position + 1] = c[2];
+        backingArray[position + 0] = c[3];
+        position += 4;
+
     }
 
     public void putInt(int number) {

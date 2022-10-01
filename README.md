@@ -30,8 +30,9 @@ http://www.gnu.org/licenses/gpl-3.0.en.html
 - Close settings window
 - From the main screen use the drop down to choose your new location
 
-### Performance:
+### Performance / Other:
 - Using Wayland on a Linux based desktop is optimal
+- On smaller screens, the main screen will only show the forecast. WFO Text viewer will also show only one text product.
 
 ### Output to local filesystem (file should NOT exist before running program for first time):
 - `$HOME/.config/joshuatee.wx@gmail.com/wxgtk.conf`
@@ -42,11 +43,13 @@ http://www.gnu.org/licenses/gpl-3.0.en.html
 ```bash
 git clone https://gitlab.com/joshua.tee/wxgtk.git
 cd wxgtk
-./makeAll.bash
+./makeAll.py
+# if you want to target gtk4
+# ./makeAll.py --gtk4
 ```
-3. After compilation you can simply launch with script
+3. After compilation you can simply launch with
 ```bash
-./run.bash
+./wxgtk
 ```
 
 ## Special thanks to the creators of

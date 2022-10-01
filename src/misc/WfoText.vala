@@ -17,7 +17,7 @@ class WfoText : Window {
     string product = "AFD";
     string sector = "";
     int productCount = 3;
-    string[] defaultProducts = {"AFD", "HWO", "LSR"};
+    const string[] defaultProducts = {"AFD", "HWO", "LSR"};
 
     public WfoText() {
         setTitle("WFO Text Products");
@@ -40,10 +40,11 @@ class WfoText : Window {
             productCount = 1;
         }
 
-        UtilityList.range(productCount).foreach((unused) => {
+        range(productCount).foreach((unused) => {
             textList.add(new Text());
             textList.last().setFixedWidth();
             textList.last().vExpand();
+            textList.last().hExpand();
             boxText.addWidget(textList.last().get());
             return true;
         });
@@ -52,7 +53,7 @@ class WfoText : Window {
     }
 
     void reload() {
-        foreach (var i in UtilityList.range(productCount)) {
+        foreach (var i in range(productCount)) {
             if (i == 0) {
                 new FutureText(product + sector, textList[i].setText);
             } else {

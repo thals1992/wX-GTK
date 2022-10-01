@@ -14,6 +14,7 @@ class RainfallOutlook : Window {
         maximize();
         var url = UtilityWpcRainfallOutlook.urls[day];
         var product = UtilityWpcRainfallOutlook.codes[day];
+        text.hExpand();
         new ObjectTwoWidgetScroll(this, photo.get(), text.get());
         new FutureText(product, text.setText);
         new FutureBytes(url, photo.setBytes);

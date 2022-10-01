@@ -6,17 +6,19 @@
 
 class ButtonFlat {
 
-    public delegate void ConnectFnButtonFlat();
     int iconSize = 42;
     Gtk.Button button = new Gtk.Button();
     Photo image = new Photo.icon();
-    Gdk.Pixbuf pix;
 
     public ButtonFlat(string imageName, string label) {
-        button.set_relief(Gtk.ReliefStyle.NONE); //GTK4_DELETE
-        /// button.set_has_frame(false);
+        #if GTK4
+            button.set_has_frame(false);
+        #else
+            button.set_relief(Gtk.ReliefStyle.NONE);
+        #endif
+
         if (imageName != "") {
-            pix = new Gdk.Pixbuf(Gdk.Colorspace.RGB, true, 8, iconSize, iconSize);
+            var pix = new Gdk.Pixbuf(Gdk.Colorspace.RGB, true, 8, iconSize, iconSize);
             try {
                 pix = new Gdk.Pixbuf.from_resource("/" + GlobalVariables.imageDir + imageName);
             } catch (Error e) {
@@ -25,19 +27,20 @@ class ButtonFlat {
             button.set_tooltip_text(label);
             pix = pix.scale_simple(iconSize, iconSize, Gdk.InterpType.BILINEAR);
             image.setPix(pix);
-            button.set_image(image.get()); //GTK4_DELETE
-            /// button.set_child(image.get());
+            #if GTK4
+                button.set_child(image.get());
+            #else
+                button.set_image(image.get());
+            #endif
         }
         if (label != "" && imageName == "") {
             button.set_label(label);
         }
     }
 
-    public void connect(ConnectFnButtonFlat fn) {
+    public void connect(FnVoid fn) {
         button.clicked.connect(() => fn());
     }
 
-    public Gtk.Widget get() {
-        return button;
-    }
+    public Gtk.Widget get() { return button; }
 }

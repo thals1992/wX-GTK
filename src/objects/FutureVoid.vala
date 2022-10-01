@@ -6,16 +6,14 @@
 
 public class FutureVoid {
 
-    public delegate void DownloadFuncVoid();
-    public delegate void UpdateFuncVoid();
-    unowned DownloadFuncVoid downloadFuncVoid;
-    unowned UpdateFuncVoid updateFuncVoid;
+    unowned FnVoid downloadFuncVoid;
+    unowned FnVoid updateFuncVoid;
     bool finished = false;
 
     //
     // void, no args
     //
-    public FutureVoid(DownloadFuncVoid downloadFuncVoid, UpdateFuncVoid updateFuncVoid) {
+    public FutureVoid(FnVoid downloadFuncVoid, FnVoid updateFuncVoid) {
         this.downloadFuncVoid = downloadFuncVoid;
         this.updateFuncVoid = updateFuncVoid;
         new Thread<void*>("downloadVoid", downloadVoid);

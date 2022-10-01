@@ -39,7 +39,7 @@ class LsrByWfo : Window {
 
     void getLsrFromWfo() {
         lsrList.clear();
-        var url = ("https://forecast.weather.gov/product.php?site=" + wfo + "&issuedby=" + wfo + "&product=LSR&format=txt&version=1&glossary=0");
+        var url = "https://forecast.weather.gov/product.php?site=" + wfo + "&issuedby=" + wfo + "&product=LSR&format=txt&version=1&glossary=0";
         var html = UtilityIO.getHtml(url);
         var numberLSR = UtilityString.parseLastMatch(html, "product=LSR&format=TXT&version=(.*?)&glossary");
         if (numberLSR == "") {
@@ -49,7 +49,7 @@ class LsrByWfo : Window {
             if (maxVers > 30) {
                 maxVers = 30;
             }
-            foreach (var version in UtilityList.range3(1, maxVers, 2)) {
+            foreach (var version in range3(1, maxVers, 2)) {
                 lsrList.add(UtilityDownload.getTextProductWithVersion("LSR" + wfo, version));
             }
         }

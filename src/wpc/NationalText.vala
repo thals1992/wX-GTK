@@ -62,7 +62,7 @@ class NationalText : Window {
     }
 
     void reload() {
-        index = UtilityList.findex(textProduct, UtilityWpcText.labels);
+        index = findex(textProduct, UtilityWpcText.labels);
         setTitle(UtilityWpcText.labels[index]);
         new FutureText(textProduct, text.setText);
     }

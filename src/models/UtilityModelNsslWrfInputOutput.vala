@@ -18,13 +18,13 @@ class UtilityModelNsslWrfInputOutput {
         time = time.replace("\"", "");
         var mostRecentRun = day + time;
         runData.appendListRun(mostRecentRun);
-        runData.appendListRunWithList(UtilityTime.generateModelRuns(mostRecentRun, 12));
+        runData.appendListRunWithList(UtilityModels.generateModelRuns(mostRecentRun, 12));
         runData.mostRecentRun = mostRecentRun;
         return runData;
     }
 
     public static string getImageUrl(ObjectModel om) {
-        var sectorIndex = UtilityList.indexOf(UtilityModelNsslWrfInterface.sectorsLong, om.sector);
+        var sectorIndex = indexOf(UtilityModelNsslWrfInterface.sectorsLong, om.sector);
         var sector = UtilityModelNsslWrfInterface.sectors[sectorIndex];
         var baseLayerUrl = "https://cams.nssl.noaa.gov/graphics/blankmaps/spc" + sector + ".png";
         var modelPostfix = "nssl";

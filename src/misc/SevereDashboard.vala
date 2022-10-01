@@ -23,27 +23,27 @@ class SevereDashboard : Window {
         setTitle("Severe Dashboard");
         maximize();
 
-        severeNotices[PolygonType.watch] = new SevereNotice(PolygonType.watch);
-        severeNotices[PolygonType.mcd] = new SevereNotice(PolygonType.mcd);
-        severeNotices[PolygonType.mpd] = new SevereNotice(PolygonType.mpd);
+        severeNotices[PolygonType.Watch] = new SevereNotice(PolygonType.Watch);
+        severeNotices[PolygonType.Mcd] = new SevereNotice(PolygonType.Mcd);
+        severeNotices[PolygonType.Mpd] = new SevereNotice(PolygonType.Mpd);
 
-        warningsByType[PolygonType.tor] = new SevereWarning(PolygonType.tor);
-        warningsByType[PolygonType.tst] = new SevereWarning(PolygonType.tst);
-        warningsByType[PolygonType.ffw] = new SevereWarning(PolygonType.ffw);
+        warningsByType[PolygonType.Tor] = new SevereWarning(PolygonType.Tor);
+        warningsByType[PolygonType.Tst] = new SevereWarning(PolygonType.Tst);
+        warningsByType[PolygonType.Ffw] = new SevereWarning(PolygonType.Ffw);
 
-        boxWarnings[PolygonType.tor] = new VBox();
-        boxWarnings[PolygonType.tst] = new VBox();
-        boxWarnings[PolygonType.ffw] = new VBox();
+        boxWarnings[PolygonType.Tor] = new VBox();
+        boxWarnings[PolygonType.Tst] = new VBox();
+        boxWarnings[PolygonType.Ffw] = new VBox();
 
         box.addLayout(boxImages.get());
-        box.addLayout(boxWarnings[PolygonType.tor].get());
-        box.addLayout(boxWarnings[PolygonType.tst].get());
-        box.addLayout(boxWarnings[PolygonType.ffw].get());
+        box.addLayout(boxWarnings[PolygonType.Tor].get());
+        box.addLayout(boxWarnings[PolygonType.Tst].get());
+        box.addLayout(boxWarnings[PolygonType.Ffw].get());
         sw = new ScrolledWindow(this, box);
 
-        new FutureVoid(() => downloadWarnings(PolygonType.tst), () => updateWarnings(PolygonType.tst));
-        new FutureVoid(() => downloadWarnings(PolygonType.ffw), () => updateWarnings(PolygonType.ffw));
-        new FutureVoid(() => downloadWarnings(PolygonType.tor), () => updateWarnings(PolygonType.tor));
+        new FutureVoid(() => downloadWarnings(PolygonType.Tst), () => updateWarnings(PolygonType.Tst));
+        new FutureVoid(() => downloadWarnings(PolygonType.Ffw), () => updateWarnings(PolygonType.Ffw));
+        new FutureVoid(() => downloadWarnings(PolygonType.Tor), () => updateWarnings(PolygonType.Tor));
         new FutureVoid(downloadWatch, updateWatch);
     }
 
@@ -69,9 +69,10 @@ class SevereDashboard : Window {
         urls.add(UtilityDownload.getImageProduct("USWARN"));
         urls.add(UtilityDownload.getImageProduct("STRPT"));
 
-        foreach (var t in new PolygonType[]{PolygonType.mcd, PolygonType.mpd, PolygonType.watch}) {
+        foreach (var t in new PolygonType[]{PolygonType.Mcd, PolygonType.Mpd, PolygonType.Watch}) {
             ObjectPolygonWatch.polygonDataByType[t].download();
             severeNotices[t].getBitmaps();
+            // TODO FIXME
             foreach (var url in severeNotices[t].urls) {
                 urls.add(url);
             }
@@ -79,11 +80,11 @@ class SevereDashboard : Window {
     }
 
     void updateWatch() {
-        foreach (var index in UtilityList.range(urls.size)) {
+        foreach (var index in range(urls.size)) {
             images.add(new Image.withIndex(index));
             images.last().setNumberAcross(imagesAcross);
         }
-        foreach (var index in UtilityList.range(urls.size)) {
+        foreach (var index in range(urls.size)) {
             images[index].connect(launch);
             if (boxRows.size <= (int)(index / imagesAcross)) {
                 boxRows.add(new HBox());
@@ -95,9 +96,8 @@ class SevereDashboard : Window {
         }
         updateStatusBar();
         show();
-        foreach (var index in UtilityList.range(urls.size)) {
-            var url = urls[index];
-            new FutureBytes(url, images[index].setBytes);
+        foreach (var index in range(urls.size)) {
+            new FutureBytes(urls[index], images[index].setBytes);
         }
     }
 
@@ -106,14 +106,14 @@ class SevereDashboard : Window {
             new UsAlerts();
         } else if (indexFinal == 1) {
             new SpcStormReports("today");
-        } else if (indexFinal > 1) {
+        } else {
             new SpcMcdWatchMpdViewer(urls[indexFinal]);
         }
     }
 
     void updateStatusBar() {
         var statusTotal = "";
-        var col1 = new PolygonType[]{PolygonType.mcd, PolygonType.watch, PolygonType.mpd};
+        var col1 = new PolygonType[]{PolygonType.Mcd, PolygonType.Watch, PolygonType.Mpd};
         foreach (var t in col1) {
             statusTotal += "  " + severeNotices[t].getShortName() + ": " + severeNotices[t].getCount();
         }

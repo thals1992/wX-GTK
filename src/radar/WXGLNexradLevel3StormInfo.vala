@@ -10,7 +10,7 @@ class WXGLNexradLevel3StormInfo {
 
     public static void decode(ProjectionNumbers projectionNumbers, FileStorage fileStorage) {
         var productCode = "STI";
-        WXGLDownload.getNidsTab(productCode, projectionNumbers.radarSite, fileStorage);
+        WXGLDownload.getNidsTab(productCode, projectionNumbers.getRadarSite(), fileStorage);
         var dis = fileStorage.level3TextProductMap[productCode];
         if (dis != "") {
             var posn = UtilityString.parseColumn(dis, "AZ/RAN(.*?)V");
@@ -33,7 +33,7 @@ class WXGLNexradLevel3StormInfo {
             var arrowBend = 20.0;
             var stormList = new ArrayList<double?>();
             if ((posnNumbers.size == motNumbers.size) && posnNumbers.size > 1) {
-                foreach (var index in UtilityList.range3(0, posnNumbers.size - 2, 2)) {
+                foreach (var index in range3(0, posnNumbers.size - 2, 2)) {
                     var ecc = new ExternalGeodeticCalculator();
                     var degree = Too.Int(posnNumbers[index]);
                     var nm = Too.Int(posnNumbers[index + 1]);
@@ -51,7 +51,7 @@ class WXGLNexradLevel3StormInfo {
                     stormList.add(tmpCoords[1]);
                     var ecArr = new ArrayList<ExternalGlobalCoordinates>();
                     var latLons = new ArrayList<LatLon>();
-                    foreach (var index1 in UtilityList.range(4)) {
+                    foreach (var index1 in range(4)) {
                         ecArr.add(ecc.calculateEndingGlobalCoordinates(start, degree2 + degreeShift, nm2 * 1852.0 * index1 * 0.25));
                         latLons.add(LatLon.fromList(WXGLNexradLevel3Common.computeMercatorNumbersFromEc(ecArr[index1], projectionNumbers)));
                     }
@@ -64,7 +64,7 @@ class WXGLNexradLevel3StormInfo {
                         stormList.add_all(WXGLNexradLevel3Common.drawLineFromLatLon(endPoint, ecc, projectionNumbers, start, degree2 - arrowBend, arrowLength * 1852.0));
                         // 15,30,45 min ticks
                         var tickMarkAngleOff90 = 30.0;
-                        foreach (var index2 in UtilityList.range3(0, 4, 1)) {
+                        foreach (var index2 in range3(0, 4, 1)) {
                             // first line
                             stormList.add_all(drawTickMarks(latLons[index2], ecc, projectionNumbers, ecArr[index2], degree2 - (90.0 + tickMarkAngleOff90), arrowLength * 1852.0 * sti15IncrLen));
                             stormList.add_all(drawTickMarks(latLons[index2], ecc, projectionNumbers, ecArr[index2], degree2 + (90.0 - tickMarkAngleOff90), arrowLength * 1852.0 * sti15IncrLen));

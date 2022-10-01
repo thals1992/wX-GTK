@@ -4,11 +4,15 @@
 // * Refer to the COPYING file of the official project for license.
 // *****************************************************************************
 
+using Gee;
+
 public class ObjectMetalRadarBuffers {
 
     public int animationIndex = -1;
-    public MemoryBuffer floatBuffer = new MemoryBuffer(0);
-    public MemoryBuffer colorBuffer = new MemoryBuffer(0);
+    //  public MemoryBuffer floatBuffer = new MemoryBuffer(0);
+    //  public MemoryBuffer colorBuffer = new MemoryBuffer(0);
+    public ArrayList<float?> floatGL = new ArrayList<float?>();
+    public ArrayList<uint8> colorGL = new ArrayList<uint8>();
     public MemoryBuffer radialStartAngle = new MemoryBuffer(0);
     public MemoryBuffer binWord = new MemoryBuffer(0);
     public int numberOfRadials = 0;
@@ -18,36 +22,39 @@ public class ObjectMetalRadarBuffers {
     public bool initialized = false;
 
     public void initialize() {
-        if (productCode == 37 || productCode == 38 || productCode == 41 || productCode == 57) {
-            if (floatBuffer.capacity < (48 * 464 * 464)) {
-                floatBuffer = new MemoryBuffer(48 * 464 * 464);
-            }
-            if (colorBuffer.capacity < (12 * 464 * 464)) {
-                colorBuffer = new MemoryBuffer(12 * 464 * 464);
-            }
-        } else {
-            if (floatBuffer.capacity < (32 * numberOfRadials * numberOfRangeBins)) {
-                floatBuffer = new MemoryBuffer(32 * numberOfRadials * numberOfRangeBins);
-            }
-            if (colorBuffer.capacity < 12 * numberOfRadials * numberOfRangeBins) {
-                colorBuffer = new MemoryBuffer(12 * numberOfRadials * numberOfRangeBins);
-            }
-        }
-        setToPositionZero();
+        floatGL.clear();
+        colorGL.clear();
+        //  if (productCode == 37 || productCode == 38 || productCode == 41 || productCode == 57) {
+        //      if (floatBuffer.capacity < (48 * 464 * 464)) {
+        //          floatBuffer = new MemoryBuffer(48 * 464 * 464);
+        //      }
+        //      if (colorBuffer.capacity < (12 * 464 * 464)) {
+        //          colorBuffer = new MemoryBuffer(12 * 464 * 464);
+        //      }
+        //  } else {
+        //      if (floatBuffer.capacity < (32 * numberOfRadials * numberOfRangeBins)) {
+        //          floatBuffer = new MemoryBuffer(32 * numberOfRadials * numberOfRangeBins);
+        //      }
+        //      if (colorBuffer.capacity < 12 * numberOfRadials * numberOfRangeBins) {
+        //          colorBuffer = new MemoryBuffer(12 * numberOfRadials * numberOfRangeBins);
+        //      }
+        //  }
+        //  setToPositionZero();
         initialized = true;
     }
 
     public void setToPositionZero() {
-        floatBuffer.position = 0;
-        colorBuffer.position = 0;
+        //  floatBuffer.position = 0;
+        //  colorBuffer.position = 0;
     }
 
-    public void putFloat(float newValue) {
-        floatBuffer.putFloat(newValue);
-    }
+    //  public void putFloat(float newValue) {
+    //      floatBuffer.putFloat(newValue);
+    //  }
 
     public void putColor(uint8 b) {
-        colorBuffer.put(b);
+        //  colorBuffer.put(b);
+        colorGL.add(b);
     }
 
     public void setBackgroundColor() {

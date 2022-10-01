@@ -25,9 +25,9 @@ class UtilityWatch {
     public static string show(LatLon latLon, PolygonType type) {
         string[] numberList;
         var watchLatLon = "";
-        if (type == PolygonType.watch) {
+        if (type == PolygonType.Watch) {
             watchLatLon = ObjectPolygonWatch.watchLatlonCombined.getValue();
-            numberList = ObjectPolygonWatch.polygonDataByType[PolygonType.watch].numberList.getValue().split(":");
+            numberList = ObjectPolygonWatch.polygonDataByType[PolygonType.Watch].numberList.getValue().split(":");
         } else {
             numberList = ObjectPolygonWatch.polygonDataByType[type].numberList.getValue().split(":");
             watchLatLon = ObjectPolygonWatch.polygonDataByType[type].latLonList.getValue();
@@ -35,7 +35,7 @@ class UtilityWatch {
         var latLonsFromstring = watchLatLon.split(":");
         var notFound = true;
         var text = "";
-        foreach (var z in UtilityList.range(latLonsFromstring.length)) {
+        foreach (var z in range(latLonsFromstring.length)) {
             var latLons = LatLon.parseStringToLatLons(latLonsFromstring[z], 1.0, false);
             if (latLons.size > 3) {
                 var contains = ExternalPolygon.polygonContainsPoint(latLon, latLons);

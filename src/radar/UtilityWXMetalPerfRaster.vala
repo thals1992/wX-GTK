@@ -11,9 +11,9 @@ class UtilityWXMetalPerfRaster {
         var yShift = -1.0f;
         var totalBins = 0;
         uint8 curLevel = 0;
-        int numberOfRows = 0;
-        int binsPerRow = 0;
-        float scaleFactor = 0.0f;
+        var numberOfRows = 0;
+        var binsPerRow = 0;
+        var scaleFactor = 0.0f;
         switch (radarBuffers.productCode) {
             case 38:
                 numberOfRows = 232;
@@ -39,21 +39,21 @@ class UtilityWXMetalPerfRaster {
         radarBuffers.setBackgroundColor();
         radarBuffers.setToPositionZero();
         var halfPoint = numberOfRows / 2.0f;
-        foreach (var g in UtilityList.range(numberOfRows)) {
-            foreach (var bin in UtilityList.range(binsPerRow)) {
+        foreach (var g in range(numberOfRows)) {
+            foreach (var bin in range(binsPerRow)) {
                 curLevel = radarBuffers.binWord.getByIndex(g * binsPerRow + bin);
                 // 1
-                radarBuffers.putFloat(xShift * ((float)bin - halfPoint) * scaleFactor);
-                radarBuffers.putFloat(yShift * ((float)g - halfPoint) * scaleFactor * -1.0f);
+                radarBuffers.floatGL.add(xShift * (bin - halfPoint) * scaleFactor);
+                radarBuffers.floatGL.add(yShift * (g - halfPoint) * scaleFactor * -1.0f);
                 // 2
-                radarBuffers.putFloat(xShift * ((float)bin - halfPoint) * scaleFactor);
-                radarBuffers.putFloat(yShift * ((float)g + 1.0f - halfPoint) * scaleFactor * -1.0f);
+                radarBuffers.floatGL.add(xShift * (bin - halfPoint) * scaleFactor);
+                radarBuffers.floatGL.add(yShift * (g + 1.0f - halfPoint) * scaleFactor * -1.0f);
                 // 3
-                radarBuffers.putFloat(xShift * ((float)bin + 1.0f - halfPoint) * scaleFactor);
-                radarBuffers.putFloat(yShift * ((float)g + 1.0f - halfPoint) * scaleFactor * -1.0f);
+                radarBuffers.floatGL.add(xShift * (bin + 1.0f - halfPoint) * scaleFactor);
+                radarBuffers.floatGL.add(yShift * (g + 1.0f - halfPoint) * scaleFactor * -1.0f);
                 // 4
-                radarBuffers.putFloat(xShift * ((float)bin + 1.0f - halfPoint) * scaleFactor);
-                radarBuffers.putFloat(yShift * ((float)g - halfPoint) * scaleFactor * -1.0f);
+                radarBuffers.floatGL.add(xShift * (bin + 1.0f - halfPoint) * scaleFactor);
+                radarBuffers.floatGL.add(yShift * (g - halfPoint) * scaleFactor * -1.0f);
 
                 radarBuffers.putColorsByIndex(curLevel);
                 totalBins += 1;

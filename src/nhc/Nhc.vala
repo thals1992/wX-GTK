@@ -26,7 +26,7 @@ class Nhc : Window {
         new ScrolledWindow(this, box);
 
         new FutureVoid(objectNhc.getTextData, updateText);
-        foreach (var i in UtilityList.range(urls.size)) {
+        foreach (var i in range(urls.size)) {
             new FutureBytes(urls[i], images[i].setBytes);
         }
     }

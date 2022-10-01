@@ -33,11 +33,11 @@ class SevereWarning {
 
     public string getName() {
         switch (type) {
-            case PolygonType.tor:
+            case PolygonType.Tor:
                 return "Tornado Warning";
-            case PolygonType.tst:
+            case PolygonType.Tst:
                 return "Severe Thunderstorm Warning";
-            case PolygonType.ffw:
+            case PolygonType.Ffw:
                 return "Flash Flood Warning";
             default:
                 return "";
@@ -46,11 +46,11 @@ class SevereWarning {
 
     public string getShortName() {
         switch (type) {
-            case PolygonType.tor:
+            case PolygonType.Tor:
                 return "TOR";
-            case PolygonType.tst:
+            case PolygonType.Tst:
                 return "TST";
-            case PolygonType.ffw:
+            case PolygonType.Ffw:
                 return "FFW";
             default:
                 return "";
@@ -64,7 +64,6 @@ class SevereWarning {
                 i += 1;
             }
         }
-        var iString = Too.String(i);
-        return iString;
+        return Too.String(i);
     }
 }

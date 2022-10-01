@@ -9,7 +9,7 @@ using Gee;
 class UtilityString {
 
     public static string extractPreLsr(string html) {
-        const string seperator = "ABC123E";
+        var seperator = "ABC123E";
         var htmlOneLine = html.replace(GlobalVariables.newline, seperator);
         var parsedText = parse(htmlOneLine, "<pre.*?>(.*?)</pre>");
         return parsedText.replace(seperator, GlobalVariables.newline);
@@ -69,7 +69,7 @@ class UtilityString {
     public static bool match(string s, string regexp) {
         try {
             var regex = new Regex(regexp);
-            bool result = regex.match(s);
+            var result = regex.match(s);
             return result;
         } catch (Error e) {
             print(e.message + "\n");

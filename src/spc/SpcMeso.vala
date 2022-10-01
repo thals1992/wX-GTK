@@ -30,14 +30,18 @@ class SpcMeso : Window {
         maximize();
 
         photo.setWindow(this);
-        objectAnimate = new ObjectAnimate(photo, UtilitySpcMesoInputOutput.getAnimation, reload, animateButton);
-        destroy.connect(objectAnimate.stopAnimate); //GTK4_DELETE
-        /// close_request.connect(() => { objectAnimate.stopAnimate(); return false; });
+        objectAnimate = new ObjectAnimate(photo, UtilitySpcMesoInputOutput.getAnimation, reload);
+
+        #if GTK4
+            close_request.connect(() => { objectAnimate.stopAnimate(); return false; });
+        #else
+            destroy.connect(objectAnimate.stopAnimate);
+        #endif
 
         objectAnimate.product = Utility.readPref(prefTokenProduct, "pmsl");
         objectAnimate.sector = Utility.readPref(prefTokenSector, "19");
-        index = UtilityList.findex(objectAnimate.product, UtilitySpcMeso.products);
-        indexSector = UtilityList.findex(objectAnimate.sector, UtilitySpcMeso.sectorCodes);
+        index = findex(objectAnimate.product, UtilitySpcMeso.products);
+        indexSector = findex(objectAnimate.sector, UtilitySpcMeso.sectorCodes);
 
         buttonBack.connect(() => {
             index -= 1;
@@ -93,20 +97,20 @@ class SpcMeso : Window {
 
     void changeProductForFav(int i) {
         var s = UtilitySpcMeso.favList[i];
-        var index = UtilityList.indexOf(UtilitySpcMeso.products, s);
+        var index = indexOf(UtilitySpcMeso.products, s);
         objectAnimate.product = UtilitySpcMeso.products[index];
         reload();
     }
 
     void changeProductByCode(string label) {
-        index = UtilityList.findex(label, UtilitySpcMeso.labels);
+        index = findex(label, UtilitySpcMeso.labels);
         objectAnimate.product = UtilitySpcMeso.products[index];
         reload();
     }
 
     void changeSector() {
         var label = comboboxSector.getValue();
-        var index = UtilityList.findex(label, UtilitySpcMeso.sectors);
+        var index = findex(label, UtilitySpcMeso.sectors);
         objectAnimate.sector = UtilitySpcMeso.sectorCodes[index];
         reload();
     }
@@ -115,14 +119,14 @@ class SpcMeso : Window {
         var url = getUrl();
         Utility.writePref(prefTokenProduct, objectAnimate.product);
         Utility.writePref(prefTokenSector, objectAnimate.sector);
-        index = UtilityList.indexOf(UtilitySpcMeso.products, objectAnimate.product);
+        index = indexOf(UtilitySpcMeso.products, objectAnimate.product);
         setTitle(UtilitySpcMeso.labels[index]);
         new FutureBytes(url, photo.setBytes);
     }
 
     string getUrl() {
         var gifUrl = ".gif";
-        if (UtilityList.inIt(objectAnimate.product, UtilitySpcMeso.imgSf)) {
+        if (objectAnimate.product in UtilitySpcMeso.imgSf) {
             gifUrl = "_sf.gif";
         }
         var url = "https://www.spc.noaa.gov/exper/mesoanalysis/s" + objectAnimate.sector + "/" + objectAnimate.product + "/" + objectAnimate.product + gifUrl;

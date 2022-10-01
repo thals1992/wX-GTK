@@ -14,7 +14,6 @@ class SevereNotice {
 
     public SevereNotice(PolygonType type1) {
         this.type1 = type1;
-        //  numberList = new string[]{};
         getBitmaps();
     }
 
@@ -23,17 +22,17 @@ class SevereNotice {
         var html = "";
         urls.clear();
         switch (type1) {
-            case PolygonType.mcd:
+            case PolygonType.Mcd:
                 comp = "<center>No Mesoscale Discussions are currently in effect.";
-                html = ObjectPolygonWatch.polygonDataByType[PolygonType.mcd].numberList.getValue();
+                html = ObjectPolygonWatch.polygonDataByType[PolygonType.Mcd].numberList.getValue();
                 break;
-            case PolygonType.watch:
+            case PolygonType.Watch:
                 comp = "<center><strong>No watches are currently valid";
-                html = ObjectPolygonWatch.polygonDataByType[PolygonType.watch].numberList.getValue();
+                html = ObjectPolygonWatch.polygonDataByType[PolygonType.Watch].numberList.getValue();
                 break;
-            case PolygonType.mpd:
+            case PolygonType.Mpd:
                 comp = "No MPDs are currently in effect.";
-                html = ObjectPolygonWatch.polygonDataByType[PolygonType.mpd].numberList.getValue();
+                html = ObjectPolygonWatch.polygonDataByType[PolygonType.Mpd].numberList.getValue();
                 break;
             default:
                 comp = "";
@@ -56,13 +55,13 @@ class SevereNotice {
             foreach (var number in numberList) {
                 var url = "";
                 switch (type1) {
-                    case PolygonType.mcd:
+                    case PolygonType.Mcd:
                         url = GlobalVariables.nwsSPCwebsitePrefix + "/products/md/mcd" + number + ".gif";
                         break;
-                    case PolygonType.watch:
+                    case PolygonType.Watch:
                         url = GlobalVariables.nwsSPCwebsitePrefix + "/products/watch/ww" + number + "_radar.gif";
                         break;
-                    case PolygonType.mpd:
+                    case PolygonType.Mpd:
                         url = GlobalVariables.nwsWPCwebsitePrefix + "/metwatch/images/mcd" + number + ".gif";
                         break;
                     default:
@@ -76,11 +75,11 @@ class SevereNotice {
 
     public string getShortName() {
         switch (type1) {
-            case PolygonType.mcd:
+            case PolygonType.Mcd:
                 return "MCD";
-            case PolygonType.mpd:
+            case PolygonType.Mpd:
                 return "MPD";
-            case PolygonType.watch:
+            case PolygonType.Watch:
                 return "WATCH";
             default:
                 return "";

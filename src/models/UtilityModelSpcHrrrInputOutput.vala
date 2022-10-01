@@ -32,7 +32,7 @@ class UtilityModelSpcHrrrInputOutput {
 
     public static string getSectorCode(string sectorName) {
         var sectorCode = "S19";
-        foreach (var index in UtilityList.range(UtilityModelSpcHrrrInterface.sectors.length)) {
+        foreach (var index in range(UtilityModelSpcHrrrInterface.sectors.length)) {
             if (sectorName == UtilityModelSpcHrrrInterface.sectors[index]) {
                 sectorCode = UtilityModelSpcHrrrInterface.sectorCodes[index];
                 break;

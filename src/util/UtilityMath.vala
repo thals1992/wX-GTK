@@ -8,7 +8,7 @@ class UtilityMath {
 
     public static string unitsPressure(string value) {
         var tmpNum = Too.Double(value);
-        return (UIPreferences.unitsM) ? "%.2f".printf(tmpNum * 33.8637526) + " mb" : "%.2f".printf(tmpNum) + " in";
+        return (UIPreferences.unitsM) ? Too.printf(tmpNum * 33.8637526, "%.2f") + " mb" : Too.printf(tmpNum, "%.2f") + " in";
     }
 
     public static double[] computeTipPoint(double x0, double y0, double x1, double y1, bool right) {

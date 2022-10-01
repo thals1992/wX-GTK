@@ -15,7 +15,7 @@ class UtilitySpcSwo {
     public static ArrayList<string> getImageUrls(string day) {
         var urls = new ArrayList<string>();
         if (day == "48") {
-            foreach (var dayInt in UtilityList.range3(4, 9, 1)) {
+            foreach (var dayInt in range3(4, 9, 1)) {
                 urls.add(GlobalVariables.nwsSPCwebsitePrefix + "/products/exper/day4-8/day" + Too.String(dayInt) + "prob.gif");
             }
             return urls;

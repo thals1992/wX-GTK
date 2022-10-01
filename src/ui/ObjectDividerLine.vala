@@ -8,7 +8,5 @@ public class ObjectDividerLine {
 
     Gtk.Separator separator = new Gtk.Separator(Gtk.Orientation.HORIZONTAL);
 
-    public Gtk.Separator get() {
-        return separator;
-    }
+    public Gtk.Separator get() { return separator; }
 }

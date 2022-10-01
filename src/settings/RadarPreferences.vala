@@ -16,10 +16,6 @@ class RadarPreferences {
     public static bool lakes = false;
     public static bool county = true;
     public static bool countyLabels = false;
-    public static bool warnings = false;
-    public static bool mcd = false;
-    public static bool watch = false;
-    public static bool mpd = false;
     public static bool sti = false;
     public static bool hailIndex = false;
     public static bool tvs = false;
@@ -34,26 +30,14 @@ class RadarPreferences {
     public static int radarDataRefreshInterval = 5;
     public static bool rememberLocation = true;
 
-    public static int radarColorHw;
-    public static int radarColorHwExt;
-    public static int radarColorState;
-    public static int radarColorTstorm;
-    public static int radarColorTstormWatch;
-    public static int radarColorTor;
-    public static int radarColorTorWatch;
-    public static int radarColorFfw;
-    public static int radarColorMcd;
-    public static int radarColorMpd;
-    public static int radarColorLocdot;
-    public static int radarColorSpotter;
-    public static int radarColorCity;
-    public static int radarColorLakes;
-    public static int radarColorCounty;
-    public static int radarColorSti;
-    public static int radarColorHi;
-    public static int radarColorObs;
-    public static int radarColorObsWindbarbs;
-    public static int radarColorCountyLabels;
+    public static int colorLocdot;
+    public static int colorSpotter;
+    public static int colorCity;
+    public static int colorSti;
+    public static int colorHi;
+    public static int colorObs;
+    public static int colorObsWindbarbs;
+    public static int colorCountyLabels;
     public static int nexradRadarBackgroundColor;
 
     public static double warnLinesize = 0.0;
@@ -80,10 +64,6 @@ class RadarPreferences {
         locationDot = Utility.readPref("COD_LOCDOT_DEFAULT", "false").has_prefix("t");
         lakes = Utility.readPref("COD_LAKES_DEFAULT", "false").has_prefix("t");
         county = Utility.readPref("RADAR_SHOW_COUNTY", "true").has_prefix("t");
-        warnings = Utility.readPref("COD_WARNINGS_DEFAULT", "false").has_prefix("t");
-        watch = Utility.readPref("RADAR_SHOW_WATCH", "false").has_prefix("t");
-        mcd = Utility.readPref("RADAR_SHOW_MCD", "false").has_prefix("t");
-        mpd = Utility.readPref("RADAR_SHOW_MPD", "false").has_prefix("t");
         sti = Utility.readPref("RADAR_SHOW_STI", "false").has_prefix("t");
         radarShowControls = Utility.readPref("RADAR_SHOW_CONTROLS", "false").has_prefix("t");
         radarShowStatusBar = Utility.readPref("RADAR_SHOW_STATUSBAR", "true").has_prefix("t");
@@ -99,26 +79,14 @@ class RadarPreferences {
         radarDataRefreshInterval = Utility.readPrefInt("RADAR_DATA_REFRESH_INTERVAL", 5);
         rememberLocation = Utility.readPref("WXOGL_REMEMBER_LOCATION", "true").has_prefix("t");
 
-        radarColorHw = Utility.readPrefInt("RADAR_COLOR_HW", Color.rgb(135, 135, 135));
-        radarColorHwExt = Utility.readPrefInt("RADAR_COLOR_HW_EXT", Color.rgb(91, 91, 91));
-        radarColorState = Utility.readPrefInt("RADAR_COLOR_STATE", Color.rgb(255, 255, 255));
-        radarColorTstorm = Utility.readPrefInt("RADAR_COLOR_TSTORM", Color.rgb(255, 255, 0));
-        radarColorTstormWatch = Utility.readPrefInt("RADAR_COLOR_TSTORM_WATCH", Color.rgb(255, 187, 0));
-        radarColorTor = Utility.readPrefInt("RADAR_COLOR_TOR", Color.rgb(243, 85, 243));
-        radarColorTorWatch = Utility.readPrefInt("RADAR_COLOR_TOR_WATCH", Color.rgb(255, 0, 0));
-        radarColorFfw = Utility.readPrefInt("RADAR_COLOR_FFW", Color.rgb(0, 255, 0));
-        radarColorMcd = Utility.readPrefInt("RADAR_COLOR_MCD", Color.rgb(153, 51, 255));
-        radarColorMpd = Utility.readPrefInt("RADAR_COLOR_MPD", Color.rgb(0, 255, 0));
-        radarColorLocdot = Utility.readPrefInt("RADAR_COLOR_LOCDOT", Color.rgb(255, 255, 255));
-        radarColorSpotter = Utility.readPrefInt("RADAR_COLOR_SPOTTER", Color.rgb(255, 0, 245));
-        radarColorCity = Utility.readPrefInt("RADAR_COLOR_CITY", Color.rgb(255, 255, 255));
-        radarColorLakes = Utility.readPrefInt("RADAR_COLOR_LAKES", Color.rgb(0, 0, 255));
-        radarColorCounty = Utility.readPrefInt("RADAR_COLOR_COUNTY", Color.rgb(75, 75, 75));
-        radarColorSti = Utility.readPrefInt("RADAR_COLOR_STI", Color.rgb(255, 255, 255));
-        radarColorHi = Utility.readPrefInt("RADAR_COLOR_HI", Color.rgb(0, 255, 0));
-        radarColorObs = Utility.readPrefInt("RADAR_COLOR_OBS", Color.rgb(255, 255, 255));
-        radarColorObsWindbarbs = Utility.readPrefInt("RADAR_COLOR_OBS_WINDBARBS", Color.rgb(255, 255, 255));
-        radarColorCountyLabels = Utility.readPrefInt("RADAR_COLOR_COUNTY_LABELS", Color.rgb(234, 214, 123));
+        colorLocdot = Utility.readPrefInt("RADAR_COLOR_LOCDOT", Color.rgb(255, 255, 255));
+        colorSpotter = Utility.readPrefInt("RADAR_COLOR_SPOTTER", Color.rgb(255, 0, 245));
+        colorCity = Utility.readPrefInt("RADAR_COLOR_CITY", Color.rgb(255, 255, 255));
+        colorSti = Utility.readPrefInt("RADAR_COLOR_STI", Color.rgb(255, 255, 255));
+        colorHi = Utility.readPrefInt("RADAR_COLOR_HI", Color.rgb(0, 255, 0));
+        colorObs = Utility.readPrefInt("RADAR_COLOR_OBS", Color.rgb(255, 255, 255));
+        colorObsWindbarbs = Utility.readPrefInt("RADAR_COLOR_OBS_WINDBARBS", Color.rgb(255, 255, 255));
+        colorCountyLabels = Utility.readPrefInt("RADAR_COLOR_COUNTY_LABELS", Color.rgb(234, 214, 123));
         nexradRadarBackgroundColor = Utility.readPrefInt("NEXRAD_RADAR_BACKGROUND_COLOR", Color.rgb(0, 0, 0));
 
         //  radarHiSize = getInitialPreference("RADAR_HI_SIZE", 8)

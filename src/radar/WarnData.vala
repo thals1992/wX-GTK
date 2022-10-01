@@ -13,4 +13,8 @@ class WarnData {
     public WarnData(ArrayList<double?> data) {
         this.data = data;
     }
+
+    public WarnData.zero() {
+        this.data = new ArrayList<double?>();
+    }
 }

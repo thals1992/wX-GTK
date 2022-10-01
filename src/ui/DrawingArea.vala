@@ -6,11 +6,14 @@
 
 public class DrawingArea {
 
-    public delegate bool delegate0(Cairo.Context ctx); //GTK4_DELETE
-    /// public delegate void delegate0(Gtk.DrawingArea da, Cairo.Context ctx, int a, int b);
-    public delegate bool delegate1(Gdk.EventButton v0); //GTK4_DELETE
-    public delegate bool delegate2(Gdk.EventMotion v0); //GTK4_DELETE
-    public delegate bool delegate3(Gdk.EventScroll v0); //GTK4_DELETE
+    #if GTK4
+        public delegate void delegate0(Gtk.DrawingArea da, Cairo.Context ctx, int a, int b);
+    #else
+        public delegate bool delegate0(Cairo.Context ctx);
+        public delegate bool delegate1(Gdk.EventButton v0);
+        public delegate bool delegate2(Gdk.EventMotion v0);
+        public delegate bool delegate3(Gdk.EventScroll v0);
+    #endif
     Gtk.DrawingArea drawingArea = new Gtk.DrawingArea();
 
     public DrawingArea() {
@@ -22,39 +25,45 @@ public class DrawingArea {
     }
 
     public void connect(delegate0 fn) {
-        drawingArea.draw.connect((ctx) => { return fn(ctx); }); //GTK4_DELETE
-        /// drawingArea.set_draw_func((da1, ctx, w, h) => { fn(da1, ctx, w, h); });
+        #if GTK4
+            drawingArea.set_draw_func((da1, ctx, w, h) => { fn(da1, ctx, w, h); });
+        #else
+            drawingArea.draw.connect((ctx) => { return fn(ctx); });
+        #endif
     }
 
-    // void draw_callback(Gtk.Widget da, Cairo.Context ctx, int w, int h) {
+    #if GTK4
+    #else
+        public void connectScroll(delegate3 fn) {
+            drawingArea.scroll_event.connect((e) => { return fn(e); });
+        }
 
-    public void connectScroll(delegate3 fn) { //GTK4_DELETE
-        drawingArea.scroll_event.connect((e) => { return fn(e); }); //GTK4_DELETE
-    } //GTK4_DELETE
+        public void connectButtonPress(delegate1 fn) {
+            drawingArea.button_press_event.connect((e) => { return fn(e); });
+        }
 
-    public void connectButtonPress(delegate1 fn) { //GTK4_DELETE
-        drawingArea.button_press_event.connect((e) => { return fn(e); }); //GTK4_DELETE
-    } //GTK4_DELETE
+        public void connectButtonRelease(delegate1 fn) {
+            drawingArea.button_release_event.connect((e) => { return fn(e); });
+        }
 
-    public void connectButtonRelease(delegate1 fn) { //GTK4_DELETE
-        drawingArea.button_release_event.connect((e) => { return fn(e); }); //GTK4_DELETE
-    } //GTK4_DELETE
-
-    public void connectMotionNotify(delegate2 fn) { //GTK4_DELETE
-        drawingArea.motion_notify_event.connect((e) => { return fn(e); }); //GTK4_DELETE
-    } //GTK4_DELETE
+        public void connectMotionNotify(delegate2 fn) {
+            drawingArea.motion_notify_event.connect((e) => { return fn(e); });
+        }
+    #endif
 
     public void draw() {
         drawingArea.queue_draw();
     }
 
-    public void add_controller(Gtk.EventController controller) {
-        /// drawingArea.add_controller(controller);
-    }
-
-    public void addEvents(int e) { //GTK4_DELETE
-        drawingArea.add_events(e); //GTK4_DELETE
-    } //GTK4_DELETE
+    #if GTK4
+        public void add_controller(Gtk.EventController controller) {
+            drawingArea.add_controller(controller);
+        }
+    #else
+        public void addEvents(int e) {
+            drawingArea.add_events(e);
+        }
+    #endif
 
     public void setHExpand(bool e) {
         drawingArea.set_hexpand(e);
@@ -68,15 +77,13 @@ public class DrawingArea {
         drawingArea.insert_action_group(type1, ag);
     }
 
-    public float getWidth() {
-        return drawingArea.get_allocated_width();
+    public int width {
+        get { return drawingArea.get_allocated_width(); }
     }
 
-    public float getHeight() {
-        return drawingArea.get_allocated_height();
+    public int height {
+        get { return drawingArea.get_allocated_height(); }
     }
 
-    public Gtk.DrawingArea get() {
-        return drawingArea;
-    }
+    public Gtk.DrawingArea get() { return drawingArea; }
 }

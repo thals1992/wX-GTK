@@ -25,6 +25,7 @@ class ObjectNumberPicker {
         hbox.addWidget(spinbutton);
 
         text1.setText(label);
+        text1.setWordWrap(false);
         hbox.addWidget(text1.get());
     }
 
@@ -38,7 +39,5 @@ class ObjectNumberPicker {
         spinbutton.set_value(Utility.readPrefInt(pref, defaultValue));
     }
 
-    public Gtk.Widget get() {
-        return hbox.get();
-    }
+    public Gtk.Widget get() { return hbox.get(); }
 }

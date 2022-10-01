@@ -7,9 +7,6 @@
 class UtilityWXMetalPerf {
 
     const float k180DivPi = 180.0f / (float)Math.PI;
-    const float piDiv4 = (float)Math.PI / 4.0f;
-    const float piDiv360 = (float)Math.PI / 360.0f;
-    const float twicePi = 2.0f * (float)Math.PI;
 
     //
     // radar binary file has values that are big endian, handle in MemoryBuffer methods via struct.pack / unpack
@@ -38,9 +35,9 @@ class UtilityWXMetalPerf {
         var numberOfRadials = radarBuffers.numberOfRadials;
         var xShift = 1.0f;
         var yShift = -1.0f;
-        foreach (var radial in UtilityList.range(numberOfRadials)) {
-            uint16 numberOfRleHalfWords = dis2.getUnsignedShort();
-            float angle = (450.0f - ((float)(dis2.getUnsignedShort()) / 10.0f));
+        foreach (var radial in range(numberOfRadials)) {
+            var numberOfRleHalfWords = dis2.getUnsignedShort();
+            var angle = (450.0f - ((float)(dis2.getUnsignedShort()) / 10.0f));
             dis2.skipBytes(2);
             if (radial < numberOfRadials - 1) {
                 dis2.mark(dis2.position);
@@ -50,7 +47,7 @@ class UtilityWXMetalPerf {
             }
             uint8 level = 0;
             var levelCount = 0;
-            float binStart = radarBuffers.binSize;
+            var binStart = radarBuffers.binSize;
             if (radial == 0) {
                 angle0 = angle;
             }
@@ -59,8 +56,12 @@ class UtilityWXMetalPerf {
             } else {
                 angleV = angle0;
             }
-            foreach (var bin1 in UtilityList.range(numberOfRleHalfWords)) {
-                uint8 curLevel = dis2.get();
+            var angleVCos = Math.cosf(angleV / k180DivPi);
+            var angleVSin = Math.sinf(angleV / k180DivPi);
+            var angleCos = Math.cosf(angle / k180DivPi);
+            var angleSin = Math.sinf(angle / k180DivPi);
+            foreach (var bin1 in range(numberOfRleHalfWords)) {
+                var curLevel = dis2.get();
                 if (bin1 == 0) {
                     level = curLevel;
                 }
@@ -70,36 +71,34 @@ class UtilityWXMetalPerf {
                     // Since we will attempt to use the higher level QT painter we don't need a color per vertex
                     // and we can draw a polygon instead of two triangles
                     // thus we will comment out redundant point and color data
-                    float angleVCos = (float)Math.cos(angleV / k180DivPi);
-                    float angleVSin = (float)Math.sin(angleV / k180DivPi);
-                    // 1
-                    float p1x = xShift * binStart * angleVCos;
-                    float p1y = yShift * binStart * angleVSin;
-                    // 2
-                    float p2x = xShift * ((binStart + (radarBuffers.binSize * (float)(levelCount))) * angleVCos);
-                    float p2y = yShift * ((binStart + (radarBuffers.binSize * (float)(levelCount))) * angleVSin);
-                    float angleCos = (float)Math.cos(angle / k180DivPi);
-                    float angleSin = (float)Math.sin(angle / k180DivPi);
-                    // 3
-                    float p3x = xShift * ((binStart + (radarBuffers.binSize * (float)(levelCount))) * angleCos);
-                    float p3y = yShift * ((binStart + (radarBuffers.binSize * (float)(levelCount))) * angleSin);
-                    // 4
-                    float p4x = xShift * binStart * angleCos;
-                    float p4y = yShift * binStart * angleSin;
 
-                    radarBuffers.floatBuffer.putFloat(p1x);
-                    radarBuffers.floatBuffer.putFloat(p1y);
-                    radarBuffers.floatBuffer.putFloat(p2x);
-                    radarBuffers.floatBuffer.putFloat(p2y);
-                    radarBuffers.floatBuffer.putFloat(p3x);
-                    radarBuffers.floatBuffer.putFloat(p3y);
-                    radarBuffers.floatBuffer.putFloat(p4x);
-                    radarBuffers.floatBuffer.putFloat(p4y);
+                    // 1
+                    var p1x = xShift * binStart * angleVCos;
+                    var p1y = yShift * binStart * angleVSin;
+                    // 2
+                    var p2x = xShift * (binStart + (radarBuffers.binSize * levelCount)) * angleVCos;
+                    var p2y = yShift * (binStart + (radarBuffers.binSize * levelCount)) * angleVSin;
+
+                    // 3
+                    var p3x = xShift * (binStart + (radarBuffers.binSize * levelCount)) * angleCos;
+                    var p3y = yShift * (binStart + (radarBuffers.binSize * levelCount)) * angleSin;
+                    // 4
+                    var p4x = xShift * binStart * angleCos;
+                    var p4y = yShift * binStart * angleSin;
+
+                    radarBuffers.floatGL.add(p1x);
+                    radarBuffers.floatGL.add(p1y);
+                    radarBuffers.floatGL.add(p2x);
+                    radarBuffers.floatGL.add(p2y);
+                    radarBuffers.floatGL.add(p3x);
+                    radarBuffers.floatGL.add(p3y);
+                    radarBuffers.floatGL.add(p4x);
+                    radarBuffers.floatGL.add(p4y);
                     radarBuffers.putColorsByIndex(level);
 
                     totalBins += 1;
                     level = curLevel;
-                    binStart = (float)bin1 * radarBuffers.binSize;
+                    binStart = bin1 * radarBuffers.binSize;
                     levelCount = 1;
                 }
             }
@@ -140,7 +139,7 @@ class UtilityWXMetalPerf {
         }
         radarBuffers.setBackgroundColor();
         radarBuffers.setToPositionZero();
-        foreach (var g in UtilityList.range(radarBuffers.numberOfRadials)) {
+        foreach (var g in range(radarBuffers.numberOfRadials)) {
             // since radialstart is constructed natively as opposed to read in
             // from bigendian file we have to use getFloatNatve
             angle = radarBuffers.radialStartAngle.getFloatByIndex(g * 4);
@@ -152,37 +151,38 @@ class UtilityWXMetalPerf {
             } else {
                 angleV = radarBuffers.radialStartAngle.getFloatByIndex(0);
             }
-            foreach (var bin in UtilityList.range(radarBuffers.numberOfRangeBins)) {
+            var angleVCos = Math.cosf(angleV / k180DivPi);
+            var angleVSin = Math.sinf(angleV / k180DivPi);
+            var angleCos = Math.cosf(angle / k180DivPi);
+            var angleSin = Math.sinf(angle / k180DivPi);
+            foreach (var bin in range(radarBuffers.numberOfRangeBins)) {
                 curLevel = radarBuffers.binWord.getByIndex(bI);
                 bI += 1;
                 if (curLevel == level) {
                     levelCount += 1;
                 } else {
-                    float angleVCos = (float)Math.cos(angleV / k180DivPi);
-                    float angleVSin = (float)Math.sin(angleV / k180DivPi);
                     // 1
-                    float p1x = xShift * binStart * angleVCos;
-                    float p1y = yShift * binStart * angleVSin;
+                    var p1x = xShift * binStart * angleVCos;
+                    var p1y = yShift * binStart * angleVSin;
                     // 2
-                    float p2x = xShift * ((binStart + (radarBuffers.binSize * (float)(levelCount))) * angleVCos);
-                    float p2y = yShift * ((binStart + (radarBuffers.binSize * (float)(levelCount))) * angleVSin);
-                    float angleCos = (float)Math.cos(angle / k180DivPi);
-                    float angleSin = (float)Math.sin(angle / k180DivPi);
-                    // 3
-                    float p3x = xShift * ((binStart + (radarBuffers.binSize * (float)(levelCount))) * angleCos);
-                    float p3y = yShift * ((binStart + (radarBuffers.binSize * (float)(levelCount))) * angleSin);
-                    // 4
-                    float p4x = xShift * binStart * angleCos;
-                    float p4y = yShift * binStart * angleSin;
+                    var p2x = xShift * (binStart + (radarBuffers.binSize * levelCount)) * angleVCos;
+                    var p2y = yShift * (binStart + (radarBuffers.binSize * levelCount)) * angleVSin;
 
-                    radarBuffers.floatBuffer.putFloat(p1x);
-                    radarBuffers.floatBuffer.putFloat(p1y);
-                    radarBuffers.floatBuffer.putFloat(p2x);
-                    radarBuffers.floatBuffer.putFloat(p2y);
-                    radarBuffers.floatBuffer.putFloat(p3x);
-                    radarBuffers.floatBuffer.putFloat(p3y);
-                    radarBuffers.floatBuffer.putFloat(p4x);
-                    radarBuffers.floatBuffer.putFloat(p4y);
+                    // 3
+                    var p3x = xShift * (binStart + (radarBuffers.binSize * levelCount)) * angleCos;
+                    var p3y = yShift * (binStart + (radarBuffers.binSize * levelCount)) * angleSin;
+                    // 4
+                    var p4x = xShift * binStart * angleCos;
+                    var p4y = yShift * binStart * angleSin;
+
+                    radarBuffers.floatGL.add(p1x);
+                    radarBuffers.floatGL.add(p1y);
+                    radarBuffers.floatGL.add(p2x);
+                    radarBuffers.floatGL.add(p2y);
+                    radarBuffers.floatGL.add(p3x);
+                    radarBuffers.floatGL.add(p3y);
+                    radarBuffers.floatGL.add(p4x);
+                    radarBuffers.floatGL.add(p4y);
                     radarBuffers.putColorsByIndex(level);
 
                     totalBins += 1;

@@ -28,6 +28,7 @@ class LatLon {
         return new LatLon("0.0", "0.0");
     }
 
+    // TODO FIXME check other ports
     public LatLon.fromDouble(double latNum, double lonNum) {
         this.latString = Too.StringD(latNum);
         this.lonString = Too.StringD(lonNum);
@@ -67,8 +68,8 @@ class LatLon {
     }
 
     public static LatLon fromRadarSite(string radarSite) {
-        string ridX = Utility.getRadarSiteX(radarSite);
-        string ridY = Utility.getRadarSiteY(radarSite);
+        var ridX = Utility.getRadarSiteX(radarSite);
+        var ridY = Utility.getRadarSiteY(radarSite);
         var latNum = Too.Double(ridX);
         var lonNum = -1.0 * Too.Double(ridY);
         var latString = Too.StringD(latNum);
@@ -106,6 +107,7 @@ class LatLon {
         return new ExternalPoint(lat(), lon());
     }
 
+    // TODO FIXME check other ports for static vs non-static
     public static double distance(LatLon location1, LatLon location2) {
         var theta = location1.lonNum - location2.lonNum;
         var dist = Math.sin(UtilityMath.deg2rad(location1.latNum)) * Math.sin(UtilityMath.deg2rad(location2.latNum)) + Math.cos(UtilityMath.deg2rad(location1.latNum)) * Math.cos(UtilityMath.deg2rad(location2.latNum)) * Math.cos(UtilityMath.deg2rad(theta));
@@ -123,10 +125,10 @@ class LatLon {
         var x = new ArrayList<double?>();
         var y = new ArrayList<double?>();
         if (z.length > 1) {
-        foreach (var i in UtilityList.range(z.length)) {
+            foreach (var i in range(z.length)) {
                 if (isWarning) {
                     if (i % 2 == 0) {
-                        y.add((Too.Double(z[i])) * multiplier);
+                        y.add(Too.Double(z[i]) * multiplier);
                     } else {
                         x.add(Too.Double(z[i]));
                     }
@@ -134,14 +136,14 @@ class LatLon {
                     if (i % 2 == 0) {
                         x.add(Too.Double(z[i]));
                     } else {
-                        y.add((Too.Double(z[i])) * multiplier);
+                        y.add(Too.Double(z[i]) * multiplier);
                     }
                 }
             }
         }
         var latLons = new ArrayList<LatLon>();
         if (y.size > 3 && x.size > 3 && x.size == y.size) {
-            foreach (var index in UtilityList.range(x.size)) {
+            foreach (var index in range(x.size)) {
                 latLons.add(new LatLon.fromDouble(x[index], y[index]));
             }
         }
@@ -154,7 +156,7 @@ class LatLon {
             var startCoordinates = UtilityCanvasProjection.computeMercatorNumbersFromLatLon(latLons[0], projectionNumbers);
             warningList.add(startCoordinates[0]);
             warningList.add(startCoordinates[1]);
-            foreach (var index in UtilityList.range3(1, latLons.size, 1)) {
+            foreach (var index in range3(1, latLons.size, 1)) {
                 var coordinates = UtilityCanvasProjection.computeMercatorNumbersFromLatLon(latLons[index], projectionNumbers);
                 warningList.add(coordinates[0]);
                 warningList.add(coordinates[1]);
@@ -188,8 +190,8 @@ class LatLon {
         var coordinates = UtilityString.parseColumn(html, "([0-9]{8}).*?");
         var value = "";
         foreach (var coor in coordinates) {
-            LatLon l = getLatLonFromString(coor);
-            value += l.printSpaceSeparated();
+            var latLon = getLatLonFromString(coor);
+            value += latLon.printSpaceSeparated();
         }
         value += ":";
         return value.replace(" :", ":");

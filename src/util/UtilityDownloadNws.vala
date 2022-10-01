@@ -9,7 +9,8 @@ class UtilityDownloadNws {
     public static string getHourlyData(LatLon latLon) {
         var pointsData = getLocationPointData(latLon);
         var hourlyUrl = UtilityString.parse(pointsData, "\"forecastHourly\": \"(.*?)\"");
-        return UtilityIO.getHtml(hourlyUrl);
+        var html = UtilityIO.getHtml(hourlyUrl);
+        return html;
     }
 
     public static string get7DayData(LatLon latLon) {
@@ -31,34 +32,6 @@ class UtilityDownloadNws {
     }
 
     public static string getHtmlWithXml(string url) {
-        UtilityLog.d(url);
-        var session = new Soup.Session();
-        var message = new Soup.Message("GET", url);
-        message.request_headers.append("user-agent", GlobalVariables.appName + " " + GlobalVariables.appCreatorEmail);
-        message.request_headers.append("Accept", "Application/atom+xml");
-        session.send_message(message);
-        return (string)message.response_body.data;
+        return URL.getTextXmlAcceptHeader(url);
     }
-
-    // libsoup-3.0
-    //  public static string getHtmlWithXml(string url) {
-    //      if (url != "") {
-    //          UtilityLog.d(url);
-    //          try {
-    //              Soup.Session session = new Soup.Session();
-    //              Soup.Message message = new Soup.Message("GET", url);
-    //              message.request_headers.append("user-agent", GlobalVariables.appName + " " + GlobalVariables.appCreatorEmail);
-    //              message.request_headers.append("Accept", "Application/atom+xml");
-    //              var data = session.send_and_read(message).get_data();
-    //              if (data == null) {
-    //                  return "";
-    //              }
-    //              return (string)data;
-    //          } catch (Error e) {
-    //              return "";
-    //          }
-    //      } else {
-    //          return "";
-    //      }
-    //  }
 }

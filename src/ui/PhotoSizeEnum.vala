@@ -5,7 +5,7 @@
 // *****************************************************************************
 
 public enum PhotoSizeEnum {
-    full,
-    scaled,
-    normal
+    Full,
+    Scaled,
+    Normal
 }

@@ -22,6 +22,8 @@ class UIPreferences {
     public static bool nexradMainScreen = false;
     public static bool mainScreenSevereDashboard = false;
     public static bool nexradScrollWheelMotion = false;
+    public static bool rememberGOES = false;
+    public static bool rememberMosaic = false;
     public static ArrayList<PrefBool> homeScreenItemsImage;
     public static ArrayList<PrefBool> homeScreenItemsText;
 
@@ -33,12 +35,14 @@ class UIPreferences {
         nexradMainScreen = Utility.readPref("NEXRAD_ON_MAIN_SCREEN", "false").has_prefix("t");
         mainScreenSevereDashboard = Utility.readPref("MAINSCREEN_SEVERE_DASH", "false").has_prefix("t");
         nexradScrollWheelMotion = Utility.readPref("NEXRAD_SCROLLWHEEL", "false").has_prefix("t");
+        rememberGOES = Utility.readPref("REMEMBER_GOES", "false").has_prefix("t");
+        rememberMosaic = Utility.readPref("REMEMBER_MOSAIC", "false").has_prefix("t");
     }
 
     public static void initializeData() {
         homeScreenItemsImage = new ArrayList<PrefBool>.wrap({
-            new PrefBool("Visible Satellite", "VISIBLE_SATELLITE", true),
             new PrefBool("Radar Mosaic", "RADAR_MOSAIC", true),
+            new PrefBool("Visible Satellite", "VISIBLE_SATELLITE", true),
             new PrefBool("Alerts", "USWARN", false),
             new PrefBool("Analysis", "ANALYSIS_RADAR_AND_WARNINGS", false),
         });

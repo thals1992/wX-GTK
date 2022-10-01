@@ -6,76 +6,53 @@
 
 using Gee;
 
+public static string join(ArrayList<string> list, string s) {
+    return string.joinv(s, list.to_array());
+}
+
+public static ArrayList<int> range(int to) {
+    var z = new ArrayList<int>();
+    for (int index = 0; index < to; index++) {
+        z.add(index);
+    }
+    return z;
+}
+
+public static ArrayList<int> range2(int from, int to) {
+    var z = new ArrayList<int>();
+    for (int index = from; index < to; index++) {
+        z.add(index);
+    }
+    return z;
+}
+
+public static ArrayList<int> range3(int from, int to, int by) {
+    var z = new ArrayList<int>();
+    for (int i = from; i < to; i += by) {
+        z.add(i);
+    }
+    return z;
+}
+
+public static int findex(string value, string[] items) {
+    for (int index = 0; index < items.length; index++) {
+        if (items[index].has_prefix(value)) {
+            return index;
+        }
+    }
+    return 0;
+}
+
+public static int indexOf(string[] items, string value) {
+    for (int index = 0; index < items.length; index++) {
+        if (items[index] == value) {
+            return index;
+        }
+    }
+    return 0;
+}
+
 class UtilityList {
-
-    public static int indexOf(string[] items, string value) {
-        for (int index = 0; index < items.length; index++) {
-            if (items[index] == value) {
-                return index;
-            }
-        }
-        return 0;
-    }
-
-    public static bool inIt(string value, string[] items) {
-        foreach (var item in items) {
-            if (item == value) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static bool inItInt(int value, int[] items) {
-        foreach (var item in items) {
-            if (item == value) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static int findex(string value, string[] items) {
-        for (int index = 0; index < items.length; index++) {
-            if (items[index].has_prefix(value)) {
-                return index;
-            }
-        }
-        return 0;
-    }
-
-    // TODO FIXME remove
-    public static string[] listToArray(ArrayList<string> stringList) {
-        return stringList.to_array();
-    }
-
-    public static ArrayList<string> arrayToList(string[] array) {
-        return wrap(array);
-    }
-
-    public static ArrayList<int> range(int to) {
-        var z = new ArrayList<int>();
-        for (int index = 0; index < to; index++) {
-            z.add(index);
-        }
-        return z;
-    }
-
-    public static ArrayList<int> range2(int from, int to) {
-        var z = new ArrayList<int>();
-        for (int index = from; index < to; index++) {
-            z.add(index);
-        }
-        return z;
-    }
-
-    public static ArrayList<int> range3(int from, int to, int by) {
-        var z = new ArrayList<int>();
-        for (int i = from; i < to; i += by) {
-            z.add(i);
-        }
-        return z;
-    }
 
     public static ArrayList<string> wrap(string[] a) {
         return new ArrayList<string>.wrap(a);
@@ -105,9 +82,5 @@ class UtilityList {
             newList.add(data[index]);
         }
         return newList;
-    }
-
-    public static string join(ArrayList<string> l, string s) {
-        return string.joinv(s, listToArray(l));
     }
 }

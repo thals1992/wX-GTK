@@ -8,16 +8,16 @@ using Gee;
 
 class SpcFireSummary : Window {
 
-    string[] urls = UtilitySpcFireOutlook.urls;
     HBox box = new HBox();
     ArrayList<Image> images = new ArrayList<Image>();
 
     public SpcFireSummary() {
         setTitle("SPC Fire Weather Outlook");
         maximize();
+        string[] urls = UtilitySpcFireOutlook.urls;
         box.addImageRow(urls, images);
         box.getAndShow(this);
-        foreach (var i in UtilityList.range(urls.length)) {
+        foreach (var i in range(urls.length)) {
             images[i].connect((index) => new SpcFireWeatherOutlook(index));
             new FutureBytes(urls[i], images[i].setBytes);
         }

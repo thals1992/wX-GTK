@@ -31,7 +31,14 @@ public class FileStorage {
     public ArrayList<double?> obsArrY = new ArrayList<double?>();
     public ArrayList<int> obsArrAviationColor = new ArrayList<int>();
     public string obsOldRadarSite = "";
-    public DownloadTimer obsDownloadTimer = new DownloadTimer("OBS_AND_WIND_BARBS");
+    public DownloadTimer obsDownloadTimer = new DownloadTimer("OBS_AND_WIND_BARBS" + ObjectDateTime.currentTimeMillis().to_string());
+    // geom data
+    public HashMap<RadarGeometryTypeEnum, ArrayList<float?>> relativeBuffers = new HashMap<RadarGeometryTypeEnum, ArrayList<float?>>();
+    public ArrayList<WbData> locationDotsTransformed = new ArrayList<WbData>();
+    public ArrayList<int> locationDotsColor = new ArrayList<int>();
+
+    public FileStorage() {
+    }
 
     public void clearBuffers() {
         animationByteArray.clear();
@@ -46,7 +53,7 @@ public class FileStorage {
     public void setMemoryBufferForL3TextProducts(string product, uint8[] byteArrayF) {
         // ISO-8859-1
         var builder = new StringBuilder();
-        foreach (var i in UtilityList.range(byteArrayF.length)) {
+        foreach (var i in range(byteArrayF.length)) {
             uint8 ch = byteArrayF[i];
             if (ch < 0x80 && ch != '\0') {
                 builder.append_c((char)ch);

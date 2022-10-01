@@ -9,15 +9,15 @@ using Gee;
 class SpcTstormOutlooks : Window {
 
     HBox box = new HBox();
-    ArrayList<string> urls = UtilitySpc.getTstormOutlookUrls();
     ArrayList<Image> images = new ArrayList<Image>();
 
     public SpcTstormOutlooks() {
         setTitle("SPC Thunderstorm Outlooks");
         maximize();
-        box.addImageRow(urls.to_array(), images);
+        var urls = UtilitySpc.getTstormOutlookUrls().to_array();
+        box.addImageRow(urls, images);
         box.getAndShow(this);
-        foreach (var i in UtilityList.range(urls.size)) {
+        foreach (var i in range(urls.length)) {
             new FutureBytes(urls[i], images[i].setBytes);
         }
     }

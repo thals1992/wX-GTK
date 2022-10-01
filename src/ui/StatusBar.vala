@@ -8,16 +8,16 @@ public class StatusBar {
 
     Gtk.Statusbar statusBar = new Gtk.Statusbar();
 
-    public void setText(string t) {
-        uint messageId = statusBar.get_context_id(t);
-        statusBar.push(messageId, t);
+    public string text {
+        set {
+            uint messageId = statusBar.get_context_id(value);
+            statusBar.push(messageId, value);
+        }
     }
 
-    public void setVisible(bool b) {
-        statusBar.visible = b;
+    public bool visible {
+        set { statusBar.visible = value; }
     }
 
-    public Gtk.Statusbar get() {
-        return statusBar;
-    }
+    public Gtk.Statusbar get() { return statusBar; }
 }

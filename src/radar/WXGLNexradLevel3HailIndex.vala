@@ -12,7 +12,7 @@ class WXGLNexradLevel3HailIndex {
 
     public static void decode(ProjectionNumbers projectionNumbers, FileStorage fileStorage) {
         var productCode = "HI";
-        WXGLDownload.getNidsTab(productCode, projectionNumbers.radarSite, fileStorage);
+        WXGLDownload.getNidsTab(productCode, projectionNumbers.getRadarSite(), fileStorage);
         var hailData = fileStorage.level3TextProductMap[productCode];
         var posn = UtilityString.parseColumn(hailData, "AZ/RAN(.*?)V");
         var hailPercent = UtilityString.parseColumn(hailData, "POSH/POH(.*?)V");
@@ -40,7 +40,7 @@ class WXGLNexradLevel3HailIndex {
         var stormList = new ArrayList<double?>();
         if ((posnNumbers.size == hailPercentNumbers.size) && posnNumbers.size > 1) {
             var index = 0;
-            foreach (var data in UtilityList.range3(0, posnNumbers.size - 2, 2)) {
+            foreach (var data in range3(0, posnNumbers.size - 2, 2)) {
                 var hailSizeDbl = Too.Double(hailSizeNumbers[index]);
                 if (hailSizeDbl > 0.49 && (Too.Int(hailPercentNumbers[data]) > 60 || Too.Int(hailPercentNumbers[data + 1]) > 60)) {
                     var ecc = new ExternalGeodeticCalculator();

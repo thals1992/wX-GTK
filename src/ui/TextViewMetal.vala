@@ -9,7 +9,7 @@ public class TextViewMetal {
     public string text = "";
     public int xPos = 0;
     public int yPos = 0;
-    public const float fontSize = 14.0f;
+    public const double fontSize = 14.0;
 
     public void setText(string text) {
         this.text = text;

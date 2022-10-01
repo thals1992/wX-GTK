@@ -384,6 +384,7 @@ class UtilityRadar {
         radarIdToName["TTUL"] = "OK, Tulsa";
         radarIdToName["TDCA"] = "MD, Washington National";
         radarIdToName["TPBI"] = "FL, West Palm Beach";
+        radarIdToName["TICH"] = "KS, Wichita";
         wfoSitetoLat["ABC"] = "60.79278";
         wfoSitetoLat["ABQ"] = "35.1027";
         wfoSitetoLat["ABR"] = "45.45583";
@@ -990,7 +991,7 @@ class UtilityRadar {
         radarSiteToLat["THOU"] = "29.515852";
         radarSiteToLat["TIAD"] = "39.083667";
         radarSiteToLat["TIAH"] = "30.06472";
-        radarSiteToLat["TICT"] = "37.506844";
+        radarSiteToLat["TICH"] = "37.506844";
         radarSiteToLat["TIDS"] = "39.636556";
         radarSiteToLat["TJFK"] = "40.588633";
         radarSiteToLat["TLAS"] = "36.144";
@@ -1192,7 +1193,7 @@ class UtilityRadar {
         radarSiteToLon["THOU"] = "95.241692";
         radarSiteToLon["TIAD"] = "77.529224";
         radarSiteToLon["TIAH"] = "95.5675";
-        radarSiteToLon["TICT"] = "97.437228";
+        radarSiteToLon["TICH"] = "97.437228";
         radarSiteToLon["TIDS"] = "86.435286";
         radarSiteToLon["TJFK"] = "73.880303";
         radarSiteToLon["TLAS"] = "115.007";

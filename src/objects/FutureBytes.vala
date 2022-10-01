@@ -6,13 +6,13 @@
 
 public class FutureBytes {
 
-    public delegate void FBUpdateFunc(uint8[] data);
-    unowned FBUpdateFunc updateFunc;
+    public delegate void FnBytes(uint8[] data);
+    unowned FnBytes updateFunc;
     uint8[] data;
     string arg1;
     FutureType dataType;
 
-    public FutureBytes(string arg1, FBUpdateFunc updateFunc) {
+    public FutureBytes(string arg1, FnBytes updateFunc) {
         this.updateFunc = updateFunc;
         this.arg1 = arg1;
         dataType = FutureType.bytes;

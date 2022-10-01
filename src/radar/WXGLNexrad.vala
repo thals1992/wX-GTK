@@ -11,6 +11,8 @@ class WXGLNexrad {
     public const string[] radarProductList = {
         "N0Q: Base Reflectivity",
         "N0U: Base Velocity",
+        "N0B: Base Reflectivity super-res",
+        "N0G: Base Velocity super-res",
         "EET: Enhanced Echo Tops",
         "DVL: Vertically Integrated Liquid",
         "N0C: Correlation Coefficient",
@@ -34,7 +36,7 @@ class WXGLNexrad {
     public static float wxoglDspLegendMax = 0.0f;
 
     public static int findRadarProductIndex(string product) {
-        foreach (var index in UtilityList.range(radarProductList.length)) {
+        foreach (var index in range(radarProductList.length)) {
             if (radarProductList[index].has_prefix(product + ":")) {
                 return index;
             }
@@ -48,6 +50,17 @@ class WXGLNexrad {
 
     public static bool isProductTdwr(string product) {
         return product.has_prefix("TV") || product == "TZL" || product.has_prefix("TZ");
+    }
+
+    // 1 min is 60k ms
+    public static bool isRadarTimeOld(int radarMilli) { return radarMilli > 20 * 60000; }
+
+    public static bool isVtecCurrent(string vtec) {
+        // example 190512T1252Z-190512T1545Z
+        var vtecTimeRange = UtilityString.parse(vtec, "-([0-9]{6}T[0-9]{4})Z");
+        var vtecTime = new ObjectDateTime.decodeVtecTime(vtecTimeRange);
+        var currentTime = new ObjectDateTime.decodeVtecTime(ObjectDateTime.getGmtTimeForVtec());
+        return currentTime.isBefore(vtecTime);
     }
 
     public static int getNumberRangeBins(int productCode) {
@@ -131,6 +144,7 @@ class WXGLNexrad {
             case 2161:
                 return binSize13;
             case 78:
+                return binSize110;
             case 80:
                 return binSize110;
             default:

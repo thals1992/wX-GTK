@@ -21,7 +21,7 @@ class SpcSwoDay1 : Window {
         } else {
             urls = UtilitySpcSwo.getImageUrls(day);
         }
-        foreach (var index in UtilityList.range(urls.size)) {
+        foreach (var index in range(urls.size)) {
             images.add(new Image.withIndex(index));
             imageVBox.addWidget(images[index].get());
         }
@@ -29,9 +29,10 @@ class SpcSwoDay1 : Window {
         if (day == "4" || day == "5" || day == "6" || day == "7" || day == "8" || day == "48") {
             product = "SWOD48";
         }
+        text.hExpand();
         new ObjectTwoWidgetScroll(this, imageVBox.get(), text.get());
         new FutureText(product, text.setText);
-        foreach (var i in UtilityList.range(urls.size)) {
+        foreach (var i in range(urls.size)) {
             new FutureBytes(urls[i], images[i].setBytes);
         }
     }

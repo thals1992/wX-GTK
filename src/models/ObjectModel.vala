@@ -142,19 +142,19 @@ class ObjectModel {
     }
 
     public void loadTimeList(int from, int to, int by) {
-        foreach (var value in UtilityList.range3(from, to, by)) {
+        foreach (var value in range3(from, to, by)) {
             times.add(Too.StringPadLeftZeros(value, 2));
         }
     }
 
     public void loadTimeList3(int from, int to, int by) {
-        foreach (var value in UtilityList.range3(from, to, by)) {
+        foreach (var value in range3(from, to, by)) {
             times.add(Too.StringPadLeftZeros(value, 3));
         }
     }
 
     public void loadRunList(int from, int to, int by) {
-        foreach (var value in UtilityList.range3(from, to, by)) {
+        foreach (var value in range3(from, to, by)) {
             runs.add(Too.StringPadLeftZeros(value, 2) + "Z");
         }
     }

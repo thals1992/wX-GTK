@@ -49,7 +49,7 @@ class WXGLNexradLevel3WindBarbs {
                 tmpCoords = WXGLNexradLevel3Common.computeMercatorNumbersFromEc(ec, projectionNumbers);
                 stormList.add(tmpCoords[0]);
                 stormList.add(tmpCoords[1]);
-                int barbCount = length / 10;
+                var barbCount = (int)(length / 10.0);
                 var halfBarb = false;
                 var oneHalfBarb = false;
                 if (((length - barbCount * 10) > 4 && length > 10) || (length > 4 && length < 10)) {
@@ -77,7 +77,7 @@ class WXGLNexradLevel3WindBarbs {
                     stormList.add_all(WXGLNexradLevel3Common.drawLine(ec, ecc, projectionNumbers, degree2 - 180.0, startLength + 0.5 * arrowLength * nmScaleFactor));
                     index += 1;
                 }
-                UtilityList.range3(index, barbCount, 1).foreach((unused) => {
+                range3(index, barbCount, 1).foreach((unused) => {
                     ec = ecc.calculateEndingGlobalCoordinates(end, degree2, barbOffset + startLength + index * arrowSpacing * nmScaleFactor * barbLengthScaleFactor);
                     stormList.add_all(WXGLNexradLevel3Common.drawLine(ec, ecc, projectionNumbers, degree2 - arrowBend * 2.0, startLength + arrowLength * nmScaleFactor));
                     index += 1;

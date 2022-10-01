@@ -18,6 +18,7 @@ class SevenDayCard : HBox {
         text1.setText(row1.replace("\"", "") + tempAndWind(row2));
         text1.setBold();
         text2.setText(row2);
+        text2.hExpand();
 
         boxText.addWidget(text1.get());
         boxText.addWidget(text2.get());

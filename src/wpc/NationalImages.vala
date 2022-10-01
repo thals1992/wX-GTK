@@ -64,7 +64,7 @@ class NationalImages : Window {
     }
 
     void changeProductByCode(string s) {
-        index = UtilityList.findex(s, UtilityWpcImages.labels);
+        index = findex(s, UtilityWpcImages.labels);
         reload();
     }
 }
