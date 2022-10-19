@@ -2,7 +2,7 @@
 #
 # compile and run program
 #
-ulimit -c unlimited
+#ulimit -c unlimited
 buildCommand="ninja"
 if [ "$1" != "" ]; then
 	buildCommand="ninja -j ${1}"
