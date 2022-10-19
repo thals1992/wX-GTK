@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=wX
+Comment=wX port to GTK written in Vala
+Exec=wxgtk
+Icon=wx_launcher.png
+Terminal=false
+Type=Application
+Categories=web;weather;
