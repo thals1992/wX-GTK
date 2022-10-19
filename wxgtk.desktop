@@ -2,6 +2,6 @@
 Name=wX
 Comment=wX port to GTK written in Vala
 Exec=wxgtk
-Icon=wx_launcher.png
+Icon=wx_launcher
 Terminal=false
 Type=Application
