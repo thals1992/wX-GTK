@@ -72,7 +72,7 @@ class UtilityHourly {
         var shortForecasts = UtilityString.parseColumn(html, "\"shortForecast\": \"(.*?)\"");
         var stringValue = "";
         foreach (var index in range(startTime.size)) {
-            var time = translateTime(startTime[index]);
+            var time = ObjectDateTime.translateTimeForHourly(startTime[index]);
             var temperature = Utility.safeGet(temperatures, index);
             var windSpeed = Utility.safeGet(windSpeeds, index).replace(" to ", "-");
             var windDirection = Utility.safeGet(windDirections, index);
@@ -93,22 +93,5 @@ class UtilityHourly {
             hourly = hourly.replace(data, abbreviations[data]);
         }
         return hourly;
-    }
-
-    static string translateTime(string originalTime) {
-        var originalTimeComponents = originalTime.replace("T", "-").split("-");
-        var hour = Too.Int(originalTimeComponents[3].replace(":00:00", ""));
-        var hourString = Too.String(hour);
-        var dayOfTheWeek = getDayOfWeek(originalTime);
-        return dayOfTheWeek + " " + hourString;
-    }
-
-    public static string getDayOfWeek(string originalTime) {
-        var originalTimeComponents = originalTime.replace("T", "-").split("-");
-        var year = Too.Int(originalTimeComponents[0]);
-        var month = Too.Int(originalTimeComponents[1]);
-        var day = Too.Int(originalTimeComponents[2]);
-        var hour = Too.Int(originalTimeComponents[3].replace(":00:00", ""));
-        return ObjectDateTime.dayOfWeekAbbreviation(year, month, day, hour);
     }
 }

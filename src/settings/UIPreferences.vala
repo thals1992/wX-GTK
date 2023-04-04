@@ -39,12 +39,13 @@ class UIPreferences {
         rememberMosaic = Utility.readPref("REMEMBER_MOSAIC", "false").has_prefix("t");
     }
 
-    public static void initializeData() {
+    public static void initStatic() {
         homeScreenItemsImage = new ArrayList<PrefBool>.wrap({
             new PrefBool("Radar Mosaic", "RADAR_MOSAIC", true),
             new PrefBool("Visible Satellite", "VISIBLE_SATELLITE", true),
             new PrefBool("Alerts", "USWARN", false),
             new PrefBool("Analysis", "ANALYSIS_RADAR_AND_WARNINGS", false),
+            new PrefBool("RTMA Temp", "RTMA_TEMP", false),
         });
         homeScreenItemsText = new ArrayList<PrefBool>.wrap({
             new PrefBool("Hourly", "HOURLY", true),

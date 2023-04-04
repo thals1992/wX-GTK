@@ -25,7 +25,7 @@ class MenuButton {
                 // button.set_child(image.get()); // GTK 4.6+
                 button.set_label(label);
             #else
-                button.set_image(image.get());
+                button.set_image(image.getView());
             #endif
         }
         if (label != "" && imageName == "") {

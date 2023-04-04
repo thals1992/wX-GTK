@@ -8,27 +8,27 @@ using Gee;
 
 class LongPressMenu {
 
-    Menu menu = new Menu();
-    SimpleActionGroup simpleActionGroup = new SimpleActionGroup();
-    ArrayList<SimpleAction> actions = new ArrayList<SimpleAction>();
-    ArrayList<CMenuItem> menuItems = new ArrayList<CMenuItem>();
+    //  Menu menu = new Menu();
+    //  SimpleActionGroup simpleActionGroup = new SimpleActionGroup();
+    //  ArrayList<SimpleAction> actions = new ArrayList<SimpleAction>();
+    //  ArrayList<CMenuItem> menuItems = new ArrayList<CMenuItem>();
 
-    public void add(CMenuItem cmenuItem, FnVoid fn) {
-        menuItems.add(cmenuItem);
-        menu.append(cmenuItem.label, "popup.about" + cmenuItem.id);
-        actions.add(new SimpleAction("about" + cmenuItem.id, null));
-        actions.last().activate.connect(() => fn());
-        simpleActionGroup.add_action(actions.last());
-        
-    }
+    //  public void add(CMenuItem cmenuItem, FnVoid fn) {
+    //      menuItems.add(cmenuItem);
+    //      menu.append(cmenuItem.label, "popup.about" + cmenuItem.id);
+    //      actions.add(new SimpleAction("about" + cmenuItem.id, null));
+    //      actions.last().activate.connect(() => fn());
+    //      simpleActionGroup.add_action(actions.last());
 
-    public Menu get() {
-        return menu;
-    }
+    //  }
 
-    public SimpleActionGroup getAG() {
-        return simpleActionGroup;
-    }
+    //  public Menu get() {
+    //      return menu;
+    //  }
+
+    //  public SimpleActionGroup getAG() {
+    //      return simpleActionGroup;
+    //  }
 }
 
 //  var obsSite = UtilityMetar.findClosestObservation(latLon, 0);

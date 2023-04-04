@@ -20,11 +20,11 @@ class SevenDayCard : HBox {
         text2.setText(row2);
         text2.hExpand();
 
-        boxText.addWidget(text1.get());
-        boxText.addWidget(text2.get());
+        boxText.addWidget(text1);
+        boxText.addWidget(text2);
 
-        addWidget(photo.get());
-        addLayout(boxText.get());
+        addWidget(photo);
+        addLayout(boxText);
     }
 
     public void update(string row1, string row2, string icon) {

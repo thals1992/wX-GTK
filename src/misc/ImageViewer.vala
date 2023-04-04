@@ -12,7 +12,7 @@ class ImageViewer : Window {
     public ImageViewer(uint8[] data) {
         photo.setWindow(this);
         photo.setNoScale(data);
-        box.addWidget(photo.get());
+        box.addWidget(photo);
         box.getAndShow(this);
     }
 }

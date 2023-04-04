@@ -12,20 +12,20 @@ class SettingsColorsBox : VBox {
     VBox vbox2 = new VBox();
     HBox hbox = new HBox();
     ArrayList<WXColor> colors = new ArrayList<WXColor>();
-    ArrayList<ObjectColorLabel> colorLabels = new ArrayList<ObjectColorLabel>();
+    ArrayList<ColorLabel> colorLabels = new ArrayList<ColorLabel>();
 
     public SettingsColorsBox() {
         loadColors();
-        hbox.addLayout(vbox1.get());
-        hbox.addLayout(vbox2.get());
-        addLayout(hbox.get());
+        hbox.addLayout(vbox1);
+        hbox.addLayout(vbox2);
+        addLayout(hbox);
         int i = 0;
         foreach (var color in colors) {
-            colorLabels.add(new ObjectColorLabel(color));
+            colorLabels.add(new ColorLabel(color));
             if (i >= colors.size / 2) {
-                vbox2.addLayout(colorLabels.last().get());
+                vbox2.addLayout(colorLabels.last());
             } else {
-                vbox1.addLayout(colorLabels.last().get());
+                vbox1.addLayout(colorLabels.last());
             }
             i += 1;
         }

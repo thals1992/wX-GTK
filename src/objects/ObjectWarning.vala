@@ -37,7 +37,7 @@ class ObjectWarning {
         this.sender = sender;
         this.polygon = polygon;
         this.vtec = vtec;
-        this.isCurrent = WXGLNexrad.isVtecCurrent(this.vtec);
+        this.isCurrent = NexradUtil.isVtecCurrent(this.vtec);
         if (vtec.has_prefix("O.EXP") || vtec.has_prefix("O.CAN")) {
             this.isCurrent = false;
         }

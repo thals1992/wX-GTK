@@ -12,49 +12,12 @@ class Utility {
     static string prefFileName = "";
     const string sep = "ABC123";
     static Mutex mutex;
+    public static Mutex mutexMetar;
     public static string allSettings = "";
 
     public static void initMutex() {
         mutex = Mutex();
-    }
-
-    public static string getRadarSiteName(string radarSite) {
-        return UtilityRadar.radarIdToName[radarSite] ?? "";
-    }
-
-    public static LatLon getRadarSiteLatLon(string radarSite) {
-        var isTdwr = false;
-        var radarPrefix = WXGLDownload.getRidPrefix(radarSite, isTdwr).ascii_up();
-        if (radarSite.length == 4) {
-            radarPrefix = "";
-        }
-        var lat = UtilityRadar.radarSiteToLat[radarPrefix + radarSite] ?? "";
-        var lon = UtilityRadar.radarSiteToLon[radarPrefix + radarSite] ?? "";
-        return new LatLon(lat, lon);
-    }
-
-    public static string getRadarSiteX(string radarSite) {
-        var isTdwr = false;
-        var radarPrefix = WXGLDownload.getRidPrefix(radarSite, isTdwr).ascii_up();
-        if (radarSite.length == 4) {
-            radarPrefix = "";
-        }
-        return UtilityRadar.radarSiteToLat[radarPrefix + radarSite] ?? "";
-    }
-
-    public static string getRadarSiteY(string radarSite) {
-        var isTdwr = false;
-        var radarPrefix = WXGLDownload.getRidPrefix(radarSite, isTdwr).ascii_up();
-        if (radarSite.length == 4) {
-            radarPrefix = "";
-        }
-        return UtilityRadar.radarSiteToLon[radarPrefix + radarSite] ?? "";
-    }
-
-    public static LatLon getWfoSiteLatLon(string wfo) {
-        var lat = UtilityRadar.wfoSitetoLat[wfo] ?? "";
-        var lon = UtilityRadar.wfoSitetoLon[wfo] ?? "";
-        return new LatLon(lat, lon);
+        mutexMetar = Mutex();
     }
 
     public static string safeGet(ArrayList<string> l, int index) {

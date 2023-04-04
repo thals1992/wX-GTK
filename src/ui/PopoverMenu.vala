@@ -6,7 +6,7 @@
 
 using Gee;
 
-public class PopoverMenu {
+public class PopoverMenu : Widget {
 
     unowned FnString fnAction;
     Gtk.Popover popover;
@@ -26,12 +26,12 @@ public class PopoverMenu {
             var url = buttonList[index];
             buttons.add(new Button(Icon.None, buttonList[index]));
             buttons.last().connectString(buttonClick, url);
-            vbox.addWidget(buttons.last().get());
+            vbox.addWidget(buttons.last());
         }
         #if GTK4
-            popover.set_child(vbox.get());
+            popover.set_child(vbox.getView());
         #else
-            popover.add(vbox.get());
+            popover.add(vbox.getView());
         #endif
         button.set_popover(popover);
         popover.set_position(Gtk.PositionType.BOTTOM);
@@ -46,5 +46,5 @@ public class PopoverMenu {
         fnAction(s);
     }
 
-    public Gtk.MenuButton get() { return button; }
+    public Gtk.Widget getView() { return button; }
 }

@@ -19,7 +19,7 @@ class RadarMosaicNws : Window {
     public RadarMosaicNws() {
         setTitle("Radar Mosaic Viewer");
         maximize();
-        
+
         photo = new Photo(this, PhotoSizeEnum.Full);
         objectAnimate = new ObjectAnimate(photo, UtilityNwsRadarMosaic.getAnimation, reload);
         if (!UIPreferences.rememberMosaic) {
@@ -40,11 +40,11 @@ class RadarMosaicNws : Window {
         comboboxSector.setIndex(UtilityNwsRadarMosaic.sectors.index_of(objectAnimate.sector));
         comboboxSector.connect(changeSector);
 
-        boxH.addWidget(comboboxSector.get());
-        boxH.addWidget(animateButton.get());
+        boxH.addWidget(comboboxSector);
+        boxH.addWidget(animateButton);
 
-        box.addLayout(boxH.get());
-        box.addWidgetAndCenter(photo.get());
+        box.addLayout(boxH);
+        box.addWidgetAndCenter1(photo);
         box.getAndShow(this);
 
         reload();

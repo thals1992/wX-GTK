@@ -31,7 +31,7 @@ class UtilityIO {
     //         string read;
     //         FileUtils.get_contents(srcFile, out read);
     //         return UtilityList.wrap(read.split(GlobalVariables.newline));
-    //     } catch(Error e) {
+    //     } catch (Error e) {
     //         print(e.message + "\n");
     //         return UtilityList.wrap({});
     //     }

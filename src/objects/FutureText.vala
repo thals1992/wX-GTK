@@ -23,7 +23,7 @@ public class FutureText {
     }
 
     void* download() {
-        textData = UtilityDownload.getTextProduct(arg1);
+        textData = DownloadText.byProduct(arg1);
         GLib.Idle.add(() => { updateFunc(textData); return false; });
         return null;
     }

@@ -24,15 +24,15 @@ class SevereNotice {
         switch (type1) {
             case PolygonType.Mcd:
                 comp = "<center>No Mesoscale Discussions are currently in effect.";
-                html = ObjectPolygonWatch.polygonDataByType[PolygonType.Mcd].numberList.getValue();
+                html = PolygonWatch.byType[PolygonType.Mcd].numberList.getValue();
                 break;
             case PolygonType.Watch:
                 comp = "<center><strong>No watches are currently valid";
-                html = ObjectPolygonWatch.polygonDataByType[PolygonType.Watch].numberList.getValue();
+                html = PolygonWatch.byType[PolygonType.Watch].numberList.getValue();
                 break;
             case PolygonType.Mpd:
                 comp = "No MPDs are currently in effect.";
-                html = ObjectPolygonWatch.polygonDataByType[PolygonType.Mpd].numberList.getValue();
+                html = PolygonWatch.byType[PolygonType.Mpd].numberList.getValue();
                 break;
             default:
                 comp = "";
@@ -56,7 +56,7 @@ class SevereNotice {
                 var url = "";
                 switch (type1) {
                     case PolygonType.Mcd:
-                        url = GlobalVariables.nwsSPCwebsitePrefix + "/products/md/mcd" + number + ".gif";
+                        url = GlobalVariables.nwsSPCwebsitePrefix + "/products/md/mcd" + number + ".png";
                         break;
                     case PolygonType.Watch:
                         url = GlobalVariables.nwsSPCwebsitePrefix + "/products/watch/ww" + number + "_radar.gif";
@@ -88,5 +88,9 @@ class SevereNotice {
 
     public string getCount() {
         return Too.String(urls.size);
+    }
+
+    public int getCountInt() {
+        return urls.size;
     }
 }

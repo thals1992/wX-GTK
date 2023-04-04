@@ -24,13 +24,10 @@ class ObjectMetar {
     public string metarWeatherCondition = "";
     public string[] metarDataList;
     public RID obsClosest;
-    LatLon location;
     string metarData = "";
 
     public ObjectMetar(LatLon location, int order) {
-        // TODO FIXME?
-        this.location = new LatLon.fromDouble(location.lat(), location.lon());
-        obsClosest = UtilityMetar.findClosestObservation(location, order);
+        obsClosest = Metar.findClosestObservation(location, order);
     }
 
     public void process() {

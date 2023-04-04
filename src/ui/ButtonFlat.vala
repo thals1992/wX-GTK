@@ -4,7 +4,7 @@
 // * Refer to the COPYING file of the official project for license.
 // *****************************************************************************
 
-class ButtonFlat {
+class ButtonFlat : Widget {
 
     int iconSize = 42;
     Gtk.Button button = new Gtk.Button();
@@ -28,9 +28,9 @@ class ButtonFlat {
             pix = pix.scale_simple(iconSize, iconSize, Gdk.InterpType.BILINEAR);
             image.setPix(pix);
             #if GTK4
-                button.set_child(image.get());
+                button.set_child(image.getView());
             #else
-                button.set_image(image.get());
+                button.set_image(image.getView());
             #endif
         }
         if (label != "" && imageName == "") {
@@ -42,5 +42,5 @@ class ButtonFlat {
         button.clicked.connect(() => fn());
     }
 
-    public Gtk.Widget get() { return button; }
+    public Gtk.Widget getView() { return button; }
 }

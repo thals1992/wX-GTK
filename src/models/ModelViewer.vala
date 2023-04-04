@@ -38,15 +38,15 @@ class ModelViewer : Window {
         leftButton.connect(moveLeftClicked);
         rightButton.connect(moveRightClicked);
 
-        boxH.addWidget(comboboxModel.get());
-        boxH.addWidget(comboboxRun.get());
-        boxH.addWidget(comboboxSector.get());
-        boxH.addWidget(comboboxProduct.get());
-        boxH.addWidget(comboboxTime.get());
-        boxH.addWidget(leftButton.get());
-        boxH.addWidget(rightButton.get());
-        box.addLayout(boxH.get());
-        box.addWidgetCenter(photo.get());
+        boxH.addWidget(comboboxModel);
+        boxH.addWidget(comboboxRun);
+        boxH.addWidget(comboboxSector);
+        boxH.addWidget(comboboxProduct);
+        boxH.addWidget(comboboxTime);
+        boxH.addWidget(leftButton);
+        boxH.addWidget(rightButton);
+        box.addLayout(boxH);
+        box.addWidgetAndCenter1(photo);
         box.getAndShow(this);
         getRun();
     }

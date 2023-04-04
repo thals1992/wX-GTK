@@ -29,91 +29,88 @@ public class NexradLayerDownload {
             }
         }
         if (allDone) {
-            print("NexradLayerDownload: clear futures\n");
             futures.clear();
             futureInts.clear();
         }
         //  if (RadarPreferences.warnings) {
-        //      futures.add(new FutureVoid(ObjectPolygonWarning.polygonDataByType[PolygonType.Tst].download, () => updateWarnings(PolygonType.Tst)));
-        //      futures.add(new FutureVoid(ObjectPolygonWarning.polygonDataByType[PolygonType.Tor].download, () => updateWarnings(PolygonType.Tor)));
-        //      futures.add(new FutureVoid(ObjectPolygonWarning.polygonDataByType[PolygonType.Ffw].download, () => updateWarnings(PolygonType.Ffw)));
+        //      futures.add(new FutureVoid(PolygonWarning.polygonDataByType[PolygonType.Tst].download, () => updateWarnings(PolygonType.Tst)));
+        //      futures.add(new FutureVoid(PolygonWarning.polygonDataByType[PolygonType.Tor].download, () => updateWarnings(PolygonType.Tor)));
+        //      futures.add(new FutureVoid(PolygonWarning.polygonDataByType[PolygonType.Ffw].download, () => updateWarnings(PolygonType.Ffw)));
         //  }
 
-        //  foreach (var t in ObjectPolygonWarning.polygonList) {
-        //      if (ObjectPolygonWarning.polygonDataByType[PolygonType.Tst].isEnabled) {
-        //          futures.add(new FutureVoid(ObjectPolygonWarning.polygonDataByType[PolygonType.Tst].download, () => updateWarnings(PolygonType.Tst)));
+        //  foreach (var t in PolygonWarning.polygonList) {
+        //      if (PolygonWarning.polygonDataByType[PolygonType.Tst].isEnabled) {
+        //          futures.add(new FutureVoid(PolygonWarning.polygonDataByType[PolygonType.Tst].download, () => updateWarnings(PolygonType.Tst)));
         //      }
         //  }
 
-        if (ObjectPolygonWarning.polygonDataByType[PolygonType.Tst].isEnabled) {
-            futures.add(new FutureVoid(ObjectPolygonWarning.polygonDataByType[PolygonType.Tst].download, () => updateWarnings(PolygonType.Tst)));
+        if (PolygonWarning.byType[PolygonType.Tst].isEnabled) {
+            futures.add(new FutureVoid(PolygonWarning.byType[PolygonType.Tst].download, () => updateWarnings(PolygonType.Tst)));
         }
-        if (ObjectPolygonWarning.polygonDataByType[PolygonType.Tor].isEnabled) {
-            futures.add(new FutureVoid(ObjectPolygonWarning.polygonDataByType[PolygonType.Tor].download, () => updateWarnings(PolygonType.Tor)));
+        if (PolygonWarning.byType[PolygonType.Tor].isEnabled) {
+            futures.add(new FutureVoid(PolygonWarning.byType[PolygonType.Tor].download, () => updateWarnings(PolygonType.Tor)));
         }
-        if (ObjectPolygonWarning.polygonDataByType[PolygonType.Ffw].isEnabled) {
-            futures.add(new FutureVoid(ObjectPolygonWarning.polygonDataByType[PolygonType.Ffw].download, () => updateWarnings(PolygonType.Ffw)));
+        if (PolygonWarning.byType[PolygonType.Ffw].isEnabled) {
+            futures.add(new FutureVoid(PolygonWarning.byType[PolygonType.Ffw].download, () => updateWarnings(PolygonType.Ffw)));
         }
-        if (ObjectPolygonWarning.polygonDataByType[PolygonType.Smw].isEnabled) {
-            futures.add(new FutureVoid(ObjectPolygonWarning.polygonDataByType[PolygonType.Smw].download, () => updateWarnings(PolygonType.Smw)));
+        if (PolygonWarning.byType[PolygonType.Smw].isEnabled) {
+            futures.add(new FutureVoid(PolygonWarning.byType[PolygonType.Smw].download, () => updateWarnings(PolygonType.Smw)));
         }
-        if (ObjectPolygonWarning.polygonDataByType[PolygonType.Sqw].isEnabled) {
-            futures.add(new FutureVoid(ObjectPolygonWarning.polygonDataByType[PolygonType.Sqw].download, () => updateWarnings(PolygonType.Sqw)));
+        if (PolygonWarning.byType[PolygonType.Sqw].isEnabled) {
+            futures.add(new FutureVoid(PolygonWarning.byType[PolygonType.Sqw].download, () => updateWarnings(PolygonType.Sqw)));
         }
-        if (ObjectPolygonWarning.polygonDataByType[PolygonType.Dsw].isEnabled) {
-            futures.add(new FutureVoid(ObjectPolygonWarning.polygonDataByType[PolygonType.Dsw].download, () => updateWarnings(PolygonType.Dsw)));
+        if (PolygonWarning.byType[PolygonType.Dsw].isEnabled) {
+            futures.add(new FutureVoid(PolygonWarning.byType[PolygonType.Dsw].download, () => updateWarnings(PolygonType.Dsw)));
         }
-        if (ObjectPolygonWarning.polygonDataByType[PolygonType.Sps].isEnabled) {
-            futures.add(new FutureVoid(ObjectPolygonWarning.polygonDataByType[PolygonType.Sps].download, () => updateWarnings(PolygonType.Sps)));
+        if (PolygonWarning.byType[PolygonType.Sps].isEnabled) {
+            futures.add(new FutureVoid(PolygonWarning.byType[PolygonType.Sps].download, () => updateWarnings(PolygonType.Sps)));
         }
 
         //  auto col1 = {Mcd, Watch, Mpd};
         //  var col1 = new PolygonType[]{PolygonType.Mcd, PolygonType.Watch, PolygonType.Mpd};
         //  foreach (var t in col1) {
-        //      if (ObjectPolygonWatch.polygonDataByType[t].isEnabled) {
-        //          print(t.to_string() + " enabled \n");
+        //      if (PolygonWatch.polygonDataByType[t].isEnabled) {
         //          PolygonType t1 = t;
-        //          futures.add(new FutureVoid(ObjectPolygonWatch.polygonDataByType[t].download, () => processWatch(t1)));
+        //          futures.add(new FutureVoid(PolygonWatch.polygonDataByType[t].download, () => processWatch(t1)));
         //      }
         //  }
-        if (ObjectPolygonWatch.polygonDataByType[PolygonType.Watch].isEnabled) {
-            futures.add(new FutureVoid(ObjectPolygonWatch.polygonDataByType[PolygonType.Watch].download, () => processWatch(PolygonType.Watch)));
+        if (PolygonWatch.byType[PolygonType.Watch].isEnabled) {
+            futures.add(new FutureVoid(PolygonWatch.byType[PolygonType.Watch].download, () => processWatch(PolygonType.Watch)));
         }
-        if (ObjectPolygonWatch.polygonDataByType[PolygonType.Mcd].isEnabled) {
-            futures.add(new FutureVoid(ObjectPolygonWatch.polygonDataByType[PolygonType.Mcd].download, () => processWatch(PolygonType.Mcd)));
+        if (PolygonWatch.byType[PolygonType.Mcd].isEnabled) {
+            futures.add(new FutureVoid(PolygonWatch.byType[PolygonType.Mcd].download, () => processWatch(PolygonType.Mcd)));
         }
-        if (ObjectPolygonWatch.polygonDataByType[PolygonType.Mpd].isEnabled) {
-            futures.add(new FutureVoid(ObjectPolygonWatch.polygonDataByType[PolygonType.Mpd].download, () => processWatch(PolygonType.Mpd)));
+        if (PolygonWatch.byType[PolygonType.Mpd].isEnabled) {
+            futures.add(new FutureVoid(PolygonWatch.byType[PolygonType.Mpd].download, () => processWatch(PolygonType.Mpd)));
         }
-
 
         //  if (RadarPreferences.watch) {
-        //      futures.add(new FutureVoid(ObjectPolygonWatch.polygonDataByType[PolygonType.Watch].download, () => processWatch(PolygonType.Watch)));
+        //      futures.add(new FutureVoid(PolygonWatch.polygonDataByType[PolygonType.Watch].download, () => processWatch(PolygonType.Watch)));
         //  }
         //  if (RadarPreferences.mcd) {
-        //      futures.add(new FutureVoid(ObjectPolygonWatch.polygonDataByType[PolygonType.Mcd].download, () => processWatch(PolygonType.Mcd)));
+        //      futures.add(new FutureVoid(PolygonWatch.polygonDataByType[PolygonType.Mcd].download, () => processWatch(PolygonType.Mcd)));
         //  }
         //  if (RadarPreferences.mpd) {
-        //      futures.add(new FutureVoid(ObjectPolygonWatch.polygonDataByType[PolygonType.Mpd].download, () => processWatch(PolygonType.Mpd)));
+        //      futures.add(new FutureVoid(PolygonWatch.polygonDataByType[PolygonType.Mpd].download, () => processWatch(PolygonType.Mpd)));
         //  }
         if (RadarPreferences.swo) {
-            futures.add(new FutureVoid(UtilitySwoDayOne.get, updateSwo));
+            futures.add(new FutureVoid(SwoDayOne.get, updateSwo));
         }
         if (RadarPreferences.wpcFronts) {
-            futures.add(new FutureVoid(UtilityWpcFronts.get, updateWpcFronts));
+            futures.add(new FutureVoid(WpcFronts.get, updateWpcFronts));
         }
         foreach (var i in range(nexradList.size)) {
             if (RadarPreferences.sti) {
-                futureInts.add(new FutureVoidInt((i) => WXGLNexradLevel3StormInfo.decode(nexradList[i].nexradState.getPn(), nexradList[i].fileStorage), updateSti, i));
+                futureInts.add(new FutureVoidInt((i) => NexradLevel3StormInfo.decode(nexradList[i].nexradState.getPn(), nexradList[i].fileStorage), updateSti, i));
             }
             if (RadarPreferences.obsWindbarbs || RadarPreferences.obs) {
-                futureInts.add(new FutureVoidInt((i) => UtilityMetar.getStateMetarArrayForWXOGL(nexradList[i].nexradState.getRadarSite(), nexradList[i].fileStorage), updateWBLines, i));
+                futureInts.add(new FutureVoidInt((i) => Metar.getStateMetarArrayForWXOGL(nexradList[i].nexradState.getRadarSite(), nexradList[i].fileStorage), updateWBLines, i));
             }
             if (RadarPreferences.hailIndex) {
-                futureInts.add(new FutureVoidInt((i) => WXGLNexradLevel3HailIndex.decode(nexradList[i].nexradState.getPn(), nexradList[i].fileStorage), constructHi, i));
+                futureInts.add(new FutureVoidInt((i) => NexradLevel3HailIndex.decode(nexradList[i].nexradState.getPn(), nexradList[i].fileStorage), constructHi, i));
             }
             if (RadarPreferences.tvs) {
-                futureInts.add(new FutureVoidInt((i) => WXGLNexradLevel3Tvs.decode(nexradList[i].nexradState.getPn(), nexradList[i].fileStorage), constructTvs, i));
+                futureInts.add(new FutureVoidInt((i) => NexradLevel3Tvs.decode(nexradList[i].nexradState.getPn(), nexradList[i].fileStorage), constructTvs, i));
             }
         }
     }
@@ -126,7 +123,6 @@ public class NexradLayerDownload {
     }
 
     void processWatch(PolygonType type) {
-        //  print("processWatch " + type.to_string() + "\n");
         foreach (var nw in nexradList) {
             nw.process(type);
             if (type == PolygonType.Watch) {

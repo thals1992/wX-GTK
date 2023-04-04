@@ -4,7 +4,7 @@
 // * Refer to the COPYING file of the official project for license.
 // *****************************************************************************
 
-public class ButtonToggle {
+public class ButtonToggle : Widget {
 
     Gtk.ToggleButton button = new Gtk.ToggleButton();
     Photo image = new Photo.icon();
@@ -22,9 +22,9 @@ public class ButtonToggle {
             image.setPix(pix);
             button.set_tooltip_text(label);
             #if GTK4
-                button.set_child(image.get());
+                button.set_child(image.getView());
             #else
-                button.set_image(image.get());
+                button.set_image(image.getView());
             #endif
         }
         if (label != "" && imageName == Icon.None) {
@@ -46,5 +46,5 @@ public class ButtonToggle {
         button.set_active(b);
     }
 
-    public Gtk.ToggleButton get() { return button; }
+    public Gtk.Widget getView() { return button; }
 }

@@ -24,9 +24,9 @@ class UsAlerts : Window {
         setTitle("US Alerts");
         maximize();
 
-        box.addLayout(boxCombo.get());
-        box.addWidgetAndCenter(photo.get());
-        box.addLayout(boxText.get());
+        box.addLayout(boxCombo);
+        box.addWidgetAndCenter1(photo);
+        box.addLayout(boxText);
 
         new ScrolledWindow(this, box);
         new FutureBytes(url, photo.setBytes);
@@ -47,7 +47,7 @@ class UsAlerts : Window {
                 filterCount[cap.event1] = 1;
             }
             if (defaultFilter.contains(cap.event1)) {
-                boxText.addWidget(new ObjectCardAlertDetail(cap).get());
+                boxText.addLayout(new CardAlertDetail(cap));
             }
         }
         var uniqEvents = UtilityList.removeDup(rawEvents);
@@ -55,10 +55,11 @@ class UsAlerts : Window {
         foreach (var item in uniqEvents) {
             eventList.add(item + ": " + Too.String(UtilityList.count(rawEvents, item)));
         }
+        setTitle("US Alerts: " + Too.String(capAlerts.size));
         comboBox = new ComboBox.fromList(eventList);
         comboBox.setIndex(0);
         comboBox.connect(() => filterEvents(comboBox.getIndex()));
-        boxCombo.addWidget(comboBox.get());
+        boxCombo.addWidget(comboBox);
     }
 
     void filterEvents(int index) {
@@ -68,13 +69,13 @@ class UsAlerts : Window {
             filter = ":" + join(defaultFilter, ":");
             foreach (var cap in capAlerts) {
                 if (filter.contains(":" + cap.event1 + ":")) {
-                    boxText.addWidget(new ObjectCardAlertDetail(cap).get());
+                    boxText.addLayout(new CardAlertDetail(cap));
                 }
             }
         } else {
             foreach (var cap in capAlerts) {
                 if (cap.event1 == filter) {
-                    boxText.addWidget(new ObjectCardAlertDetail(cap).get());
+                    boxText.addLayout(new CardAlertDetail(cap));
                 }
             }
         }

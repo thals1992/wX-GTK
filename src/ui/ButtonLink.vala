@@ -4,7 +4,7 @@
 // * Refer to the COPYING file of the official project for license.
 // *****************************************************************************
 
-public class ButtonLink {
+public class ButtonLink : Widget {
 
     Gtk.LinkButton button;
 
@@ -13,5 +13,5 @@ public class ButtonLink {
         button.set_halign(Gtk.Align.START);
     }
 
-    public Gtk.Widget get() { return button; }
+    public Gtk.Widget getView() { return button; }
 }

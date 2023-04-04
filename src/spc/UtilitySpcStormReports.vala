@@ -53,9 +53,9 @@ class UtilitySpcStormReports {
                     lat = lineChunks[5];
                     lon = lineChunks[6];
                     damageReport = lineChunks[7];
-                    stormReports.add(new StormReport(output, lat, lon, time, magnitude, address, city, state, damageReport, damageHeader));
                 }
             }
+            stormReports.add(new StormReport(output, lat, lon, time, magnitude, address, city, state, damageReport, damageHeader));
         }
         return stormReports;
     }

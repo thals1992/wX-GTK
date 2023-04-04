@@ -4,7 +4,7 @@
 // * Refer to the COPYING file of the official project for license.
 // *****************************************************************************
 
-public class RadarStatusBox {
+public class RadarStatusBox : Widget {
 
     DrawingArea drawingArea = new DrawingArea();
     bool radarIsCurrent = true;
@@ -73,5 +73,5 @@ public class RadarStatusBox {
         #endif
     }
 
-    public Gtk.DrawingArea get() { return drawingArea.get(); }
+    public Gtk.Widget getView() { return drawingArea.getView(); }
 }

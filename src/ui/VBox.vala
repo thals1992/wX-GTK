@@ -6,7 +6,7 @@
 
 using Gee;
 
-public class VBox {
+public class VBox : Box {
 
     Gtk.Box box = new Gtk.Box(Gtk.Orientation.VERTICAL, 6);
     ArrayList<HBox> boxRows = new ArrayList<HBox>();
@@ -21,38 +21,38 @@ public class VBox {
         w.show();
     }
 
-    public void addLayout(Gtk.Widget w) {
+    public void addLayout(Box widget) {
         #if GTK4
-            box.append(w);
+            box.append(widget.getView());
         #else
-            box.add(w);
+            box.add(widget.getView());
             box.show_all();
         #endif
     }
 
-    public void addWidget(Gtk.Widget w) {
+    public void addWidgetReal(Gtk.Widget widget) {
         #if GTK4
-            box.append(w);
+            box.append(widget);
         #else
-            box.add(w);
+            box.add(widget);
             box.show_all();
         #endif
     }
 
-    public void addWidgetCenter(Gtk.Widget w) {
+    public void addWidget(Widget widget) {
         #if GTK4
-            box.append(w);
+            box.append(widget.getView());
         #else
-            box.add(w);
+            box.add(widget.getView());
             box.show_all();
         #endif
     }
 
-    public void addWidgetAndCenter(Gtk.Widget w) {
+    public void addWidgetAndCenter1(Widget widget) {
         #if GTK4
-            box.append(w);
+            box.append(widget.getView());
         #else
-            box.add(w);
+            box.add(widget.getView());
             box.show_all();
         #endif
     }
@@ -72,7 +72,7 @@ public class VBox {
     }
 
     public void removeChildren() {
-        UtilityUI.removeChildren(get());
+        UtilityUI.removeChildren(getView());
     }
 
     public void addImageRows(ArrayList<string> urls, ArrayList<Image> images, int imagesAcross) {
@@ -81,13 +81,13 @@ public class VBox {
             if ((boxRows.size <= (int)(index / imagesAcross))) {
                 boxRows.add(new HBox());
             }
-            boxRows.last().addWidget(images.last().get());
+            boxRows.last().addWidget(images.last());
         }
         foreach (var b in boxRows) {
             #if GTK4
-                box.append(b.get());
+                box.append(b.getView());
             #else
-                box.add(b.get());
+                box.add(b.getView());
             #endif
         }
     }
@@ -96,5 +96,5 @@ public class VBox {
     public void addStretch() {
     }
 
-    public Gtk.Box get() { return box; }
+    public Gtk.Box getView() { return box; }
 }

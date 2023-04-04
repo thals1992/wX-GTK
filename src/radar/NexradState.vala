@@ -29,7 +29,7 @@ public class NexradState {
     public ArrayList<TextViewMetal> pressureCenterLabelsBlue = new ArrayList<TextViewMetal>();
     public ArrayList<TextViewMetal> observations = new ArrayList<TextViewMetal>();
     public double zoomToHideMiscFeatures = 0.2;
-    public ArrayList<WXMetalNexradLevelData> levelDataList = new ArrayList<WXMetalNexradLevelData>();
+    public ArrayList<NexradLevelData> levelDataList = new ArrayList<NexradLevelData>();
 
     public NexradState(int paneNumber, int numberOfPanes, bool useASpecificRadar, string radarToUse) {
         this.paneNumber = paneNumber;
@@ -90,7 +90,7 @@ public class NexradState {
     public void processAnimationFiles(int frameCount, FileStorage fileStorage) {
         if (fileStorage.animationMemoryBuffer.size >= frameCount) {
             foreach (var index in range(frameCount)) {
-                levelDataList.add(new WXMetalNexradLevelData(this, fileStorage));
+                levelDataList.add(new NexradLevelData(this, fileStorage));
                 levelDataList.last().radarBuffers.animationIndex = index;
                 levelDataList.last().decode();
                 levelDataList.last().radarBuffers.initialize();

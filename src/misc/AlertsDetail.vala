@@ -14,7 +14,7 @@ class AlertsDetail : Window {
     public AlertsDetail(string url) {
         this.url = url;
         setSize(700, 900);
-        box.addWidget(text.get());
+        box.addWidget(text);
         new ScrolledWindow(this, box);
         new FutureVoid(() => capAlert = new CapAlert(this.url), updateText);
     }

@@ -68,8 +68,8 @@ class LatLon {
     }
 
     public static LatLon fromRadarSite(string radarSite) {
-        var ridX = Utility.getRadarSiteX(radarSite);
-        var ridY = Utility.getRadarSiteY(radarSite);
+        var ridX = UtilityLocation.getRadarSiteX(radarSite);
+        var ridY = UtilityLocation.getRadarSiteY(radarSite);
         var latNum = Too.Double(ridX);
         var lonNum = -1.0 * Too.Double(ridY);
         var latString = Too.StringD(latNum);
@@ -100,7 +100,7 @@ class LatLon {
     }
 
     public double[] getProjection(ProjectionNumbers pn) {
-        return UtilityCanvasProjection.computeMercatorNumbersFromLatLon(this, pn);
+        return Projection.computeMercatorNumbersFromLatLon(this, pn);
     }
 
     public ExternalPoint asPoint() {
@@ -153,11 +153,11 @@ class LatLon {
     public static ArrayList<double?> latLonListToListOfDoubles(ArrayList<LatLon> latLons, ProjectionNumbers projectionNumbers) {
         var warningList = new ArrayList<double?>();
         if (latLons.size > 0) {
-            var startCoordinates = UtilityCanvasProjection.computeMercatorNumbersFromLatLon(latLons[0], projectionNumbers);
+            var startCoordinates = Projection.computeMercatorNumbersFromLatLon(latLons[0], projectionNumbers);
             warningList.add(startCoordinates[0]);
             warningList.add(startCoordinates[1]);
             foreach (var index in range3(1, latLons.size, 1)) {
-                var coordinates = UtilityCanvasProjection.computeMercatorNumbersFromLatLon(latLons[index], projectionNumbers);
+                var coordinates = Projection.computeMercatorNumbersFromLatLon(latLons[index], projectionNumbers);
                 warningList.add(coordinates[0]);
                 warningList.add(coordinates[1]);
                 warningList.add(coordinates[0]);

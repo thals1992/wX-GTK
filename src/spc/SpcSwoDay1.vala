@@ -23,14 +23,14 @@ class SpcSwoDay1 : Window {
         }
         foreach (var index in range(urls.size)) {
             images.add(new Image.withIndex(index));
-            imageVBox.addWidget(images[index].get());
+            imageVBox.addWidget(images[index]);
         }
         var product = "SWODY" + day;
         if (day == "4" || day == "5" || day == "6" || day == "7" || day == "8" || day == "48") {
             product = "SWOD48";
         }
         text.hExpand();
-        new ObjectTwoWidgetScroll(this, imageVBox.get(), text.get());
+        new TwoWidgetScroll(this, imageVBox.getView(), text.get());
         new FutureText(product, text.setText);
         foreach (var i in range(urls.size)) {
             new FutureBytes(urls[i], images[i].setBytes);

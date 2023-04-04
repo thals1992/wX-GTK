@@ -6,7 +6,7 @@
 
 using Gee;
 
-public class ComboBox {
+public class ComboBox : Widget {
 
     string[] items;
     #if GTK4
@@ -143,11 +143,7 @@ public class ComboBox {
         setIndex(findex(value, items));
     }
 
-    #if GTK4
-        public Gtk.DropDown get() {
-    #else
-        public Gtk.ComboBox get() {
-    #endif
-            return cb;
-        }
+    public Gtk.Widget getView() {
+        return cb;
+    }
 }

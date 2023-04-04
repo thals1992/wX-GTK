@@ -4,7 +4,7 @@
 // * Refer to the COPYING file of the official project for license.
 // *****************************************************************************
 
-public class Photo {
+public class Photo : Widget {
 
     PhotoSizeEnum size = PhotoSizeEnum.Full;
     Gtk.Window win;
@@ -78,7 +78,7 @@ public class Photo {
             loader.write(ba);
             loader.close();
             setPix(loader.get_pixbuf());
-        } catch(Error e) {
+        } catch (Error e) {
             print(e.message + "\n");
         }
     }
@@ -111,5 +111,5 @@ public class Photo {
         setPix(UtilityForecastIcon.getIcon(url));
     }
 
-    public Gtk.Widget get() { return image; }
+    public Gtk.Widget getView() { return image; }
 }

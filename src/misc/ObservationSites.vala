@@ -13,8 +13,8 @@ class ObservationSites : Window {
     public ObservationSites() {
         setSize (600, 600);
         setTitle("Observation web sites - " + Location.name());
-        box.addWidget(button1.get());
-        box.addWidget(button2.get());
+        box.addWidget(button1);
+        box.addWidget(button2);
         new ScrolledWindow(this, box);
     }
 }

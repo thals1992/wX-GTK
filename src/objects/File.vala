@@ -17,7 +17,7 @@ public class File {
         }
 
     }
-    
+
     public static uint8[] getBinaryDataFromResource(string fileName) {
         try {
             size_t bytesRead;
@@ -33,7 +33,7 @@ public class File {
             return new uint8[0];
         }
     }
-    
+
     public static void setText(string fileName, string data) {
         try {
             FileUtils.set_contents(fileName, data);

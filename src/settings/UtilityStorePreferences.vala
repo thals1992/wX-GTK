@@ -21,7 +21,7 @@ class UtilityStorePreferences {
             Utility.writePref("STATECODE", "OK");
             Utility.writePref("ZIPCODE1", "73069");
             Utility.writePref("NWS1", "OUN");
-            Utility.writePref("RID1", "TLX");
+            Utility.writePref("RID1", "KTLX");
             Utility.writePref("NWS1STATE", "OK");
             Utility.writePref("CURRENTLOCFRAGMENT", "1");
         }

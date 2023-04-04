@@ -19,8 +19,8 @@ class Opc : Window {
         comboboxProduct.setIndexByPref(prefToken, 0);
         comboboxProduct.connect(reload);
 
-        box.addWidget(comboboxProduct.get());
-        box.addWidget(photo.get());
+        box.addWidget(comboboxProduct);
+        box.addWidget(photo);
         box.getAndShow(this);
 
         reload();

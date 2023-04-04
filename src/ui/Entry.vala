@@ -4,7 +4,7 @@
 // * Refer to the COPYING file of the official project for license.
 // *****************************************************************************
 
-public class Entry {
+public class Entry : Widget {
 
     Gtk.Entry entry = new Gtk.Entry();
 
@@ -18,5 +18,5 @@ public class Entry {
         set { entry.text = value; }
     }
 
-    public Gtk.Entry get() { return entry; }
+    public Gtk.Widget getView() { return entry; }
 }

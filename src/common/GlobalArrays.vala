@@ -16,11 +16,8 @@ class GlobalArrays {
     }
 
     public static int findRadarIndex(string radarF) {
+        print("findRadarIndex " + radarF + "\n");
         var radar = radarF;
-        if (radar.length == 3) {
-            var radarPrefix = WXGLDownload.getRidPrefix(radar, false);
-            radar = radarPrefix.ascii_up() + radar;
-        }
         var radarList = new ArrayList<string>();
         radarList.add_all(UtilityList.wrap(radars));
         radarList.add_all(UtilityList.wrap(tdwrRadars));
@@ -35,7 +32,7 @@ class GlobalArrays {
     public static ArrayList<string> tdwrRadarCodes() {
         var radarList = new ArrayList<string>();
         foreach (var radar in tdwrRadars) {
-            radarList.add(radar.split(" ")[0]);
+            radarList.add(radar.split(":")[0]);
         }
         return radarList;
     }
@@ -386,53 +383,6 @@ class GlobalArrays {
     };
 
     public const string[] tdwrRadars = {
-        "TPHX AZ, Phoenix",
-        "TDEN CO, Denver",
-        "TFLL FL, Fort Lauderdale",
-        "TMIA FL, Miami",
-        "TMCO FL, Orlando International",
-        "TTPA FL, Tampa Bay",
-        "TPBI FL, West Palm Beach",
-        "TATL GA, Atlanta",
-        "TMDW IL, Chicago Midway",
-        "TORD IL, Chicago O\"Hare",
-        "TIDS IN, Indianapolis",
-        "TICH KS, Wichita",
-        "TSDF KY, Louisville",
-        "TMSY LA, New Orleans",
-        "TBOS MA, Boston",
-        "TBWI MD, Baltimore/Wash",
-        "TDCA MD, Washington National",
-        "TDTW MI, Detroit",
-        "TMSP MN, Minneapolis",
-        "TMCI MO, Kansas City",
-        "TSTL MO, St Louis",
-        "TCLT NC, Charlotte",
-        "TRDU NC, Raleigh Durham",
-        "TEWR NJ, Newark",
-        "TLAS NV, Las Vegas",
-        "TJFK NY, New York City",
-        "TLVE OH, Cleveland",
-        "TCMH OH, Columbus",
-        "TCVG OH, Covington",
-        "TDAY OH, Dayton",
-        "TOKC OK, Oklahoma City",
-        "TTUL OK, Tulsa",
-        "TPHL PA, Philadelphia",
-        "TPIT PA, Pittsburgh",
-        "TSJU PR, San Juan",
-        "TMEM TN, Memphis",
-        "TBNA TN, Nashville",
-        "TDFW TX, Dallas/Ft. Worth",
-        "TDAL TX, Dallas Love Field",
-        "THOU TX, Houston Hobby",
-        "TIAH TX, Houston International",
-        "TSLC UT, Salt Lake City",
-        "TIAD VA, Dulles",
-        "TMKE WI, Milwaukee"
-    };
-
-    public const string[] tdwrRadarsForMap = {
         "TPHX: AZ, Phoenix",
         "TDEN: CO, Denver",
         "TFLL: FL, Fort Lauderdale",

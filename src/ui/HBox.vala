@@ -6,7 +6,7 @@
 
 using Gee;
 
-public class HBox {
+public class HBox : Box {
 
     Gtk.Box box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
 
@@ -20,31 +20,40 @@ public class HBox {
         w.show();
     }
 
-    public void addLayout(Gtk.Widget w) {
+    public void addLayout(Box widget) {
         #if GTK4
-            box.append(w);
+            box.append(widget.getView());
         #else
-            box.add(w);
+            box.add(widget.getView());
             box.show_all();
         #endif
     }
 
-    public void addWidgetFirst(Gtk.Widget w) {
+    public void addWidgetFirst(Widget widget) {
         #if GTK4
-            box.append(w);
-            box.reorder_child_after(w, null);
+            box.append(widget.getView());
+            box.reorder_child_after(widget.getView(), null);
         #else
-            box.add(w);
-            box.reorder_child(w, 0);
+            box.add(widget.getView());
+            box.reorder_child(widget.getView(), 0);
             box.show_all();
         #endif
     }
 
-    public void addWidget(Gtk.Widget w) {
+    public void addWidgetReal(Gtk.Widget widget) {
         #if GTK4
-            box.append(w);
+            box.append(widget);
         #else
-            box.add(w);
+            box.add(widget);
+            box.show_all();
+        #endif
+    }
+
+    public void addWidget(Widget widget) {
+        #if GTK4
+            box.append(widget.getView());
+        #else
+            box.add(widget.getView());
             box.show_all();
         #endif
     }
@@ -62,15 +71,17 @@ public class HBox {
     }
 
     public void removeChildren() {
-        UtilityUI.removeChildren(get());
+        UtilityUI.removeChildren(getView());
     }
 
     public void addImageRow(string[] urls, ArrayList<Image> images) {
         foreach (var index in range(urls.length)) {
             images.add(new Image.withIndex(index));
-            addWidget(images.last().get());
+            addWidget(images.last());
         }
     }
 
-    public Gtk.Box get() { return box; }
+    //  public Gtk.Box get() { return box; }
+
+    public Gtk.Box getView() { return box; }
 }

@@ -38,7 +38,7 @@ class ObjectLocation {
         countyCurrent = Utility.readPref("COUNTY" + jStr, "");
         zoneCurrent = Utility.readPref("ZONE" + jStr, "");
         wfo = Utility.readPref("NWS" + jStr, "OUN");
-        rid = Utility.readPref("RID" + jStr, "TLX");
+        rid = Utility.readPref("RID" + jStr, "KTLX");
         nwsStateCurrent = Utility.readPref("NWS" + jStr + "STATE", "OK");
         observation = Utility.readPref("LOC" + jStr + "OBSERVATION", "");
     }

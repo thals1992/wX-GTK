@@ -15,26 +15,13 @@ public class ProjectionNumbers {
     string radarSite = "";
 
     public ProjectionNumbers(string radarSite) {
-        if (radarSite.length == 3) {
-            string radarPrefix = WXGLDownload.getRidPrefix(radarSite, false);
-            this.radarSite = radarPrefix.ascii_up() + radarSite;
-        } else {
-            this.radarSite = radarSite;
-        }
-        latstring = Utility.getRadarSiteX(this.radarSite);
-        lonstring = Utility.getRadarSiteY(this.radarSite);
-        oneDegreeScaleFactor = UtilityMath.pixPerDegreeLon(x(), scale);
+        setRadarSite(radarSite);
     }
 
     public void setRadarSite(string radarSite) {
-        if (radarSite.length == 3) {
-            string radarPrefix = WXGLDownload.getRidPrefix(radarSite, false);
-            this.radarSite = radarPrefix.ascii_up() + radarSite;
-        } else {
-            this.radarSite = radarSite;
-        }
-        latstring = Utility.getRadarSiteX(this.radarSite);
-        lonstring = Utility.getRadarSiteY(this.radarSite);
+        this.radarSite = radarSite;
+        latstring = UtilityLocation.getRadarSiteX(this.radarSite);
+        lonstring = UtilityLocation.getRadarSiteY(this.radarSite);
         oneDegreeScaleFactor = UtilityMath.pixPerDegreeLon(x(), scale);
     }
 

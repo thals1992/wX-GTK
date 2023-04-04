@@ -8,21 +8,21 @@ using Gee;
 
 class UtilityWpcText {
 
-    public static ArrayList<ObjectMenuTitle> titles;
+    public static ArrayList<MenuTitle> titles;
 
-    public static void init() {
-        titles = new ArrayList<ObjectMenuTitle>();
-        titles.add(new ObjectMenuTitle("General Forecast Discussions", 10));
-        titles.add(new ObjectMenuTitle("Precipitation Discussions", 2));
-        titles.add(new ObjectMenuTitle("Hazards", 7));
-        titles.add(new ObjectMenuTitle("Ocean Weather", 36));
-        titles.add(new ObjectMenuTitle("Misc North American Weather", 5));
-        titles.add(new ObjectMenuTitle("Misc Intl Weather", 4));
-        titles.add(new ObjectMenuTitle("SPC", 8));
-        titles.add(new ObjectMenuTitle("NHC", 7));
-        titles.add(new ObjectMenuTitle("Great Lakes", 7));
-        titles.add(new ObjectMenuTitle("Canada", 11));
-        titles.add(new ObjectMenuTitle("Space Weather", 6));
+    public static void initStatic() {
+        titles = new ArrayList<MenuTitle>();
+        titles.add(new MenuTitle("General Forecast Discussions", 10));
+        titles.add(new MenuTitle("Precipitation Discussions", 2));
+        titles.add(new MenuTitle("Hazards", 7));
+        titles.add(new MenuTitle("Ocean Weather", 36));
+        titles.add(new MenuTitle("Misc North American Weather", 5));
+        titles.add(new MenuTitle("Misc Intl Weather", 4));
+        titles.add(new MenuTitle("SPC", 8));
+        titles.add(new MenuTitle("NHC", 7));
+        titles.add(new MenuTitle("Great Lakes", 7));
+        titles.add(new MenuTitle("Canada", 11));
+        titles.add(new MenuTitle("Space Weather", 6));
     }
 
     public const string[] labels = {

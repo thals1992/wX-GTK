@@ -20,7 +20,7 @@ class ObjectNhc {
     public ArrayList<string> movementSpeeds = new ArrayList<string>();
     public ArrayList<string> lastUpdates = new ArrayList<string>();
     public ArrayList<string> statusList = new ArrayList<string>();
-    public ArrayList<ObjectNhcStormDetails> stormDataList = new ArrayList<ObjectNhcStormDetails>();
+    public ArrayList<NhcStormDetails> stormDataList = new ArrayList<NhcStormDetails>();
 
     public void getTextData() {
         var url = GlobalVariables.nwsNhcWebsitePrefix + "/CurrentStorms.json";
@@ -44,7 +44,7 @@ class ObjectNhc {
         movementSpeeds = UtilityString.parseColumn(html, "\"movementSpeed\": (.*?),");
         lastUpdates = UtilityString.parseColumn(html, "\"lastUpdate\": \"(.*?)\"");
         foreach (var index in range(binNumbers.size)) {
-            var text = UtilityDownload.getTextProduct("MIATCP" + binNumbers[index]);
+            var text = DownloadText.byProduct("MIATCP" + binNumbers[index]);
             var textNoNewLines = text.replace(GlobalVariables.newline, " ");
             var status = UtilityString.parse(textNoNewLines, "(\\.\\.\\..*?\\.\\.\\.)");
             statusList.add(status);
@@ -54,7 +54,7 @@ class ObjectNhc {
     public void showTextData() {
         if (ids.size > 0) {
             foreach (var index in range(ids.size)) {
-                stormDataList.add(new ObjectNhcStormDetails(names[index], movementDirs[index], movementSpeeds[index], pressures[index], binNumbers[index], ids[index], lastUpdates[index], classifications[index], latitudes[index], longitudes[index], intensities[index], statusList[index]));
+                stormDataList.add(new NhcStormDetails(names[index], movementDirs[index], movementSpeeds[index], pressures[index], binNumbers[index], ids[index], lastUpdates[index], classifications[index], latitudes[index], longitudes[index], intensities[index], statusList[index]));
             }
         }
     }

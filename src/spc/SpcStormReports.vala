@@ -30,13 +30,13 @@ class SpcStormReports : Window {
         url = GlobalVariables.nwsSPCwebsitePrefix + "/climo/reports/" + spcStormReportsDay + ".gif";
         stormReportsUrl = GlobalVariables.nwsSPCwebsitePrefix + "/climo/reports/" + spcStormReportsDay + ".csv";
         calendar.connect(getData);
-        boxImage.addWidget(photo.get());
-        boxImage.addWidget(calendar.get());
+        boxImage.addWidget(photo);
+        boxImage.addWidget(calendar);
         button.connect(() => new LsrByWfo());
-        box.addLayout(boxImage.get());
-        box.addLayout(boxCombo.get());
-        box.addWidget(button.get());
-        box.addLayout(boxText.get());
+        box.addLayout(boxImage);
+        box.addLayout(boxCombo);
+        box.addWidget(button);
+        box.addLayout(boxText);
         new ScrolledWindow(this, box);
         reload();
     }
@@ -83,7 +83,7 @@ class SpcStormReports : Window {
         #if GTK4
             filterReports();
         #endif
-        boxCombo.addWidget(comboBox.get());
+        boxCombo.addWidget(comboBox);
     }
 
     void filterReports() {
@@ -96,14 +96,14 @@ class SpcStormReports : Window {
         cardWidgets.clear();
         foreach (var stormReport in stormReports) {
             if (stormReport.damageHeader == "" && filter == "All") {
-                boxText.addLayout(new ObjectCardStormReportItem(stormReport).get());
-                boxText.addWidget(new ObjectDividerLine().get());
+                boxText.addLayout(new CardStormReportItem(stormReport));
+                boxText.addWidget(new DividerLine());
             } else if (stormReport.damageHeader == "" && stormReport.state == filter) {
-                boxText.addLayout(new ObjectCardStormReportItem(stormReport).get());
-                boxText.addWidget(new ObjectDividerLine().get());
+                boxText.addLayout(new CardStormReportItem(stormReport));
+                boxText.addWidget(new DividerLine());
             } else if (stormReport.damageHeader != "") {
-                boxText.addLayout(new ObjectCardBlackHeaderText(stormReport.damageHeader).get());
-                boxText.addWidget(new ObjectDividerLine().get());
+                boxText.addLayout(new CardBlackHeaderText(stormReport.damageHeader));
+                boxText.addWidget(new DividerLine());
             }
         }
         boxText.addStretch();

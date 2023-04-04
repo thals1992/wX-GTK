@@ -19,8 +19,8 @@ class Observations : Window {
         comboboxProduct.setIndexByPref(prefToken, 0);
         comboboxProduct.connect(reload);
 
-        box.addWidget(comboboxProduct.get());
-        box.addWidgetCenter(photo.get());
+        box.addWidget(comboboxProduct);
+        box.addWidgetAndCenter1(photo);
         box.getAndShow(this);
         reload();
     }

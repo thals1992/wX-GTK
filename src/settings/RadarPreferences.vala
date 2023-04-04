@@ -106,7 +106,8 @@ class RadarPreferences {
         locdotSize = Utility.readPrefInt("RADAR_LOCDOT_SIZE", 20) / lineFactor;
 
         DownloadTimer.radarDataRefreshInterval = RadarPreferences.dataRefreshInterval;
-        ObjectPolygonWarning.load();
-        ObjectPolygonWatch.load();
+        PolygonWarning.load();
+        PolygonWatch.load();
+        RadarGeometry.initStatic();
     }
 }

@@ -12,7 +12,7 @@ class TextViewer : Window {
     public TextViewer(string url) {
         maximize();
         text.setFixedWidth();
-        box.addWidget(text.get());
+        box.addWidget(text);
         new ScrolledWindow(this, box);
         new FutureText(url, text.setText);
     }

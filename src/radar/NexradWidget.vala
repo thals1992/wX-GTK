@@ -9,7 +9,7 @@ using Gee;
 public class NexradWidget {
 
     int totalBins = 0;
-    WXMetalNexradLevelData levelData;
+    NexradLevelData levelData;
     public FileStorage fileStorage = new FileStorage();
     public ArrayList<double?> stiList = new ArrayList<double?>();
     ArrayList<double?> wbLines = new ArrayList<double?>();
@@ -27,7 +27,7 @@ public class NexradWidget {
     bool dragInProgress = false;
     double dragLastX = 0.0;
     double dragLastY = 0.0;
-    public WXMetalTextObject textObject;
+    public NexradRenderTextObject textObject;
     public NexradState nexradState;
     public NexradDraw nexradDraw;
     #if GTK4
@@ -71,8 +71,8 @@ public class NexradWidget {
         this.fnSyncRadarSite = fnSyncRadarSite;
 
         nexradState = new NexradState(paneNumber, numberOfPanes, useASpecificRadar, radarToUse);
-        levelData = new WXMetalNexradLevelData(nexradState, fileStorage);
-        textObject = new WXMetalTextObject(numberOfPanes, nexradState, fileStorage);
+        levelData = new NexradLevelData(nexradState, fileStorage);
+        textObject = new NexradRenderTextObject(numberOfPanes, nexradState, fileStorage);
         nexradDraw = new NexradDraw(nexradState, fileStorage, textObject);
 
         radarStatusBox.connect(toggleRadar);
@@ -190,10 +190,10 @@ public class NexradWidget {
 
         void gestureLongPress(double xPoint, double yPoint) {
             dragInProgress = false;
-            var latLon = UtilityRadarUI.getLatLonFromScreenPosition(nexradState, xPoint, yPoint);
-            var menu  = UtilityRadarUI.setupContextMenu(da, nexradState, latLon, changeRadarSite, fnProduct);
-            var popover  = new Gtk.PopoverMenu.from_model(menu);
-            popover.set_parent(da.get());
+            var latLon = NexradRenderUI.getLatLonFromScreenPosition(nexradState, xPoint, yPoint);
+            var menu = NexradLongPressMenu.setupContextMenu(da, nexradState, latLon, changeRadarSite, fnProduct);
+            var popover = new Gtk.PopoverMenu.from_model(menu);
+            popover.set_parent(da.getView());
             popover.set_position(Gtk.PositionType.BOTTOM);
             var rectangle = Gdk.Rectangle();
             rectangle.x = (int)xPoint;
@@ -247,26 +247,26 @@ public class NexradWidget {
             }
         }
         if (nexradState.zoom > 0.9) {
-            if(RadarPreferences.county) {
+            if (RadarPreferences.county) {
                 nexradDraw.drawGeomLine(ctx, RadarGeometryTypeEnum.CountyLines);
             }
             if (!hideRoads) {
-                if(RadarPreferences.highways) {
+                if (RadarPreferences.highways) {
                     nexradDraw.drawGeomLine(ctx, RadarGeometryTypeEnum.HwLines);
                 }
-                if(RadarPreferences.hwEnhExt) {
+                if (RadarPreferences.hwEnhExt) {
                     nexradDraw.drawGeomLine(ctx, RadarGeometryTypeEnum.HwExtLines);
                 }
             }
-            if(RadarPreferences.lakes) {
+            if (RadarPreferences.lakes) {
                 nexradDraw.drawGeomLine(ctx, RadarGeometryTypeEnum.LakeLines);
             }
         }
         nexradDraw.drawGeomLine(ctx, RadarGeometryTypeEnum.StateLines);
-        if(RadarPreferences.caBorders) {
+        if (RadarPreferences.caBorders) {
             nexradDraw.drawGeomLine(ctx, RadarGeometryTypeEnum.CaLines);
         }
-        if(RadarPreferences.mxBorders) {
+        if (RadarPreferences.mxBorders) {
             nexradDraw.drawGeomLine(ctx, RadarGeometryTypeEnum.MxLines);
         }
         if (RadarPreferences.locationDot) {
@@ -312,17 +312,17 @@ public class NexradWidget {
     }
 
     void drawSwo(Cairo.Context ctx) {
-        foreach (var riskLevelIndex in range(UtilitySwoDayOne.threatList.length)) {
-            if (UtilitySwoDayOne.hashSwo.has_key(riskLevelIndex) && UtilitySwoDayOne.hashSwo[riskLevelIndex].size > 0 && swoLinesMap.has_key(riskLevelIndex)) {
-                var color = UtilitySwoDayOne.swoPaints[riskLevelIndex];
+        foreach (var riskLevelIndex in range(SwoDayOne.threatList.length)) {
+            if (SwoDayOne.hashSwo.has_key(riskLevelIndex) && SwoDayOne.hashSwo[riskLevelIndex].size > 0 && swoLinesMap.has_key(riskLevelIndex)) {
+                var color = SwoDayOne.swoPaints[riskLevelIndex];
                 nexradDraw.drawGenericLine(ctx, RadarPreferences.watmcdLinesize, color, swoLinesMap[riskLevelIndex].data);
             }
         }
     }
 
     void drawWpcFronts(Cairo.Context ctx) {
-        if (nexradState.zoom < 0.5 && UtilityWpcFronts.fronts != null) {
-            foreach (var it in UtilityWpcFronts.fronts) {
+        if (nexradState.zoom < 0.5 && WpcFronts.fronts != null) {
+            foreach (var it in WpcFronts.fronts) {
                 if (it.coordinatesModified[nexradState.paneNumber] != null) {
                     nexradDraw.drawGenericLine(ctx,
                         RadarPreferences.watmcdLinesize,
@@ -335,11 +335,11 @@ public class NexradWidget {
     }
 
     void drawWarnings(Cairo.Context ctx) {
-        foreach (var it in ObjectPolygonWarning.polygonList) {
-            if (ObjectPolygonWarning.polygonDataByType[it] != null && ObjectPolygonWarning.polygonDataByType[it].isEnabled && polygons.keys.contains(it)) {
+        foreach (var it in PolygonWarning.polygonList) {
+            if (PolygonWarning.byType[it] != null && PolygonWarning.byType[it].isEnabled && polygons.keys.contains(it)) {
                 nexradDraw.drawGenericLine(ctx,
                     RadarPreferences.warnLinesize,
-                    ObjectPolygonWarning.polygonDataByType[it].colorInt,
+                    PolygonWarning.byType[it].colorInt,
                     polygons[it].data
                 );
             }
@@ -347,11 +347,11 @@ public class NexradWidget {
     }
 
     void drawWatch(Cairo.Context ctx) {
-        foreach (var type1 in ObjectPolygonWatch.polygonList) {
-            if (ObjectPolygonWatch.polygonDataByType[type1].isEnabled && polygons.keys.contains(type1)) {
+        foreach (var type1 in PolygonWatch.polygonList) {
+            if (PolygonWatch.byType[type1].isEnabled && polygons.keys.contains(type1)) {
                 nexradDraw.drawGenericLine(ctx,
                     RadarPreferences.watmcdLinesize,
-                    ObjectPolygonWatch.polygonDataByType[type1].colorInt,
+                    PolygonWatch.byType[type1].colorInt,
                     polygons[type1].data
                 );
             }
@@ -372,9 +372,9 @@ public class NexradWidget {
     #else
         bool mousePressEvent(Gdk.EventButton event) {
             if (event.type == Gdk.EventType.BUTTON_PRESS && event.button == 3) {
-                var latLon = UtilityRadarUI.getLatLonFromScreenPosition(nexradState, event.x, event.y);
-                var menu = UtilityRadarUI.setupContextMenu(da, nexradState, latLon, changeRadarSite, fnProduct);
-                var popover = new Gtk.Popover.from_model(da.get(), menu);
+                var latLon = NexradRenderUI.getLatLonFromScreenPosition(nexradState, event.x, event.y);
+                var menu = NexradLongPressMenu.setupContextMenu(da, nexradState, latLon, changeRadarSite, fnProduct);
+                var popover = new Gtk.Popover.from_model(da.getView(), menu);
                 popover.set_position(Gtk.PositionType.BOTTOM);
                 var rectangle = Gdk.Rectangle();
                 rectangle.x = (int)event.x;
@@ -426,16 +426,16 @@ public class NexradWidget {
 
     public void downloadData() {
         nexradState.writePreferences();
-        if (GlobalArrays.tdwrRadarCodes().contains(nexradState.getRadarSite()) && !WXGLNexrad.isProductTdwr(nexradState.radarProduct)) {
+        if (GlobalArrays.tdwrRadarCodes().contains(nexradState.getRadarSite()) && !NexradUtil.isProductTdwr(nexradState.radarProduct)) {
             nexradState.radarProduct = "TZL";
-        } else if (GlobalArrays.nexradRadarCodes().contains(nexradState.getRadarSite()) && WXGLNexrad.isProductTdwr(nexradState.radarProduct)) {
+        } else if (GlobalArrays.nexradRadarCodes().contains(nexradState.getRadarSite()) && NexradUtil.isProductTdwr(nexradState.radarProduct)) {
             nexradState.radarProduct = "N0Q";
         }
         var tmpRadarProduct = nexradState.radarProduct;
         if (UtilityString.match(nexradState.radarProduct, "[A-Z][0-9][A-Z]")) {
             tmpRadarProduct = UtilityString.replaceRegex(nexradState.radarProduct, "([0-3])", Too.String(nexradState.tiltInt));
         }
-        var url = WXGLDownload.getRadarFileUrl(nexradState.getRadarSite(), tmpRadarProduct, false);
+        var url = NexradDownload.getRadarFileUrl(nexradState.getRadarSite(), tmpRadarProduct, false);
         totalBins = 0;
         fileStorage.memoryBuffer = new MemoryBuffer.fromArray(UtilityIO.downloadAsByteArray(url));
         levelData.radarBuffers.animationIndex = -1;
@@ -460,14 +460,14 @@ public class NexradWidget {
         }
         wbLines.clear();
         wbGustLines.clear();
-        wbLines.add_all(WXGLNexradLevel3WindBarbs.decodeAndPlot(nexradState.getPn(), false, fileStorage));
-        wbGustLines.add_all(WXGLNexradLevel3WindBarbs.decodeAndPlot(nexradState.getPn(), true, fileStorage));
+        wbLines.add_all(NexradLevel3WindBarbs.decodeAndPlot(nexradState.getPn(), false, fileStorage));
+        wbGustLines.add_all(NexradLevel3WindBarbs.decodeAndPlot(nexradState.getPn(), true, fileStorage));
         windBarbCirclesTransformed.clear();
         windBarbCircleColors.clear();
         foreach (var index in range(fileStorage.obsArrX.size)) {
             var lat = fileStorage.obsArrX[index];
             var lon = fileStorage.obsArrY[index];
-            var coords = UtilityCanvasProjection.computeMercatorNumbers(lat, lon * -1.0, nexradState.getPn());
+            var coords = Projection.computeMercatorNumbers(lat, lon * -1.0, nexradState.getPn());
             var rawColor = fileStorage.obsArrAviationColor[index];
             windBarbCirclesTransformed.add(new WbData(coords));
             windBarbCircleColors.add(rawColor);
@@ -475,24 +475,23 @@ public class NexradWidget {
     }
 
     public void process(PolygonType polygonType) {
-        var numbers = UtilityWatch.add(nexradState.getPn(), polygonType);
+        var numbers = Watch.add(nexradState.getPn(), polygonType);
         //  polygonBufferSize[polygonType] = numbers.size / 4;
         polygons[polygonType] = new WarnData(numbers);
-        print(polygonType.to_string() + " " + numbers.size.to_string() + "\n");
     }
 
     public void constructSwo() {
-        foreach (var riskLevelIndex in range(UtilitySwoDayOne.threatList.length)) {
+        foreach (var riskLevelIndex in range(SwoDayOne.threatList.length)) {
             if (!swoLinesMap.has_key(riskLevelIndex)) {
                 swoLinesMap[riskLevelIndex] = new WarnData.zero();
             }
-            if (UtilitySwoDayOne.hashSwo.has_key(riskLevelIndex) && UtilitySwoDayOne.hashSwo[riskLevelIndex].size > 0) {
+            if (SwoDayOne.hashSwo.has_key(riskLevelIndex) && SwoDayOne.hashSwo[riskLevelIndex].size > 0) {
                 swoLinesMap[riskLevelIndex].data.clear();
                 var x = 0;
-                range(UtilitySwoDayOne.hashSwo[riskLevelIndex].size / 4).foreach((unused) => {
-                    var floatList = UtilitySwoDayOne.hashSwo[riskLevelIndex];
-                    var coords1 = UtilityCanvasProjection.computeMercatorNumbers(floatList[x], -1.0 * floatList[x + 1], nexradState.getPn());
-                    var coords2 = UtilityCanvasProjection.computeMercatorNumbers(floatList[x + 2], -1.0 * floatList[x + 3], nexradState.getPn());
+                range(SwoDayOne.hashSwo[riskLevelIndex].size / 4).foreach((unused) => {
+                    var floatList = SwoDayOne.hashSwo[riskLevelIndex];
+                    var coords1 = Projection.computeMercatorNumbers(floatList[x], -1.0 * floatList[x + 1], nexradState.getPn());
+                    var coords2 = Projection.computeMercatorNumbers(floatList[x + 2], -1.0 * floatList[x + 3], nexradState.getPn());
                     swoLinesMap[riskLevelIndex].data.add(coords1[0]);
                     swoLinesMap[riskLevelIndex].data.add(coords1[1]);
                     swoLinesMap[riskLevelIndex].data.add(coords2[0]);
@@ -509,7 +508,7 @@ public class NexradWidget {
     }
 
     public void constructWpcFronts() {
-        foreach (var front in UtilityWpcFronts.fronts) {
+        foreach (var front in WpcFronts.fronts) {
             front.translate(nexradState.paneNumber, nexradState.getPn());
         }
         textObject.addWpcPressureCenters();
@@ -529,7 +528,7 @@ public class NexradWidget {
         var length = lengthOrig / nexradState.zoom;
         hiPolygons.clear();
         foreach (var index in range3(0, hiRawData.size, 2)) {
-            var point0 = UtilityCanvasProjection.computeMercatorNumbers(hiRawData[index], -1.0 * hiRawData[index + 1], nexradState.getPn());
+            var point0 = Projection.computeMercatorNumbers(hiRawData[index], -1.0 * hiRawData[index + 1], nexradState.getPn());
             var point1 = new ArrayList<double?>.wrap({point0[0], point0[1]});
             var point2 = new ArrayList<double?>.wrap({point0[0] - length, point0[1] - length});
             var point3 = new ArrayList<double?>.wrap({point0[0] + length, point0[1] - length});
@@ -557,7 +556,7 @@ public class NexradWidget {
         var length = lengthOrig / nexradState.zoom;
         tvsPolygons.clear();
         foreach (var index in range3(0, tvsRawData.size, 2)) {
-            var point0 = UtilityCanvasProjection.computeMercatorNumbers(tvsRawData[index], -1.0 * tvsRawData[index + 1], nexradState.getPn());
+            var point0 = Projection.computeMercatorNumbers(tvsRawData[index], -1.0 * tvsRawData[index + 1], nexradState.getPn());
             var point1 = new ArrayList<double?>.wrap({point0[0], point0[1]});
             var point2 = new ArrayList<double?>.wrap({point0[0] - length, point0[1] - length});
             var point3 = new ArrayList<double?>.wrap({point0[0] + length, point0[1] - length});
@@ -570,9 +569,8 @@ public class NexradWidget {
     }
 
     public void processVtec(PolygonType polygonGenericType) {
-        var numbers = WXGLPolygonWarnings.add(nexradState.getPn(), polygonGenericType);
+        var numbers = Warnings.add(nexradState.getPn(), polygonGenericType);
         polygons[polygonGenericType] = new WarnData(numbers);
-        print(polygonGenericType.to_string() + " " + numbers.size.to_string() + "\n");
     }
 
     public void downloadDataForAnimation(int index) {
@@ -591,9 +589,9 @@ public class NexradWidget {
         }
         if (nexradState.paneNumber == 0) {
             statusTotal += nexradState.levelDataList[index].radarInfo + sep;
-            foreach (var polygonGenericType in ObjectPolygonWarning.polygonList) {
-                if (ObjectPolygonWarning.polygonDataByType[polygonGenericType].isEnabled) {
-                    statusTotal += " " + polygonGenericType.to_string().replace("POLYGON_TYPE_", "").ascii_up() + ": " + Too.String(WXGLPolygonWarnings.getCount(polygonGenericType));
+            foreach (var polygonGenericType in PolygonWarning.polygonList) {
+                if (PolygonWarning.byType[polygonGenericType].isEnabled) {
+                    statusTotal += " " + polygonGenericType.to_string().replace("POLYGON_TYPE_", "").ascii_up() + ": " + Too.String(Warnings.getCount(polygonGenericType));
                 }
             }
             statusBar.text = statusTotal;
@@ -604,7 +602,7 @@ public class NexradWidget {
     void updateRadarStatusIconForAnimation(int index) {
         var radarAgeString = "age: " + Too.String((int) (nexradState.levelDataList[index].radarAgeMilli / 60000.0)) + " min";
         var status = " / " + nexradState.levelDataList[index].radarInfo.split(" ")[0];
-        if (WXGLNexrad.isRadarTimeOld(nexradState.levelDataList[index].radarAgeMilli)) {
+        if (NexradUtil.isRadarTimeOld(nexradState.levelDataList[index].radarAgeMilli)) {
             radarStatusBox.setOld(radarAgeString + status);
         } else {
             radarStatusBox.setCurrent(radarAgeString + status);
@@ -621,9 +619,9 @@ public class NexradWidget {
         //foreach (var pane in range(nexradState.numberOfPanes)) {
         if (nexradState.paneNumber == 0) {
             statusTotal += fileStorage.radarInfo + sep;
-            foreach (var polygonGenericType in ObjectPolygonWarning.polygonList) {
-                if (ObjectPolygonWarning.polygonDataByType[polygonGenericType].isEnabled) {
-                    statusTotal += " " + polygonGenericType.to_string().replace("POLYGON_TYPE_", "").ascii_up() + ": " + Too.String(WXGLPolygonWarnings.getCount(polygonGenericType));
+            foreach (var polygonGenericType in PolygonWarning.polygonList) {
+                if (PolygonWarning.byType[polygonGenericType].isEnabled) {
+                    statusTotal += " " + polygonGenericType.to_string().replace("POLYGON_TYPE_", "").ascii_up() + ": " + Too.String(Warnings.getCount(polygonGenericType));
                 }
             }
             statusBar.text = statusTotal;
@@ -634,7 +632,7 @@ public class NexradWidget {
     void updateRadarStatusIcon() {
         var radarAgeString = "age: " + Too.String((int) (fileStorage.radarAgeMilli / 60000.0)) + " min";
         var status = " / " + fileStorage.radarInfo.split(" ")[0];
-        if (WXGLNexrad.isRadarTimeOld(fileStorage.radarAgeMilli)) {
+        if (NexradUtil.isRadarTimeOld(fileStorage.radarAgeMilli)) {
             radarStatusBox.setOld(radarAgeString + status);
         } else {
             radarStatusBox.setCurrent(radarAgeString + status);

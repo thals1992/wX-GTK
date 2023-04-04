@@ -8,8 +8,9 @@ using Gee;
 
 class RadarGeomInfo {
 
+    RadarGeometryTypeEnum type;
     public float[] lineData;
-    public ArrayList<uint8> colorData;
+    //  public ArrayList<uint8> colorData;
     public int colorInt;
     public bool isEnabled;
     double lineSizeDefault = 10.0;
@@ -24,6 +25,18 @@ class RadarGeomInfo {
     static HashMap<RadarGeometryTypeEnum, int> prefTokenColorIntDefault;
 
     public RadarGeomInfo(RadarGeometryTypeEnum type) {
+        this.type = type;
+        isEnabled = Utility.readPref(prefToken[type], defaultPref[type]).has_prefix("t");
+        if (isEnabled) {
+            loadData(typeToFileName[type], out lineData);
+        } else {
+            //  lineData.clear();
+        }
+        colorInt = Utility.readPrefInt(prefTokenColorInt[type], prefTokenColorIntDefault[type]);
+        lineSize = Utility.readPrefInt(prefTokenLineSize[type], (int)lineSizeDefault) / lineFactor;
+    }
+
+    public void update() {
         isEnabled = Utility.readPref(prefToken[type], defaultPref[type]).has_prefix("t");
         if (isEnabled) {
             loadData(typeToFileName[type], out lineData);
@@ -47,7 +60,7 @@ class RadarGeomInfo {
         }
     }
 
-    public static void initialize() {
+    public static void initStatic() {
         typeToFileName = new HashMap<RadarGeometryTypeEnum, string>();
         prefToken = new HashMap<RadarGeometryTypeEnum, string>();
         defaultPref = new HashMap<RadarGeometryTypeEnum, string>();
@@ -70,7 +83,7 @@ class RadarGeomInfo {
         prefToken[RadarGeometryTypeEnum.LakeLines] = "COD_LAKES_DEFAULT";
         prefToken[RadarGeometryTypeEnum.CaLines] = "RADARCANADALINES";
         prefToken[RadarGeometryTypeEnum.MxLines] = "RADARMEXICOLINES";
-        
+
         defaultPref[RadarGeometryTypeEnum.StateLines] = "true";
         defaultPref[RadarGeometryTypeEnum.CountyLines] = "true";
         defaultPref[RadarGeometryTypeEnum.HwLines] = "false";
@@ -78,7 +91,7 @@ class RadarGeomInfo {
         defaultPref[RadarGeometryTypeEnum.LakeLines] = "false";
         defaultPref[RadarGeometryTypeEnum.CaLines] = "false";
         defaultPref[RadarGeometryTypeEnum.MxLines] = "false";
-        
+
         prefTokenLineSize[RadarGeometryTypeEnum.StateLines] = "RADAR_STATE_LINESIZE";
         prefTokenLineSize[RadarGeometryTypeEnum.CountyLines] = "RADAR_COUNTY_LINESIZE";
         prefTokenLineSize[RadarGeometryTypeEnum.HwLines] = "RADAR_HW_LINESIZE";
@@ -86,7 +99,7 @@ class RadarGeomInfo {
         prefTokenLineSize[RadarGeometryTypeEnum.LakeLines] = "RADAR_LAKE_LINESIZE";
         prefTokenLineSize[RadarGeometryTypeEnum.CaLines] = "RADAR_STATE_LINESIZE";
         prefTokenLineSize[RadarGeometryTypeEnum.MxLines] = "RADAR_STATE_LINESIZE";
-        
+
         prefTokenColorInt[RadarGeometryTypeEnum.StateLines] = "RADAR_COLOR_STATE";
         prefTokenColorInt[RadarGeometryTypeEnum.CountyLines] = "RADAR_COLOR_COUNTY";
         prefTokenColorInt[RadarGeometryTypeEnum.HwLines] = "RADAR_COLOR_HW";

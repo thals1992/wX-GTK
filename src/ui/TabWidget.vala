@@ -4,16 +4,16 @@
 // * Refer to the COPYING file of the official project for license.
 // *****************************************************************************
 
-public class TabWidget {
+public class TabWidget : Widget {
 
     public delegate void ConnectFn(Gtk.Widget w, uint i);
     unowned ConnectFn fn;
     Gtk.Notebook tw = new Gtk.Notebook();
 
-    public void addTab(Gtk.Widget w, string s) {
+    public void addTab(Box widget, string s) {
         var text = new Text(false);
         text.setText(s);
-        tw.append_page(w, text.get());
+        tw.append_page(widget.getView(), text.get());
     }
 
     public void connect(ConnectFn fn) {
@@ -25,5 +25,5 @@ public class TabWidget {
         tw.set_current_page(index);
     }
 
-    public Gtk.Notebook get() { return tw; }
+    public Gtk.Widget getView() { return tw; }
 }

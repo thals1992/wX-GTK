@@ -18,13 +18,13 @@ class SevereWarning {
     }
 
     public void download() {
-        ObjectPolygonWarning.polygonDataByType[type].download();
+        PolygonWarning.byType[type].download();
         generateString();
 
     }
 
     public void generateString() {
-        var html = ObjectPolygonWarning.polygonDataByType[type].getData();
+        var html = PolygonWarning.byType[type].getData();
         warningList = ObjectWarning.parseJson(html);
         var data = html.replace("\n", "");
         data = data.replace(" ", "");
@@ -65,5 +65,15 @@ class SevereWarning {
             }
         }
         return Too.String(i);
+    }
+
+    public int getCountInt() {
+        var i = 0;
+        foreach (var s in warningList) {
+            if (s.isCurrent) {
+                i += 1;
+            }
+        }
+        return i;
     }
 }

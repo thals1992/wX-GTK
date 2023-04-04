@@ -4,7 +4,7 @@
 // * Refer to the COPYING file of the official project for license.
 // *****************************************************************************
 
-public class DrawingArea {
+public class DrawingArea : Widget {
 
     #if GTK4
         public delegate void delegate0(Gtk.DrawingArea da, Cairo.Context ctx, int a, int b);
@@ -73,6 +73,10 @@ public class DrawingArea {
         drawingArea.set_vexpand(e);
     }
 
+    public void setVisible(bool e) {
+        drawingArea.set_visible(e);
+    }
+
     public void insertActionGroup(string type1, SimpleActionGroup ag) {
         drawingArea.insert_action_group(type1, ag);
     }
@@ -85,5 +89,5 @@ public class DrawingArea {
         get { return drawingArea.get_allocated_height(); }
     }
 
-    public Gtk.DrawingArea get() { return drawingArea; }
+    public Gtk.Widget getView() { return drawingArea; }
 }

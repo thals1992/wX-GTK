@@ -27,21 +27,21 @@ class LocationEditBox : HBox {
         cityEdit.connect(() => lookupSearchTerm(cityEdit.text));
         saveButton.connect(() => saveLocation(0));
 
-        table.addRow("Enter City:", cityEdit.get());
-        table.addRow("Name", editName.get());
-        table.addRow("Latitude", editLat.get());
-        table.addRow("Longitude", editLon.get());
-        table.addRow("Nexrad", editNexrad.get());
-        box.addLayout(table.get());
-        box.addWidget(saveButton.get());
+        table.addRow("Enter City:", cityEdit);
+        table.addRow("Name", editName);
+        table.addRow("Latitude", editLat);
+        table.addRow("Longitude", editLon);
+        table.addRow("Nexrad", editNexrad);
+        box.addWidget(table);
+        box.addWidget(saveButton);
 
         foreach (var index in range(6)) {
             buttons.add(new Button(Icon.None, ""));
-            boxResults.addWidget(buttons.last().get());
+            boxResults.addWidget(buttons.last());
             buttons.last().connectInt(populateLabels, index);
         }
-        addLayout(box.get());
-        addLayout(boxResults.get());
+        addLayout(box);
+        addLayout(boxResults);
         blankOutButtons();
     }
 

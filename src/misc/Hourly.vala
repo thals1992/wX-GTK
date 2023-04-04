@@ -43,7 +43,7 @@ class Hourly : Window {
         setTitle("Hourly forecast for " + Location.locationName());
         setSize(500, 900);
         text.setFixedWidth();
-        box.addWidget(text.get());
+        box.addWidget(text);
         new ScrolledWindow(this, box);
         new FutureText("HOURLY", text.setText);
     }

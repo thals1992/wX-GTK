@@ -23,7 +23,7 @@ class UtilityForecastIcon {
     public static Gdk.Pixbuf getIcon(string url) {
         var fileName = getFilename(url);
         //  print(fileName + ":\n");
-        if (url == "NULL" || url == "" || fileName == ""|| url == "https://api.weather.gov/icons/land/night/?size=medium") {
+        if (url == "NULL" || url == "" || fileName == "" || url == "https://api.weather.gov/icons/land/night/?size=medium") {
             return ForecastIcon.blankBitmap();
         }
         if (fileName + ".png" in UtilityNwsIcon.iconMap) {

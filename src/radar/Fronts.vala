@@ -38,8 +38,8 @@ class Fronts {
             coordinatesModified[paneIndex].clear();
             foreach (var i in range3(0, coordinates.size, 2)) {
                 if (i + 1 < coordinates.size) {
-                    var coords1 = UtilityCanvasProjection.computeMercatorNumbers(coordinates[i].lat(), -1.0 * coordinates[i].lon(), pn);
-                    var coords2 = UtilityCanvasProjection.computeMercatorNumbers(coordinates[i + 1].lat(), -1.0 * coordinates[i + 1].lon(), pn);
+                    var coords1 = Projection.computeMercatorNumbers(coordinates[i].lat(), -1.0 * coordinates[i].lon(), pn);
+                    var coords2 = Projection.computeMercatorNumbers(coordinates[i + 1].lat(), -1.0 * coordinates[i + 1].lon(), pn);
                     coordinatesModified[paneIndex].add(coords1[0]);
                     coordinatesModified[paneIndex].add(coords1[1]);
                     coordinatesModified[paneIndex].add(coords2[0]);

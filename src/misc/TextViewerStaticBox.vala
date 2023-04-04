@@ -9,7 +9,7 @@ class TextViewerStaticBox : VBox {
     Text text = new Text();
 
     public TextViewerStaticBox(string data) {
-        addWidget(text.get());
+        addWidget(text);
         text.setText(data);
     }
 }

@@ -9,7 +9,7 @@ using Gee;
 class SettingsLocationsBox : VBox {
 
     ArrayList<Button> buttons = new ArrayList<Button>();
-    ArrayList<ObjectCardLocationItem> cards = new ArrayList<ObjectCardLocationItem>();
+    ArrayList<CardLocationItem> cards = new ArrayList<CardLocationItem>();
     ArrayList<HBox> boxes = new ArrayList<HBox>();
 
     public SettingsLocationsBox() {
@@ -18,23 +18,23 @@ class SettingsLocationsBox : VBox {
 
     void addLocations() {
         foreach (var index in range(Location.getNumLocations())) {
-            cards.add(new ObjectCardLocationItem(index));
+            cards.add(new CardLocationItem(index));
             boxes.add(new HBox());
 
             buttons.add(new Button(Icon.Down, ""));
             buttons.last().connectInt(moveDownClicked, index);
-            boxes.last().addWidget(buttons.last().get());
+            boxes.last().addWidget(buttons.last());
 
             buttons.add(new Button(Icon.Up, ""));
             buttons.last().connectInt(moveUpClicked, index);
-            boxes.last().addWidget(buttons.last().get());
+            boxes.last().addWidget(buttons.last());
 
             buttons.add(new Button(Icon.Delete, "Delete"));
             buttons.last().connectInt(deleteLocation, index);
-            boxes.last().addWidget(buttons.last().get());
+            boxes.last().addWidget(buttons.last());
 
-            boxes.last().addWidget(cards.last().get());
-            addLayout(boxes.last().get());
+            boxes.last().addLayout(cards.last());
+            addLayout(boxes.last());
         }
     }
 

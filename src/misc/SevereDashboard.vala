@@ -35,10 +35,10 @@ class SevereDashboard : Window {
         boxWarnings[PolygonType.Tst] = new VBox();
         boxWarnings[PolygonType.Ffw] = new VBox();
 
-        box.addLayout(boxImages.get());
-        box.addLayout(boxWarnings[PolygonType.Tor].get());
-        box.addLayout(boxWarnings[PolygonType.Tst].get());
-        box.addLayout(boxWarnings[PolygonType.Ffw].get());
+        box.addLayout(boxImages);
+        box.addLayout(boxWarnings[PolygonType.Tor]);
+        box.addLayout(boxWarnings[PolygonType.Tst]);
+        box.addLayout(boxWarnings[PolygonType.Ffw]);
         sw = new ScrolledWindow(this, box);
 
         new FutureVoid(() => downloadWarnings(PolygonType.Tst), () => updateWarnings(PolygonType.Tst));
@@ -53,24 +53,26 @@ class SevereDashboard : Window {
     }
 
     void updateWarnings(PolygonType t) {
-        var label = new ObjectCardBlackHeaderText(warningsByType[t].getCount() + " " + warningsByType[t].getName());
-        boxWarnings[t].addLayout(label.get());
-        foreach (var w in warningsByType[t].warningList) {
-            if (w.isCurrent) {
-                var widget1 = new ObjectCardDashAlertItem(w);
-                boxWarnings[t].addLayout(widget1.get());
-                boxWarnings[t].addWidget(new ObjectDividerLine().get());
+        if (warningsByType[t].getCountInt() > 0) {
+            var label = new CardBlackHeaderText(warningsByType[t].getCount() + " " + warningsByType[t].getName());
+            boxWarnings[t].addLayout(label);
+            foreach (var w in warningsByType[t].warningList) {
+                if (w.isCurrent) {
+                    var widget1 = new CardDashAlertItem(w);
+                    boxWarnings[t].addLayout(widget1);
+                    boxWarnings[t].addWidget(new DividerLine());
+                }
             }
+            updateStatusBar();
         }
-        updateStatusBar();
     }
 
     void downloadWatch() {
-        urls.add(UtilityDownload.getImageProduct("USWARN"));
-        urls.add(UtilityDownload.getImageProduct("STRPT"));
+        urls.add(DownloadImage.byProduct("USWARN"));
+        urls.add(DownloadImage.byProduct("STRPT"));
 
         foreach (var t in new PolygonType[]{PolygonType.Mcd, PolygonType.Mpd, PolygonType.Watch}) {
-            ObjectPolygonWatch.polygonDataByType[t].download();
+            PolygonWatch.byType[t].download();
             severeNotices[t].getBitmaps();
             // TODO FIXME
             foreach (var url in severeNotices[t].urls) {
@@ -89,10 +91,10 @@ class SevereDashboard : Window {
             if (boxRows.size <= (int)(index / imagesAcross)) {
                 boxRows.add(new HBox());
             }
-            boxRows.last().addWidget(images[index].get());
+            boxRows.last().addWidget(images[index]);
         }
         foreach (var b in boxRows) {
-            boxImages.addLayout(b.get());
+            boxImages.addLayout(b);
         }
         updateStatusBar();
         show();
@@ -115,10 +117,14 @@ class SevereDashboard : Window {
         var statusTotal = "";
         var col1 = new PolygonType[]{PolygonType.Mcd, PolygonType.Watch, PolygonType.Mpd};
         foreach (var t in col1) {
-            statusTotal += "  " + severeNotices[t].getShortName() + ": " + severeNotices[t].getCount();
+            if (severeNotices[t].getCountInt() > 0) {
+                statusTotal += "  " + severeNotices[t].getShortName() + ": " + severeNotices[t].getCount();
+            }
         }
         foreach (var t in warningsByType.keys) {
-            statusTotal += "  " + warningsByType[t].getShortName() + ": " + warningsByType[t].getCount();
+            if (warningsByType[t].getCountInt() > 0) {
+                statusTotal += "  " + warningsByType[t].getShortName() + ": " + warningsByType[t].getCount();
+            }
         }
         setTitle(statusTotal);
     }

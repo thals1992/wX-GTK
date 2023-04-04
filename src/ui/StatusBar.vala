@@ -4,7 +4,7 @@
 // * Refer to the COPYING file of the official project for license.
 // *****************************************************************************
 
-public class StatusBar {
+public class StatusBar : Widget {
 
     Gtk.Statusbar statusBar = new Gtk.Statusbar();
 
@@ -19,5 +19,5 @@ public class StatusBar {
         set { statusBar.visible = value; }
     }
 
-    public Gtk.Statusbar get() { return statusBar; }
+    public Gtk.Widget getView() { return statusBar; }
 }

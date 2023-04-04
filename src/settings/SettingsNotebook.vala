@@ -16,13 +16,13 @@ public class SettingsNotebook : VBox {
     LocationEditBox locationEditBox = new LocationEditBox();
 
     public SettingsNotebook() {
-        addWidget(tabWidget.get());
-        tabWidget.addTab(settingsMain.get(), "General");
-        tabWidget.addTab(settingsRadar.get(), "Radar");
-        tabWidget.addTab(settingsColors.get(), "Colors");
-        tabWidget.addTab(settingsLocation.get(), "Locations");
-        tabWidget.addTab(locationEditBox.get(), "Add Location");
-        tabWidget.addTab(new TextViewerStaticBox(GlobalVariables.aboutString).get(), "About");
+        addWidget(tabWidget);
+        tabWidget.addTab(settingsMain, "General");
+        tabWidget.addTab(settingsRadar, "Radar");
+        tabWidget.addTab(settingsColors, "Colors");
+        tabWidget.addTab(settingsLocation, "Locations");
+        tabWidget.addTab(locationEditBox, "Add Location");
+        tabWidget.addTab(new TextViewerStaticBox(GlobalVariables.aboutString), "About");
         tabWidget.connect((w, i) => {
             if (i == 3) {
                 settingsLocation.refresh();

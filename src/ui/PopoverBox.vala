@@ -6,7 +6,7 @@
 
 using Gee;
 
-public class PopoverBox {
+public class PopoverBox : Widget {
 
     unowned FnVoid fnAction;
     unowned FnVoid fnShow;
@@ -23,9 +23,9 @@ public class PopoverBox {
         #endif
         popover.closed.connect(() => this.fnAction());
         #if GTK4
-            popover.set_child(vbox.get());
+            popover.set_child(vbox.getView());
         #else
-            popover.add(vbox.get());
+            popover.add(vbox.getView());
         #endif
         button.setPopover(popover);
         popover.set_position(Gtk.PositionType.BOTTOM);
@@ -44,5 +44,5 @@ public class PopoverBox {
         popover.closed.connect(() => fnShow());
     }
 
-    public Gtk.MenuButton get() { return button.get(); }
+    public Gtk.Widget getView() { return button.get(); }
 }

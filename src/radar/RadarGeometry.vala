@@ -10,10 +10,10 @@ class RadarGeometry {
 
     public static HashMap<RadarGeometryTypeEnum, RadarGeomInfo> dataByType;
 
-    public static void initialize() {
+    public static void initStatic() {
         if (dataByType == null) {
             dataByType = new HashMap<RadarGeometryTypeEnum, RadarGeomInfo>();
-            RadarGeomInfo.initialize();
+            RadarGeomInfo.initStatic();
         }
         foreach (var t in new RadarGeometryTypeEnum[]{
             RadarGeometryTypeEnum.StateLines,
@@ -24,7 +24,11 @@ class RadarGeometry {
             RadarGeometryTypeEnum.CaLines,
             RadarGeometryTypeEnum.MxLines,
         }) {
-            dataByType[t] = new RadarGeomInfo(t);
+            if (dataByType.has_key(t)) {
+                dataByType[t].update();
+            } else {
+                dataByType[t] = new RadarGeomInfo(t);
+            }
         }
     }
 }

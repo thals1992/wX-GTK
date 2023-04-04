@@ -9,17 +9,17 @@ using Gee;
 public class MainWindow : Gtk.ApplicationWindow {
 
     ComboBox comboBox = new ComboBox(Location.listOfNames());
-    ObjectSevenDay objectSevenDay = new ObjectSevenDay();
-    ObjectCurrentConditions objectCurrentConditions = new ObjectCurrentConditions();
-    ObjectHazards objectHazards = new ObjectHazards();
-    ObjectCardSevenDay objectCardSevenDay;
-    ObjectCardCurrentConditions objectCardCurrentConditions;
-    ObjectCardHazards objectCardHazards;
+    SevenDay sevenDay = new SevenDay();
+    CurrentConditions currentConditions = new CurrentConditions();
+    Hazards hazards = new Hazards();
+    SevenDayCollection sevenDayCollection;
+    CardCurrentConditions cardCurrentConditions;
+    CardHazards cardHazards;
     VBox box = new VBox();
     VBox boxCc = new VBox();
     VBox boxSevenDay = new VBox();
     VBox boxHazards = new VBox();
-    ObjectToolbar toolbar;
+    Toolbar toolbar;
     bool initializedCc = false;
     bool initialized7Day = false;
     HBox layout = new HBox();
@@ -59,7 +59,7 @@ public class MainWindow : Gtk.ApplicationWindow {
             }
         #endif
 
-        toolbar = new ObjectToolbar(reload);
+        toolbar = new Toolbar(reload);
         comboBox.setIndex(Location.getCurrentLocation());
         comboBox.connect(comboBoxChanged);
         Location.comboBox = comboBox;
@@ -70,19 +70,19 @@ public class MainWindow : Gtk.ApplicationWindow {
 
         addWidgets();
 
-        layout.addWidget(toolbar.get());
-        box.addLayout(boxSevereDashboard.get());
+        layout.addLayout(toolbar);
+        box.addLayout(boxSevereDashboard);
         forecastLayout.hExpand();
 
-        box.addLayout(layout.get());
-        layout.addLayout(imageLayout.get());
-        layout.addLayout(forecastLayout.get());
-        layout.addLayout(rightMostLayout.get());
+        box.addLayout(layout);
+        layout.addLayout(imageLayout);
+        layout.addLayout(forecastLayout);
+        layout.addLayout(rightMostLayout);
 
-        forecastLayout.addLayout(comboBox.get());
-        forecastLayout.addLayout(boxCc.get());
-        forecastLayout.addLayout(boxHazards.get());
-        forecastLayout.addLayout(boxSevenDay.get());
+        forecastLayout.addWidget(comboBox);
+        forecastLayout.addLayout(boxCc);
+        forecastLayout.addLayout(boxHazards);
+        forecastLayout.addLayout(boxSevenDay);
         new ScrolledWindow(this, box);
 
         reload();
@@ -113,7 +113,7 @@ public class MainWindow : Gtk.ApplicationWindow {
             }
             foreach (var item in UIPreferences.homeScreenItemsImage) {
                 if (item.isEnabled()) {
-                    new FutureBytes(UtilityDownload.getImageProduct(item.prefToken), imageWidgets[item.prefToken].setBytes);
+                    new FutureBytes(DownloadImage.byProduct(item.prefToken), imageWidgets[item.prefToken].setBytes);
                 }
             }
             if (UIPreferences.nexradMainScreen) {
@@ -139,12 +139,12 @@ public class MainWindow : Gtk.ApplicationWindow {
     void downloadWatch() {
         urls.clear();
         foreach (var t in new PolygonType[]{PolygonType.Mcd, PolygonType.Mpd, PolygonType.Watch}) {
-            ObjectPolygonWatch.polygonDataByType[t].download();
+            PolygonWatch.byType[t].download();
         }
-        urls.add(UtilityDownload.getImageProduct("USWARN"));
-        urls.add(UtilityDownload.getImageProduct("STRPT"));
+        urls.add(DownloadImage.byProduct("USWARN"));
+        urls.add(DownloadImage.byProduct("STRPT"));
         foreach (var t in new PolygonType[]{PolygonType.Watch, PolygonType.Mcd, PolygonType.Mpd}) {
-            ObjectPolygonWatch.polygonDataByType[t].download();
+            PolygonWatch.byType[t].download();
             watchesByType[t].getBitmaps();
             urls.add_all(watchesByType[t].urls);
         }
@@ -161,7 +161,7 @@ public class MainWindow : Gtk.ApplicationWindow {
             images[index].imageSize = 150;
             images[index].setBytes(bytesList[index].data);
             images[index].connect(launch);
-            boxSevereDashboard.addWidget(images[index].get());
+            boxSevereDashboard.addWidget(images[index]);
         }
     }
 
@@ -182,41 +182,41 @@ public class MainWindow : Gtk.ApplicationWindow {
     }
 
     void get7Day() {
-        objectSevenDay.process(Location.getLatLonCurrent());
+        sevenDay.process(Location.getLatLonCurrent());
     }
 
     void getCC() {
-        objectCurrentConditions.process(Location.getLatLonCurrent(), 0);
-        objectCurrentConditions.timeCheck();
+        currentConditions.process(Location.getLatLonCurrent(), 0);
+        currentConditions.timeCheck();
     }
 
     void getHazards() {
-        objectHazards.process(Location.getLatLonCurrent());
+        hazards.process(Location.getLatLonCurrent());
     }
 
     void updateCc() {
         if (!initializedCc) {
-            objectCardCurrentConditions = new ObjectCardCurrentConditions(objectCurrentConditions);
-            boxCc.addLayout(objectCardCurrentConditions.get());
+            cardCurrentConditions = new CardCurrentConditions(currentConditions);
+            boxCc.addLayout(cardCurrentConditions);
             initializedCc = true;
         } else {
-            objectCardCurrentConditions.update(objectCurrentConditions);
+            cardCurrentConditions.update(currentConditions);
         }
     }
 
     void update7Day() {
-        if (!initialized7Day || objectCardSevenDay.cards.size == 0) {
-            objectCardSevenDay = new ObjectCardSevenDay(boxSevenDay, objectSevenDay.detailedForecasts, objectSevenDay.icons);
+        if (!initialized7Day || sevenDayCollection.cards.size == 0) {
+            sevenDayCollection = new SevenDayCollection(boxSevenDay, sevenDay);
             initialized7Day = true;
         } else {
-            objectCardSevenDay.update(objectSevenDay.detailedForecasts, objectSevenDay.icons);
+            sevenDayCollection.update();
         }
     }
 
     void updateHazards() {
         boxHazards.removeChildren();
-        objectCardHazards = new ObjectCardHazards(objectHazards);
-        boxHazards.addLayout(objectCardHazards.get());
+        cardHazards = new CardHazards(hazards);
+        boxHazards.addLayout(cardHazards);
     }
 
     void addWidgets() {
@@ -252,7 +252,7 @@ public class MainWindow : Gtk.ApplicationWindow {
         //
         if (UIPreferences.nexradMainScreen) {
             nexradList[0].da.setSizeRequest(UIPreferences.mainScreenImageSize, UIPreferences.mainScreenImageSize);
-            imageLayout.addWidget(nexradList[0].da.get());
+            imageLayout.addWidget(nexradList[0].da);
             foreach (var nw in nexradList) {
                 nw.nexradDraw.initGeom();
             }
@@ -267,7 +267,7 @@ public class MainWindow : Gtk.ApplicationWindow {
                 imageWidgets[item.prefToken] = new Image.withIndex(imageIndex);
                 imageWidgets[item.prefToken].connect(launchImageScreen);
                 imageWidgets[item.prefToken].imageSize = UIPreferences.mainScreenImageSize;
-                imageLayout.addWidget(imageWidgets[item.prefToken].get());
+                imageLayout.addWidget(imageWidgets[item.prefToken]);
                 tokenString += item.prefToken;
             }
             imageSize = UIPreferences.mainScreenImageSize;
@@ -280,7 +280,7 @@ public class MainWindow : Gtk.ApplicationWindow {
             if (item.isEnabled()) {
                 textWidgets[item.prefToken] = new Text();
                 textWidgets[item.prefToken].setFixedWidth();
-                rightMostLayout.addWidget(textWidgets[item.prefToken].get());
+                rightMostLayout.addWidget(textWidgets[item.prefToken]);
                 tokenString += item.prefToken;
             }
         }
@@ -288,7 +288,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     string computeTokenString() {
         var tokenString = "";
-    	if (UIPreferences.nexradMainScreen) {
+        if (UIPreferences.nexradMainScreen) {
             tokenString += "NEXRAD_MAIN";
         }
         foreach (var item in UIPreferences.homeScreenItemsImage) {
@@ -331,6 +331,9 @@ public class MainWindow : Gtk.ApplicationWindow {
                     break;
                 case Gdk.Key.a:
                     new WfoText();
+                    break;
+                case Gdk.Key.b:
+                    new Rtma();
                     break;
                 case Gdk.Key.l:
                     Route.lightning();
@@ -403,6 +406,8 @@ public class MainWindow : Gtk.ApplicationWindow {
             new NationalImages();
         } else if (token == "USWARN") {
             new UsAlerts();
+        } else if (token == "RTMA_TEMP") {
+            new Rtma();
         }
     }
 }

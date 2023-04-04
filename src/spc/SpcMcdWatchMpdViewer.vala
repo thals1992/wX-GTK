@@ -19,10 +19,10 @@ class SpcMcdWatchMpdViewer : Window {
         token = getToken(url);
         setTitle(token);
         text.hExpand();
-        boxText.addWidget(button.get());
-        boxText.addWidget(text.get());
+        boxText.addWidget(button);
+        boxText.addWidget(text);
 
-        new ObjectTwoWidgetScroll(this, photo.get(), boxText.get());
+        new TwoWidgetScroll(this, photo.getView(), boxText.getView());
         new FutureText(token, updateText);
         new FutureBytes(url, photo.setBytes);
     }
@@ -47,6 +47,7 @@ class SpcMcdWatchMpdViewer : Window {
         var items = url.split("/");
         var s = items[items.length - 1];
         s = s.replace(".gif", "");
+        s = s.replace(".png", "");
         s = s.ascii_up();
         if (url.contains("www.wpc.ncep.noaa.gov")) {
             s = "WPCMPD" + s[s.length - 4:s.length];

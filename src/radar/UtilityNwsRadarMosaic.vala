@@ -9,29 +9,26 @@ using Gee;
 
 class UtilityNwsRadarMosaic {
 
-
-    public const string baseUrl = "https://radar.weather.gov/ridge/lite/";
-
+    public const string baseUrl = "https://radar.weather.gov/ridge/standard/";
     public static ArrayList<string> sectors;
     public static HashMap<string, LatLon> cityToLatLon;
 
-// TODO FIXME remove status class names
-
     public static string getNearestMosaic(LatLon latLon) {
-        ArrayList<RID> sites = new ArrayList<RID>();
-        foreach (var m in UtilityNwsRadarMosaic.cityToLatLon.entries) {
-            sites.add(new RID(m.key, m.value));
-            sites.last().distance = LatLon.distance(latLon, m.value);
-        }
-        sites.sort((a, b) => { return a.distance > b.distance ? 1 : -1; });
-        return sites[0].name;
+        //  ArrayList<RID> sites = new ArrayList<RID>();
+        //  foreach (var m in cityToLatLon.entries) {
+        //      sites.add(new RID(m.key, m.value));
+        //      sites.last().distance = LatLon.distance(latLon, m.value);
+        //  }
+        //  sites.sort((a, b) => { return a.distance > b.distance ? 1 : -1; });
+        //  return sites[0].name;
+        return UtilityLocation.getNearest(latLon, UtilityNwsRadarMosaic.cityToLatLon);
     }
 
     public static string get(string sector) {
         if (sector == "CONUS") {
-            return "https://radar.weather.gov/ridge/lite/CONUS-LARGE_0.gif";
+            return baseUrl + "CONUS-LARGE_0.gif";
         }
-        return UtilityNwsRadarMosaic.baseUrl + sector + "_0.gif";
+        return baseUrl + sector + "_0.gif";
 
     }
 
@@ -43,7 +40,7 @@ class UtilityNwsRadarMosaic {
         }
         for (var index = 9; index >= 0; index -= 1) {
         // foreach (int i in range3(9, -1, -1)) {
-            returnList.add(UtilityNwsRadarMosaic.baseUrl + sector + add + "_" + Too.String(index) + ".gif");
+            returnList.add(baseUrl + sector + add + "_" + Too.String(index) + ".gif");
         }
         return returnList.to_array();
     }

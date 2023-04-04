@@ -35,14 +35,14 @@ class NationalImages : Window {
             index = int.min(index, UtilityWpcImages.urls.length - 1);
             reload();
         });
-        buttonBox.addWidget(buttonBack.get());
-        buttonBox.addWidget(buttonForward.get());
+        buttonBox.addWidget(buttonBack);
+        buttonBox.addWidget(buttonForward);
 
-        box.addLayout(buttonBox.get());
-        box.addWidgetCenter(photo.get());
+        box.addLayout(buttonBox);
+        box.addWidgetAndCenter1(photo);
         box.getAndShow(this);
 
-        UtilityWpcImages.init();
+        UtilityWpcImages.initStatic();
         var itemsSoFar = 0;
         foreach (var menu in UtilityWpcImages.titles) {
             menu.setList(UtilityWpcImages.labels, itemsSoFar);
@@ -50,15 +50,17 @@ class NationalImages : Window {
         }
         foreach (var objectMenuTitle in UtilityWpcImages.titles) {
             popoverMenus.add(new PopoverMenu(objectMenuTitle.title, objectMenuTitle.get(), changeProductByCode));
-            buttonBox.addWidget(popoverMenus.last().get());
+            buttonBox.addWidget(popoverMenus.last());
         }
-
         reload();
     }
 
     void reload() {
         Utility.writePrefInt(prefToken, index);
         var url = UtilityWpcImages.urls[index];
+        if (url.contains(GlobalVariables.nwsGraphicalWebsitePrefix + "/images/conus/")) {
+            url += "1_conus.png";
+        }
         setTitle(UtilityWpcImages.labels[index]);
         new FutureBytes(url, photo.setBytes);
     }

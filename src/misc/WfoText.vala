@@ -27,14 +27,14 @@ class WfoText : Window {
 
         comboboxSector.setIndexByValue(sector);
         comboboxSector.connect(changeSector);
-        boxH.addWidget(comboboxSector.get());
+        boxH.addWidget(comboboxSector);
 
         comboboxProduct.setIndexByValue(product);
         comboboxProduct.connect(changeProduct);
-        boxH.addWidget(comboboxProduct.get());
+        boxH.addWidget(comboboxProduct);
 
-        box.addLayout(boxH.get());
-        box.addLayout(boxText.get());
+        box.addLayout(boxH);
+        box.addLayout(boxText);
 
         if (UtilityUI.isScreenSmall()) {
             productCount = 1;
@@ -45,7 +45,7 @@ class WfoText : Window {
             textList.last().setFixedWidth();
             textList.last().vExpand();
             textList.last().hExpand();
-            boxText.addWidget(textList.last().get());
+            boxText.addWidget(textList.last());
             return true;
         });
         new ScrolledWindow(this, box);

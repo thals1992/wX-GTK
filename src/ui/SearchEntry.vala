@@ -4,7 +4,7 @@
 // * Refer to the COPYING file of the official project for license.
 // *****************************************************************************
 
-public class SearchEntry {
+public class SearchEntry : Widget {
 
     Gtk.SearchEntry entry = new Gtk.SearchEntry();
 
@@ -17,5 +17,5 @@ public class SearchEntry {
         entry.changed.connect(() => fn());
     }
 
-    public Gtk.SearchEntry get() { return entry; }
+    public Gtk.Widget getView() { return entry; }
 }

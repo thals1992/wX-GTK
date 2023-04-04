@@ -14,9 +14,9 @@ class ScrolledWindow {
 
     public ScrolledWindow(Gtk.Window win, VBox box) {
         #if GTK4
-            swin.set_child(box.get());
+            swin.set_child(box.getView());
         #else
-            swin.add(box.get()); //GTK4_DELETE
+            swin.add(box.getView()); //GTK4_DELETE
         #endif
         swin.set_margin_start(UIPreferences.swinMargin);
         swin.set_margin_end(UIPreferences.swinMargin);

@@ -4,7 +4,7 @@
 // * Refer to the COPYING file of the official project for license.
 // *****************************************************************************
 
-class Button {
+class Button : Widget {
 
     int iconSize = 42;
     Gtk.Button button = new Gtk.Button();
@@ -27,9 +27,9 @@ class Button {
             image.setPix(pix);
             button.set_tooltip_text(label);
             #if GTK4
-                button.set_child(image.get());
+                button.set_child(image.getView());
             #else
-                button.set_image(image.get());
+                button.set_image(image.getView());
             #endif
         }
         if (label != "" && imageName == Icon.None) {
@@ -64,5 +64,7 @@ class Button {
 
     public string getText() { return button.get_label(); }
 
-    public Gtk.Button get() { return button; }
+    //  public Gtk.Widget get() { return button; }
+
+    public Gtk.Widget getView() { return button; }
 }

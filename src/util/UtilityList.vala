@@ -66,7 +66,7 @@ class UtilityList {
         return l;
     }
 
-    public static int count(ArrayList<string> al, string data) {
+    public static int count(Gee.List<string> al, string data) {
         var count = 0;
         foreach (var item in al) {
             if (item == data) {

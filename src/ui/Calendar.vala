@@ -6,7 +6,7 @@
 
 using Gee;
 
-public class Calendar {
+public class Calendar : Widget {
 
     Gtk.Calendar cal = new Gtk.Calendar();
 
@@ -45,7 +45,7 @@ public class Calendar {
     }
 
     public int dayOfMonth {
-        get  {
+        get {
             #if GTK4
                 var dateTime = cal.get_date();
                 int day = dateTime.get_day_of_month();
@@ -59,5 +59,5 @@ public class Calendar {
         }
     }
 
-    public Gtk.Widget get() { return cal; }
+    public Gtk.Widget getView() { return cal; }
 }

@@ -38,11 +38,11 @@ class SpcCompMap : Window {
         comboboxProduct.setIndex(index);
         comboboxProduct.connect(changeProduct);
 
-        buttonBox.addWidget(buttonBack.get());
-        buttonBox.addWidget(buttonForward.get());
-        buttonBox.addWidget(comboboxProduct.get());
-        box.addLayout(buttonBox.get());
-        box.addWidgetAndCenter(this.photo.get());
+        buttonBox.addWidget(buttonBack);
+        buttonBox.addWidget(buttonForward);
+        buttonBox.addWidget(comboboxProduct);
+        box.addLayout(buttonBox);
+        box.addWidgetAndCenter1(this.photo);
         box.getAndShow(this);
 
         reload();

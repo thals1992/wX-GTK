@@ -12,15 +12,18 @@ class MyApplication {
         GlobalDictionaries.initStatic();
         UtilityHourly.initStatic();
         UtilityMetarConditions.initStatic();
-        UtilityRadar.initStatic();
+        RadarSites.initStatic();
+        WfoSites.initStatic();
+        SoundingSites.initStatic();
         Location.refresh();
         UtilityGoes.initStatic();
+        UtilityRtma.initStatic();
         UtilityNwsRadarMosaic.initStatic();
         RadarPreferences.initialize();
         UIPreferences.initialize();
-        UIPreferences.initializeData();
+        UIPreferences.initStatic();
         ColorPalettes.initialize();
-        RadarGeometry.initialize();
+        //  RadarGeometry.initialize();
         UtilityStorePreferences.setDefaultLocation();
     }
 }

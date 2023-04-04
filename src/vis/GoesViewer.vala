@@ -63,13 +63,13 @@ class GoesViewer : Window {
 
         animateButton.connect(objectAnimate.animateClicked);
         if (!goesFloater) {
-            boxH.addWidget(comboboxSector.get());
+            boxH.addWidget(comboboxSector);
         }
-        boxH.addWidget(comboboxProduct.get());
-        boxH.addWidget(comboboxCount.get());
-        boxH.addWidget(animateButton.get());
-        box.addLayout(boxH.get());
-        box.addWidgetCenter(photo.get());
+        boxH.addWidget(comboboxProduct);
+        boxH.addWidget(comboboxCount);
+        boxH.addWidget(animateButton);
+        box.addLayout(boxH);
+        box.addWidgetAndCenter1(photo);
         box.getAndShow(this);
         reload();
     }

@@ -4,7 +4,7 @@
 // * Refer to the COPYING file of the official project for license.
 // *****************************************************************************
 
-public class Image {
+public class Image : Widget {
 
     Photo image = new Photo.icon();
     #if GTK4
@@ -19,9 +19,9 @@ public class Image {
     public Image() {
         #if GTK4
             gesture = new Gtk.GestureClick();
-            image.get().add_controller(gesture);
+            image.getView().add_controller(gesture);
         #else
-            evb.add(image.get());
+            evb.add(image.getView());
             gesture = new Gtk.GestureMultiPress(evb);
         #endif
         gesture.set_propagation_phase(Gtk.PropagationPhase.CAPTURE);
@@ -31,9 +31,9 @@ public class Image {
         this.index = index;
         #if GTK4
             gesture = new Gtk.GestureClick();
-            image.get().add_controller(gesture);
+            image.getView().add_controller(gesture);
         #else
-            evb.add(image.get());
+            evb.add(image.getView());
             gesture = new Gtk.GestureMultiPress(evb);
         #endif
         gesture.set_propagation_phase(Gtk.PropagationPhase.CAPTURE);
@@ -55,9 +55,17 @@ public class Image {
         image.setToWidth(ba, imageSize);
     }
 
-    public Gtk.Widget get() {
+    //  public Gtk.Widget get() {
+    //      #if GTK4
+    //          return image.getView();
+    //      #else
+    //          return evb;
+    //      #endif
+    //  }
+
+    public Gtk.Widget getView() {
         #if GTK4
-            return image.get();
+            return image.getView();
         #else
             return evb;
         #endif

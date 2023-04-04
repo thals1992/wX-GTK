@@ -8,22 +8,22 @@ using Gee;
 
 class UtilitySpcMeso {
 
-    public static ArrayList<ObjectMenuTitle> titles;
+    public static ArrayList<MenuTitle> titles;
 
-    public static void init() {
-        titles = new ArrayList<ObjectMenuTitle>();
-        titles.add(new ObjectMenuTitle("Observations", 3));
-        titles.add(new ObjectMenuTitle("Surface", 15));
-        titles.add(new ObjectMenuTitle("Upper Air", 25));
-        titles.add(new ObjectMenuTitle("Thermodynamics", 19));
-        titles.add(new ObjectMenuTitle("Wind Shear", 19));
-        titles.add(new ObjectMenuTitle("Composite Indices", 23));
-        titles.add(new ObjectMenuTitle("Multi-Parameter Fields", 11));
-        titles.add(new ObjectMenuTitle("Heavy Rain", 8));
-        titles.add(new ObjectMenuTitle("Winter Weather", 14));
-        titles.add(new ObjectMenuTitle("Fire Weather", 6));
-        titles.add(new ObjectMenuTitle("Classic", 3));
-        titles.add(new ObjectMenuTitle("Beta", 10));
+    public static void initStatic() {
+        titles = new ArrayList<MenuTitle>();
+        titles.add(new MenuTitle("Observations", 3));
+        titles.add(new MenuTitle("Surface", 15));
+        titles.add(new MenuTitle("Upper Air", 25));
+        titles.add(new MenuTitle("Thermodynamics", 19));
+        titles.add(new MenuTitle("Wind Shear", 19));
+        titles.add(new MenuTitle("Composite Indices", 23));
+        titles.add(new MenuTitle("Multi-Parameter Fields", 11));
+        titles.add(new MenuTitle("Heavy Rain", 8));
+        titles.add(new MenuTitle("Winter Weather", 14));
+        titles.add(new MenuTitle("Fire Weather", 6));
+        titles.add(new MenuTitle("Classic", 3));
+        titles.add(new MenuTitle("Beta", 10));
     }
 
     public const string defaultSector = "19";

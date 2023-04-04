@@ -64,7 +64,7 @@ public class ObjectAnimateNexrad {
 
     void downloadFrames() {
         foreach (var nw in nexradList) {
-            WXGLDownload.getRadarFilesForAnimation(frameCount, nw.nexradState.radarProduct, nw.nexradState.getRadarSite(), nw.fileStorage);
+            NexradDownload.getRadarFilesForAnimation(frameCount, nw.nexradState.radarProduct, nw.nexradState.getRadarSite(), nw.fileStorage);
             nw.nexradState.levelDataList.clear();
             nw.nexradState.processAnimationFiles(frameCount, nw.fileStorage);
         }

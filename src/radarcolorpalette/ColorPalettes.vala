@@ -9,40 +9,40 @@ using Gee;
 class ColorPalettes {
 
     public static void initialize() {
-        ObjectColorPalette.radarColorPalette = new HashMap<int, string>();
+        ColorPalette.radarColorPalette = new HashMap<int, string>();
         refreshPref();
-        ObjectColorPalette.colorMap = new HashMap<int, ObjectColorPalette>();
+        ColorPalette.colorMap = new HashMap<int, ColorPalette>();
         var colorMapInts = new int[]{19, 30, 56, 134, 135, 159, 161, 163, 165};
-        ObjectColorPalette cm94 = new ObjectColorPalette(94);
-        ObjectColorPalette.colorMap[94] = cm94;
-        ObjectColorPalette.colorMap[94].initialize();
-        ObjectColorPalette.colorMap[153] = cm94;
-        ObjectColorPalette.colorMap[186] = cm94;
-        ObjectColorPalette.colorMap[180] = cm94;
-        ObjectColorPalette cm99 = new ObjectColorPalette(99);
-        ObjectColorPalette.colorMap[99] = cm99;
-        ObjectColorPalette.colorMap[99].initialize();
-        ObjectColorPalette.colorMap[154] = cm99;
-        ObjectColorPalette.colorMap[182] = cm99;
-        ObjectColorPalette cm172 = new ObjectColorPalette(172);
-        ObjectColorPalette.colorMap[172] = cm172;
-        ObjectColorPalette.colorMap[172].initialize();
-        ObjectColorPalette.colorMap[170] = cm172;
+        ColorPalette cm94 = new ColorPalette(94);
+        ColorPalette.colorMap[94] = cm94;
+        ColorPalette.colorMap[94].initialize();
+        ColorPalette.colorMap[153] = cm94;
+        ColorPalette.colorMap[186] = cm94;
+        ColorPalette.colorMap[180] = cm94;
+        ColorPalette cm99 = new ColorPalette(99);
+        ColorPalette.colorMap[99] = cm99;
+        ColorPalette.colorMap[99].initialize();
+        ColorPalette.colorMap[154] = cm99;
+        ColorPalette.colorMap[182] = cm99;
+        ColorPalette cm172 = new ColorPalette(172);
+        ColorPalette.colorMap[172] = cm172;
+        ColorPalette.colorMap[172].initialize();
+        ColorPalette.colorMap[170] = cm172;
         foreach (var data in colorMapInts) {
-            ObjectColorPalette.colorMap[data] = new ObjectColorPalette(data);
-            ObjectColorPalette.colorMap[data].initialize();
+            ColorPalette.colorMap[data] = new ColorPalette(data);
+            ColorPalette.colorMap[data].initialize();
         }
-        ObjectColorPalette.colorMap[181] = ObjectColorPalette.colorMap[19];
-        ObjectColorPalette.colorMap[37] = ObjectColorPalette.colorMap[19];
-        ObjectColorPalette.colorMap[38] = ObjectColorPalette.colorMap[19];
-        ObjectColorPalette.colorMap[2161] = ObjectColorPalette.colorMap[161];
+        ColorPalette.colorMap[181] = ColorPalette.colorMap[19];
+        ColorPalette.colorMap[37] = ColorPalette.colorMap[19];
+        ColorPalette.colorMap[38] = ColorPalette.colorMap[19];
+        ColorPalette.colorMap[2161] = ColorPalette.colorMap[161];
     }
 
     public static void refreshPref() {
-        ObjectColorPalette.radarColorPalette.clear();
+        ColorPalette.radarColorPalette.clear();
         var radarProductCodes = new int[]{94, 99, 134, 135, 159, 161, 163, 165, 172};
         foreach (var data in radarProductCodes) {
-            ObjectColorPalette.radarColorPalette[data] = Utility.readPref("RADAR_COLOR_PALETTE_" + Too.String(data), "CODENH");
+            ColorPalette.radarColorPalette[data] = Utility.readPref("RADAR_COLOR_PALETTE_" + Too.String(data), "CODENH");
         }
     }
 }

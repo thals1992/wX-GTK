@@ -10,20 +10,20 @@ class SettingsBox : VBox {
 
     HBox hbox0 = new HBox();
     Button button = new Button(Icon.None, "Keyboard Shortcuts");
-    ObjectNumberPicker np1 = new ObjectNumberPicker("Main screen image size", "MAIN_SCREEN_IMAGE_SIZE", 400, 200, 800, 50);
-    ObjectSwitch[] configs = {
-        new ObjectSwitch("Show Nexrad on main screen", "NEXRAD_ON_MAIN_SCREEN", false),
-        new ObjectSwitch("Use new NWS API", "USE_NWS_API_SEVEN_DAY", false),
-        new ObjectSwitch("Use new NWS API - Hourly", "USE_NWS_API_HOURLY", true),
-        new ObjectSwitch("Show mini SevereDashboard on main screen", "MAINSCREEN_SEVERE_DASH", false),
-        new ObjectSwitch("Toggle scroll wheel motion", "NEXRAD_SCROLLWHEEL", false),
-        new ObjectSwitch("Remember last GOES image", "REMEMBER_GOES", false),
-        new ObjectSwitch("Remember last Radar Mosaic image", "REMEMBER_MOSAIC", false)
+    NumberPicker np1 = new NumberPicker("Main screen image size", "MAIN_SCREEN_IMAGE_SIZE", 400, 200, 800, 50);
+    Switch[] configs = {
+        new Switch("Show Nexrad on main screen", "NEXRAD_ON_MAIN_SCREEN", false),
+        new Switch("Use new NWS API", "USE_NWS_API_SEVEN_DAY", false),
+        new Switch("Use new NWS API - Hourly", "USE_NWS_API_HOURLY", true),
+        new Switch("Show mini SevereDashboard on main screen", "MAINSCREEN_SEVERE_DASH", false),
+        new Switch("Toggle scroll wheel motion", "NEXRAD_SCROLLWHEEL", false),
+        new Switch("Remember last GOES image", "REMEMBER_GOES", false),
+        new Switch("Remember last Radar Mosaic image", "REMEMBER_MOSAIC", false)
     };
-    ArrayList<ObjectSwitch> homeScreenObjectSwitch = new ArrayList<ObjectSwitch>();
+    ArrayList<Switch> homeScreenObjectSwitch = new ArrayList<Switch>();
 
     public SettingsBox() {
-        addLayout(hbox0.get());
+        addLayout(hbox0);
 
         button.connect(() => {
             Gtk.Builder builder = new Gtk.Builder.from_string(Shortcuts.mainWindow, Shortcuts.mainWindow.length);
@@ -34,22 +34,22 @@ class SettingsBox : VBox {
                 dialog.show_all();
             #endif
         });
-        addWidget(button.get());
+        addWidget(button);
 
         foreach (var item in UIPreferences.homeScreenItemsImage) {
-            homeScreenObjectSwitch.add(ObjectSwitch.fromPrefBool(item));
-            addWidget(homeScreenObjectSwitch.last().get());
+            homeScreenObjectSwitch.add(Switch.fromPrefBool(item));
+            addWidget(homeScreenObjectSwitch.last());
         }
 
         foreach (var item in UIPreferences.homeScreenItemsText) {
-            homeScreenObjectSwitch.add(ObjectSwitch.fromPrefBool(item));
-            addWidget(homeScreenObjectSwitch.last().get());
+            homeScreenObjectSwitch.add(Switch.fromPrefBool(item));
+            addWidget(homeScreenObjectSwitch.last());
         }
 
         foreach (var config in configs) {
-            addWidget(config.get());
+            addWidget(config);
         }
-        addWidget(np1.get());
+        addWidget(np1);
     }
 
     public void refresh() {

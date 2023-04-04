@@ -4,7 +4,7 @@
 // * Refer to the COPYING file of the official project for license.
 // *****************************************************************************
 
-class Text {
+class Text : Widget {
 
     Gtk.Label textView = new Gtk.Label("");
     string text = "";
@@ -99,4 +99,6 @@ class Text {
     }
 
     public Gtk.Label get() { return textView; }
+
+    public Gtk.Widget getView() { return textView; }
 }

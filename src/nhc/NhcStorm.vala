@@ -10,14 +10,14 @@ class NhcStorm : Window {
 
     Text text = new Text();
     ComboBox comboboxProduct = new ComboBox(UtilityNhc.stormtextProducts);
-    ObjectNhcStormDetails stormData;
+    NhcStormDetails stormData;
     VBox boxText = new VBox();
     VBox boxImages = new VBox();
     ArrayList<Photo> images = new ArrayList<Photo>();
     Button goesButton = new Button(Icon.None, "GOES");
-    ObjectTwoWidgetScroll sw;
+    TwoWidgetScroll sw;
 
-    public NhcStorm(ObjectNhcStormDetails stormData) {
+    public NhcStorm(NhcStormDetails stormData) {
         this.stormData = stormData;
         setTitle("NHC Storm " + stormData.forTopHeader());
         maximize();
@@ -31,17 +31,17 @@ class NhcStorm : Window {
         comboboxProduct.connect(reload);
 
         text.hExpand();
-        boxText.addWidget(goesButton.get());
-        boxText.addWidget(comboboxProduct.get());
-        boxText.addWidget(text.get());
+        boxText.addWidget(goesButton);
+        boxText.addWidget(comboboxProduct);
+        boxText.addWidget(text);
 
         urls.foreach((unused) => {
             images.add(new Photo(this, PhotoSizeEnum.Scaled));
-            boxImages.addWidget(images.last().get());
+            boxImages.addWidget(images.last());
             return true;
         });
 
-        sw = new ObjectTwoWidgetScroll(this, boxImages.get(), boxText.get());
+        sw = new TwoWidgetScroll(this, boxImages.getView(), boxText.getView());
 
         foreach (var index in range(urls.size)) {
             new FutureBytes(urls[index], images[index].setBytes);

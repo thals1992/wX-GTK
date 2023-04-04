@@ -59,29 +59,29 @@ class SpcMeso : Window {
         comboboxSector.setIndex(indexSector);
         comboboxSector.connect(changeSector);
 
-        boxFav.addWidget(comboboxSector.get());
-        boxFav.addWidget(animateButton.get());
+        boxFav.addWidget(comboboxSector);
+        boxFav.addWidget(animateButton);
 
         var j = 0;
         foreach (var item in UtilitySpcMeso.favList) {
             buttons.add(new Button(Icon.None, ""));
             buttons.last().setText(item);
             buttons.last().connectInt(changeProductForFav, j);
-            boxFav.addWidget(buttons.last().get());
+            boxFav.addWidget(buttons.last());
             j += 1;
         }
 
         animateButton.connect(objectAnimate.animateClicked);
-        boxH.addWidget(buttonBack.get());
-        boxH.addWidget(buttonForward.get());
+        boxH.addWidget(buttonBack);
+        boxH.addWidget(buttonForward);
 
-        box.addLayout(boxH.get());
-        imageLayout.addLayout(boxFav.get());
-        imageLayout.addWidget(photo.get());
-        box.addLayout(imageLayout.get());
+        box.addLayout(boxH);
+        imageLayout.addLayout(boxFav);
+        imageLayout.addWidget(photo);
+        box.addLayout(imageLayout);
         box.getAndShow(this);
 
-        UtilitySpcMeso.init();
+        UtilitySpcMeso.initStatic();
         int itemsSoFar = 0;
         foreach (var menu in UtilitySpcMeso.titles) {
             menu.setList(UtilitySpcMeso.labels, itemsSoFar);
@@ -89,7 +89,7 @@ class SpcMeso : Window {
         }
         foreach (var objectMenuTitle in UtilitySpcMeso.titles) {
             popoverMenus.add(new PopoverMenu(objectMenuTitle.title, objectMenuTitle.get(), changeProductByCode));
-            boxH.addWidget(popoverMenus.last().get());
+            boxH.addWidget(popoverMenus.last());
         }
 
         reload();

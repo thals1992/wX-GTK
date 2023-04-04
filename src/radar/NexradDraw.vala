@@ -13,9 +13,9 @@ public class NexradDraw {
 
     NexradState nexradState;
     FileStorage fileStorage;
-    WXMetalTextObject textObject;
+    NexradRenderTextObject textObject;
 
-    public NexradDraw(NexradState nexradState, FileStorage fileStorage, WXMetalTextObject textObject) {
+    public NexradDraw(NexradState nexradState, FileStorage fileStorage, NexradRenderTextObject textObject) {
         this.nexradState = nexradState;
         this.fileStorage = fileStorage;
         this.textObject = textObject;
@@ -50,33 +50,33 @@ public class NexradDraw {
             if (RadarGeometry.dataByType[type] != null) {
                 fileStorage.relativeBuffers[type].clear();
             }
-            return;
-        }
-        if (!fileStorage.relativeBuffers.keys.contains(type) || fileStorage.relativeBuffers[type].is_empty) {
-            fileStorage.relativeBuffers[type] = new ArrayList<float?>.wrap(new float?[RadarGeometry.dataByType[type].lineData.length]);
-        }
-        var pnX = nexradState.getPn().x();
-        var pnY = nexradState.getPn().y();
-        var xCenter = nexradState.getPn().xCenter;
-        var yCenter = nexradState.getPn().yCenter;
-        var oneDegreeScaleFactor = nexradState.getPn().oneDegreeScaleFactor;
-        foreach (var indexRelative in range3(0, RadarGeometry.dataByType[type].lineData.length, 4)) {
-            double lat = RadarGeometry.dataByType[type].lineData[indexRelative];
-            double lon = RadarGeometry.dataByType[type].lineData[indexRelative + 1];
-            var test1 = (180.0 / Math.PI * Math.log(Math.tan(Math.PI / 4.0 + lat * (Math.PI / 180.0) / 2.0)));
-            var test2 = (180.0 / Math.PI * Math.log(Math.tan(Math.PI / 4.0 + pnX * (Math.PI / 180.0) / 2.0)));
-            var y1 = (-1.0 * ((test1 - test2) * oneDegreeScaleFactor) + yCenter);
-            var x1 = (-1.0 * ((lon - pnY) * oneDegreeScaleFactor) + xCenter);
-            lat = RadarGeometry.dataByType[type].lineData[indexRelative + 2];
-            lon = RadarGeometry.dataByType[type].lineData[indexRelative + 3];
-            test1 = (180.0 / Math.PI * Math.log(Math.tan(Math.PI / 4.0 + lat * (Math.PI / 180.0) / 2.0)));
-            test2 = (180.0 / Math.PI * Math.log(Math.tan(Math.PI / 4.0 + pnX * (Math.PI / 180.0) / 2.0)));
-            var y2 = (-1.0 * ((test1 - test2) * oneDegreeScaleFactor) + yCenter);
-            var x2 = (-1.0 * ((lon - pnY) * oneDegreeScaleFactor) + xCenter);
-            fileStorage.relativeBuffers[type][indexRelative] = (float)x1;
-            fileStorage.relativeBuffers[type][indexRelative + 1] = (float)y1;
-            fileStorage.relativeBuffers[type][indexRelative + 2] = (float)x2;
-            fileStorage.relativeBuffers[type][indexRelative + 3] = (float)y2;
+        } else {
+            if (!fileStorage.relativeBuffers.keys.contains(type) || fileStorage.relativeBuffers[type].is_empty) {
+                fileStorage.relativeBuffers[type] = new ArrayList<float?>.wrap(new float?[RadarGeometry.dataByType[type].lineData.length]);
+            }
+            var pnX = nexradState.getPn().x();
+            var pnY = nexradState.getPn().y();
+            var xCenter = nexradState.getPn().xCenter;
+            var yCenter = nexradState.getPn().yCenter;
+            var oneDegreeScaleFactor = nexradState.getPn().oneDegreeScaleFactor;
+            foreach (var indexRelative in range3(0, RadarGeometry.dataByType[type].lineData.length, 4)) {
+                double lat = RadarGeometry.dataByType[type].lineData[indexRelative];
+                double lon = RadarGeometry.dataByType[type].lineData[indexRelative + 1];
+                var test1 = 180.0 / Math.PI * Math.log(Math.tan(Math.PI / 4.0 + lat * (Math.PI / 180.0) / 2.0));
+                var test2 = 180.0 / Math.PI * Math.log(Math.tan(Math.PI / 4.0 + pnX * (Math.PI / 180.0) / 2.0));
+                var y1 = -1.0 * ((test1 - test2) * oneDegreeScaleFactor) + yCenter;
+                var x1 = -1.0 * ((lon - pnY) * oneDegreeScaleFactor) + xCenter;
+                lat = RadarGeometry.dataByType[type].lineData[indexRelative + 2];
+                lon = RadarGeometry.dataByType[type].lineData[indexRelative + 3];
+                test1 = 180.0 / Math.PI * Math.log(Math.tan(Math.PI / 4.0 + lat * (Math.PI / 180.0) / 2.0));
+                //  test2 = (180.0 / Math.PI * Math.log(Math.tan(Math.PI / 4.0 + pnX * (Math.PI / 180.0) / 2.0)));
+                var y2 = -1.0 * ((test1 - test2) * oneDegreeScaleFactor) + yCenter;
+                var x2 = -1.0 * ((lon - pnY) * oneDegreeScaleFactor) + xCenter;
+                fileStorage.relativeBuffers[type][indexRelative] = (float) x1;
+                fileStorage.relativeBuffers[type][indexRelative + 1] = (float) y1;
+                fileStorage.relativeBuffers[type][indexRelative + 2] = (float) x2;
+                fileStorage.relativeBuffers[type][indexRelative + 3] = (float) y2;
+            }
         }
     }
 
@@ -97,37 +97,23 @@ public class NexradDraw {
             var coord = centers[index].data;
             var width = 2.0 / nexradState.zoom;
             var color = colors[index];
-            ctx.set_source_rgb((double)Color.red(color) / 255.0, (double)Color.green(color) / 255.0, (double)Color.blue(color) / 255.0);
+            ctx.set_source_rgb((double) Color.red(color) / 255.0, (double) Color.green(color) / 255.0, (double) Color.blue(color) / 255.0);
             ctx.arc(xShift * coord[0], yShift * coord[1], width, 0.0, 2.0 * Math.PI);
             ctx.stroke_preserve();
             ctx.fill();
         }
     }
 
-    // used for hw/state lines, note no shift and array instead of list
-    //  public void drawGeomLine(Cairo.Context ctx, float[] linePoints, int color, double size) {
-    //      Color.setCairoColor(ctx, color);
-    //      ctx.set_line_width(size / nexradState.zoom);
-    //      foreach (var index in range3(0, linePoints.length, 4)) {
-    //          ctx.move_to(linePoints[index], linePoints[index + 1]);
-    //          ctx.line_to(linePoints[index + 2], linePoints[index + 3]);
-    //          ctx.move_to(linePoints[index + 2], linePoints[index + 3]);
-    //      }
-    //      ctx.stroke();
-    //  }
-
     public void drawGeomLine(Cairo.Context ctx, RadarGeometryTypeEnum type) {
-        if (!RadarGeometry.dataByType[type].isEnabled) {
-            return;
+        if (RadarGeometry.dataByType[type].isEnabled) {
+            Color.setCairoColor(ctx, RadarGeometry.dataByType[type].colorInt);
+            ctx.set_line_width(RadarGeometry.dataByType[type].lineSize / nexradState.zoom);
+            foreach (var index in range3(0, fileStorage.relativeBuffers[type].size, 4)) {
+                ctx.move_to(fileStorage.relativeBuffers[type][index], fileStorage.relativeBuffers[type][index + 1]);
+                ctx.line_to(fileStorage.relativeBuffers[type][index + 2], fileStorage.relativeBuffers[type][index + 3]);
+            }
+            ctx.stroke();
         }
-        Color.setCairoColor(ctx, RadarGeometry.dataByType[type].colorInt);
-        ctx.set_line_width(RadarGeometry.dataByType[type].lineSize / nexradState.zoom);
-        foreach (var index in range3(0, fileStorage.relativeBuffers[type].size, 4)) {
-            ctx.move_to(fileStorage.relativeBuffers[type][index], fileStorage.relativeBuffers[type][index + 1]);
-            ctx.line_to(fileStorage.relativeBuffers[type][index + 2], fileStorage.relativeBuffers[type][index + 3]);
-            // ctx->move_to(fileStorage->relativeBuffers[type][index + 2], fileStorage->relativeBuffers[type][index + 3]);
-        }
-        ctx.stroke();
     }
 
     // used for things like watches and warnings
@@ -159,7 +145,7 @@ public class NexradDraw {
 
     public void drawTriangle(Cairo.Context ctx, ArrayList<ArrayList<double?>> polygons, int color) {
         var lineWidth = 1.0;
-        ctx.set_source_rgb((double)Color.red(color) / 255.0, (double)Color.green(color) / 255.0, (double)Color.blue(color) / 255.0);
+        ctx.set_source_rgb((double) Color.red(color) / 255.0, (double) Color.green(color) / 255.0, (double) Color.blue(color) / 255.0);
         ctx.set_line_width(lineWidth / nexradState.zoom);
         foreach (var index in range(polygons.size)) {
             var points = polygons[index];

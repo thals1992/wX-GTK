@@ -22,8 +22,8 @@ class LsrByWfo : Window {
         comboboxSector.setIndexByValue(wfo);
         comboboxSector.connect(changeSector);
 
-        boxH.addWidget(comboboxSector.get());
-        box.addLayout(boxH.get());
+        boxH.addWidget(comboboxSector);
+        box.addLayout(boxH);
         new ScrolledWindow(this, box);
         reload();
     }
@@ -50,20 +50,20 @@ class LsrByWfo : Window {
                 maxVers = 30;
             }
             foreach (var version in range3(1, maxVers, 2)) {
-                lsrList.add(UtilityDownload.getTextProductWithVersion("LSR" + wfo, version));
+                lsrList.add(DownloadText.getTextProductWithVersion("LSR" + wfo, version));
             }
         }
     }
 
     void update() {
         box.removeChildren();
-        box.addLayout(boxH.get());
+        box.addLayout(boxH);
         foreach (var lsr in lsrList) {
             var text = new Text();
             text.setFixedWidth();
             text.setText(lsr);
-            box.addWidget(text.get());
-            box.addWidget(new ObjectDividerLine().get());
+            box.addWidget(text);
+            box.addWidget(new DividerLine());
         }
     }
 }

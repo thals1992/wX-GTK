@@ -14,14 +14,14 @@ public class Nexrad : Window {
     VBox box = new VBox();
     HBox boxHBottom = new HBox();
     ComboBox comboboxSector = new ComboBox(GlobalArrays.getRadars());
-    ComboBox comboboxProduct = new ComboBox(WXGLNexrad.radarProductList);
+    ComboBox comboboxProduct = new ComboBox(NexradUtil.radarProductList);
     ComboBox comboboxAnimCount = new ComboBox({"5", "10", "15", "20", "25", "30"});
     ComboBox comboboxAnimSpeed = new ComboBox({"10", "25", "50", "100", "200", "300", "400", "500", "600", "700", "800", "900"});
     ComboBox comboboxTilt = new ComboBox({"0", "1", "2", "3"});
     Text textFrameCount = new Text();
     Text textTilt = new Text();
     Text textAnimSpeed = new Text();
-    ArrayList<UIColorLegend> colorLegends = new ArrayList<UIColorLegend>();
+    ArrayList<NexradColorLegend> colorLegends = new ArrayList<NexradColorLegend>();
     const int windowSize = 800;
     //  int numberOfPanes = 1;
     int currentIndex = 0;
@@ -68,7 +68,7 @@ public class Nexrad : Window {
                 )
             );
             if (RadarPreferences.colorLegend) {
-                colorLegends.add(new UIColorLegend(nexradList.last().nexradState.radarProduct));
+                colorLegends.add(new NexradColorLegend(nexradList.last().nexradState.radarProduct));
             }
         }
         nexradLayerDownload = new NexradLayerDownload(nexradList);
@@ -85,33 +85,7 @@ public class Nexrad : Window {
         popoverBox = new PopoverBox(
             "baseline_settings_black_48dp.png",
             "Settings ctrl-p", settingsRadarBox,
-            () => {
-                syncRadarSite(nexradList[0].nexradState.getRadarSite(), 0, false);
-                foreach (var nw in nexradList) {
-                    nw.textObject.initialize();
-                }
-
-                if (RadarPreferences.colorLegend && colorLegends.size == 0) {
-                    foreach (var nw in nexradList) {
-                        colorLegends.add(new UIColorLegend(nw.nexradState.radarProduct));
-                    }
-                    nexradBox.addWidgetFirst(colorLegends.last().get());
-                }
-                if (!RadarPreferences.colorLegend && colorLegends.size > 0) {
-                    foreach (var cl in colorLegends) {
-                        cl.get().set_visible(false);
-                    }
-                }
-                //  downloadData();
-                // if auto update is on, toggle it in case of refresh interval changes
-                // this will force an update as well
-                if (reloadButton.getActive()) {
-                    reloadButton.setActive(false);
-                    reloadButton.setActive(true);
-                } else {
-                    downloadData();
-                }
-            }
+            settingsCheck
         );
         settingsRadarBox.switchIndex(1);
 
@@ -124,7 +98,7 @@ public class Nexrad : Window {
         comboboxSector.setIndex(GlobalArrays.findRadarIndex(nexradList[0].nexradState.getRadarSite()));
         comboboxSector.connect(changeRadarSite);
 
-        comboboxProduct.setIndex(WXGLNexrad.findRadarProductIndex(nexradList[0].nexradState.radarProduct));
+        comboboxProduct.setIndex(NexradUtil.findRadarProductIndex(nexradList[0].nexradState.radarProduct));
         comboboxProduct.connect(changeProduct);
 
         comboboxAnimCount.setIndex(Utility.readPrefInt("NEXRAD_ANIM_FRAME_COUNT", 1));
@@ -145,74 +119,74 @@ public class Nexrad : Window {
         moveUpButton.connect(moveUp);
         moveDownButton.connect(moveDown);
 
-        boxH.addWidget(popoverBox.get());
-        boxH.addWidget(comboboxSector.get());
-        boxH.addWidget(comboboxProduct.get());
+        boxH.addWidget(popoverBox);
+        boxH.addWidget(comboboxSector);
+        boxH.addWidget(comboboxProduct);
 
-        boxH.addWidget(moveLeftButton.get());
-        boxH.addWidget(moveRightButton.get());
-        boxH.addWidget(moveUpButton.get());
-        boxH.addWidget(moveDownButton.get());
-        boxH.addWidget(zoomOutButton.get());
-        boxH.addWidget(zoomInButton.get());
+        boxH.addWidget(moveLeftButton);
+        boxH.addWidget(moveRightButton);
+        boxH.addWidget(moveUpButton);
+        boxH.addWidget(moveDownButton);
+        boxH.addWidget(zoomOutButton);
+        boxH.addWidget(zoomInButton);
 
-        boxH.addWidget(reloadButton.get());
-        boxH.addWidget(animateButton.get());
-        boxH.addWidget(textFrameCount.get());
-        boxH.addWidget(comboboxAnimCount.get());
-        boxH.addWidget(textTilt.get());
-        boxH.addWidget(comboboxTilt.get());
-        boxH.addWidget(textAnimSpeed.get());
-        boxH.addWidget(comboboxAnimSpeed.get());
+        boxH.addWidget(reloadButton);
+        boxH.addWidget(animateButton);
+        boxH.addWidget(textFrameCount);
+        boxH.addWidget(comboboxAnimCount);
+        boxH.addWidget(textTilt);
+        boxH.addWidget(comboboxTilt);
+        boxH.addWidget(textAnimSpeed);
+        boxH.addWidget(comboboxAnimSpeed);
         foreach (var statusBox in radarStatusBoxList) {
-            boxH.addWidget(statusBox.get());
+            boxH.addWidget(statusBox);
         }
         boxH.setHExpand(false);
         boxH.setVExpand(false);
-        box.addLayout(boxH.get());
+        box.addLayout(boxH);
         nexradBox.setSpacing(0);
         nexradBox2.setSpacing(0);
         box.setSpacing(0);
 
-        box.addLayout(nexradBox.get());
+        box.addLayout(nexradBox);
         nexradBox.setHExpand(true);
         nexradBox.setVExpand(true);
         if (numberOfPanes == 4) {
-            box.addLayout(nexradBox2.get());
+            box.addLayout(nexradBox2);
             nexradBox2.setHExpand(true);
             nexradBox2.setVExpand(true);
         }
         if (RadarPreferences.colorLegend) {
-            nexradBox.addWidget(colorLegends[0].get());
+            nexradBox.addWidget(colorLegends[0]);
         }
-        nexradBox.addWidget(nexradList[0].da.get());
+        nexradBox.addWidget(nexradList[0].da);
         nexradList[0].da.setHExpand(true);
         nexradList[0].da.setVExpand(true);
         if (numberOfPanes > 1) {
             if (RadarPreferences.colorLegend) {
-                nexradBox.addWidget(colorLegends[1].get());
+                nexradBox.addWidget(colorLegends[1]);
             }
-            nexradBox.addWidget(nexradList[1].da.get());
+            nexradBox.addWidget(nexradList[1].da);
             nexradList[1].da.setHExpand(true);
             nexradList[1].da.setVExpand(true);
         }
         if (numberOfPanes == 4) {
             if (RadarPreferences.colorLegend) {
-                nexradBox2.addWidget(colorLegends[2].get());
+                nexradBox2.addWidget(colorLegends[2]);
             }
-            nexradBox2.addWidget(nexradList[2].da.get());
+            nexradBox2.addWidget(nexradList[2].da);
             if (RadarPreferences.colorLegend) {
-                nexradBox2.addWidget(colorLegends[3].get());
+                nexradBox2.addWidget(colorLegends[3]);
             }
-            nexradBox2.addWidget(nexradList[3].da.get());
+            nexradBox2.addWidget(nexradList[3].da);
             nexradList[2].da.setHExpand(true);
             nexradList[2].da.setVExpand(true);
             nexradList[3].da.setHExpand(true);
             nexradList[3].da.setVExpand(true);
         }
         if (RadarPreferences.radarShowStatusBar) {
-            box.addLayout(boxHBottom.get());
-            boxHBottom.addWidget(statusBar.get());
+            box.addLayout(boxHBottom);
+            boxHBottom.addWidget(statusBar);
         }
         box.getAndShow(this);
         if (!RadarPreferences.radarShowControls) {
@@ -262,7 +236,6 @@ public class Nexrad : Window {
             }
         }
         if (allDone) {
-            print("Nexrad: clear futures\n");
             futures.clear();
         }
         foreach (var nw in nexradList) {
@@ -295,8 +268,8 @@ public class Nexrad : Window {
     void changeProductFromChild(string productF, int currentIndex) {
         objectAnimateNexrad.stopAnimateNoDownload();
         var product = productF.split(":")[0];
-        if (currentIndex == 0 && !WXGLNexrad.isProductTdwr(product)) {
-            comboboxProduct.setIndex(WXGLNexrad.findRadarProductIndex(product));
+        if (currentIndex == 0 && !NexradUtil.isProductTdwr(product)) {
+            comboboxProduct.setIndex(NexradUtil.findRadarProductIndex(product));
         } else {
             if (RadarPreferences.colorLegend) {
                 colorLegends[currentIndex].update(product);
@@ -469,6 +442,37 @@ public class Nexrad : Window {
                 break;
             default:
                 break;
+        }
+    }
+
+    void settingsCheck() {
+        foreach (var nw in nexradList) {
+            nw.nexradDraw.initGeom();
+        }
+        syncRadarSite(nexradList[0].nexradState.getRadarSite(), 0, false);
+        foreach (var nw in nexradList) {
+            nw.textObject.initialize();
+        }
+
+        if (RadarPreferences.colorLegend && colorLegends.size == 0) {
+            foreach (var nw in nexradList) {
+                colorLegends.add(new NexradColorLegend(nw.nexradState.radarProduct));
+            }
+            nexradBox.addWidgetFirst(colorLegends.last());
+        }
+        if (!RadarPreferences.colorLegend && colorLegends.size > 0) {
+            foreach (var cl in colorLegends) {
+                cl.setVisible(false);
+            }
+        }
+        //  downloadData();
+        // if auto update is on, toggle it in case of refresh interval changes
+        // this will force an update as well
+        if (reloadButton.getActive()) {
+            reloadButton.setActive(false);
+            reloadButton.setActive(true);
+        } else {
+            downloadData();
         }
     }
 }

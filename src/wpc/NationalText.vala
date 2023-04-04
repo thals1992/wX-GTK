@@ -40,15 +40,15 @@ class NationalText : Window {
             textProduct = UtilityWpcText.labels[index].split(":")[0];
             reload();
         });
-        buttonBox.addWidget(buttonBack.get());
-        buttonBox.addWidget(buttonForward.get());
+        buttonBox.addWidget(buttonBack);
+        buttonBox.addWidget(buttonForward);
 
-        box.addLayout(buttonBox.get());
-        box.addWidgetCenter(text.get());
+        box.addLayout(buttonBox);
+        box.addWidgetAndCenter1(text);
         text.setMargin();
         new ScrolledWindow(this, box);
 
-        UtilityWpcText.init();
+        UtilityWpcText.initStatic();
         var itemsSoFar = 0;
         foreach (var menu in UtilityWpcText.titles) {
             menu.setList(UtilityWpcText.labels, itemsSoFar);
@@ -56,7 +56,7 @@ class NationalText : Window {
         }
         foreach (var objectMenuTitle in UtilityWpcText.titles) {
             popoverMenus.add(new PopoverMenu(objectMenuTitle.title, objectMenuTitle.get(), changeProductByCode));
-            buttonBox.addWidget(popoverMenus.last().get());
+            buttonBox.addWidget(popoverMenus.last());
         }
         reload();
     }

@@ -8,18 +8,18 @@ using Gee;
 
 class UtilityWpcImages {
 
-    public static ArrayList<ObjectMenuTitle> titles;
+    public static ArrayList<MenuTitle> titles;
 
-    public static void init() {
-        titles = new ArrayList<ObjectMenuTitle>();
-        titles.add(new ObjectMenuTitle("Surface Analysis", 7));
-        titles.add(new ObjectMenuTitle("Forecast Maps", 22));
-        titles.add(new ObjectMenuTitle("QPF", 27));
-        titles.add(new ObjectMenuTitle("Snow / Ice", 17));
-        titles.add(new ObjectMenuTitle("National Digital Forecast Database", 15));
-        titles.add(new ObjectMenuTitle("CPC Outlooks", 24));
-        titles.add(new ObjectMenuTitle("Aviation", 17));
-        titles.add(new ObjectMenuTitle("Space Weather", 3));
+    public static void initStatic() {
+        titles = new ArrayList<MenuTitle>();
+        titles.add(new MenuTitle("Surface Analysis", 7));
+        titles.add(new MenuTitle("Forecast Maps", 22));
+        titles.add(new MenuTitle("QPF", 27));
+        titles.add(new MenuTitle("Snow / Ice", 17));
+        titles.add(new MenuTitle("National Digital Forecast Database", 15));
+        titles.add(new MenuTitle("CPC Outlooks", 24));
+        titles.add(new MenuTitle("Aviation", 17));
+        titles.add(new MenuTitle("Space Weather", 3));
     }
 
     public const string[] labels = {

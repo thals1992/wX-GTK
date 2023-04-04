@@ -55,7 +55,7 @@ class Location {
         // "radarStation": "KGRR"
         var wfo = UtilityString.parse(pointData, "\"cwa\": \"(.*?)\"");
         var radarStation = UtilityString.parse(pointData, "\"radarStation\": \"(.*?)\"");
-        radarStation = UtilityString.getLastXChars(radarStation, 3);
+        // radarStation = UtilityString.getLastXChars(radarStation, 3);
         return {wfo, radarStation};
     }
 
@@ -70,11 +70,11 @@ class Location {
         var wfo = wfoAndRadar[0];
         var radarSite = wfoAndRadar[1];
         if (wfo == "") {
-            wfo = UtilityLocation.getNearestOffice("WFO", latLon).ascii_down();
+            wfo = UtilityLocation.getNearestOffice(OfficeTypeEnum.Wfo, latLon).ascii_down();
         }
         if (radarSite == "") {
-            radarSite = UtilityLocation.getNearestOffice("RADAR", latLon);
-            radarSite = UtilityString.getLastXChars(radarSite, 3);
+            radarSite = UtilityLocation.getNearestOffice(OfficeTypeEnum.Radar, latLon);
+            // radarSite = UtilityString.getLastXChars(radarSite, 3);
         }
         Utility.writePref("RID" + locNum, radarSite.ascii_up());
         Utility.writePref("NWS" + locNum, wfo.ascii_up());
@@ -131,7 +131,7 @@ class Location {
     public static LatLon getLatLon(int index) { return locations[index].getLatLon(); }
 
     public static string getObs() {
-        return UtilityMetar.findClosestObservation(getLatLonCurrent(), 0).name;
+        return Metar.findClosestObservation(getLatLonCurrent(), 0).name;
     }
 
     public static void refresh() {

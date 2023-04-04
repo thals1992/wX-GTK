@@ -19,6 +19,11 @@ class ObjectDateTime {
         dateTime = new DateTime.now();
     }
 
+    public ObjectDateTime.fromIso8601(string time) {
+        print(time + "\n");
+        dateTime = new DateTime.from_iso8601(time, new TimeZone.utc());
+    }
+
     public void addDays(int i) {
         dateTime = dateTime.add_days(i);
     }
@@ -37,16 +42,20 @@ class ObjectDateTime {
 
     public bool isBefore(ObjectDateTime dt) { return dateTime.difference(dt.get()) < 0; }
 
+    public void utcToLocal() {
+        dateTime = dateTime.to_local();
+    }
+
     public DateTime get() { return dateTime; }
 
     public ObjectDateTime.fromObs(string time) {
         // time comes in as follows 2018.02.11 2353 UTC
         // https://valadoc.org/glib-2.0/GLib.DateTime.DateTime.from_iso8601.html
         // https://en.wikipedia.org/wiki/ISO_8601
-        var returnTime = time.strip();
-        returnTime = returnTime.replace(" UTC", "");
-        returnTime = returnTime.replace(".", "");
-        returnTime = returnTime.replace(" ", "T") + "00.000Z";
+        var returnTime = time.strip()
+                                    .replace(" UTC", "")
+                                    .replace(".", "")
+                                    .replace(" ", "T") + "00.000Z";
         // time should now be as "20220225T095300.000Z"
         // text has a timezone "Z" so 2nd arg is null
         dateTime = new DateTime.from_iso8601(returnTime, new TimeZone.utc());
@@ -148,16 +157,16 @@ class ObjectDateTime {
     //  `+hh` or `-hh` - Offset from UTC in hours, e.g. +12.
     public static string convertFromUTCForMetar(string time) {
         // time comes in as follows 2018.02.11 2353 UTC
-        var returnTime = time.strip();
-        returnTime = returnTime.replace(" UTC", "00");
-        returnTime = returnTime.replace(".", "");
-        returnTime = returnTime.replace(" ", "T") + "00Z";
+        var returnTime = time.strip()
+                                    .replace(" UTC", "00")
+                                    .replace(".", "")
+                                    .replace(" ", "T") + "00Z";
         // time should now be as "20120227T132700"
         var radarDate = new DateTime.from_iso8601(returnTime, new TimeZone.local());
         radarDate = radarDate.to_local();
-        var timeString = radarDate.to_string();
-        timeString = timeString.replace(":00.000", "");
-        timeString = timeString.replace("T", " ");
+        var timeString = radarDate.to_string()
+                                            .replace(":00.000", "")
+                                            .replace("T", " ");
         timeString = UtilityString.replaceRegex(timeString, "-0[0-9]00", "");
         return timeString;
     }
@@ -171,5 +180,22 @@ class ObjectDateTime {
         var afterSunrise = currentTime.isAfter(sunrise);
         var beforeSunset = currentTime.isBefore(sunset);
         return afterSunrise && beforeSunset;
+    }
+
+    public static string translateTimeForHourly(string originalTime) {
+        var originalTimeComponents = originalTime.replace("T", "-").split("-");
+        var hour = Too.Int(originalTimeComponents[3].replace(":00:00", ""));
+        var hourString = Too.String(hour);
+        var dayOfTheWeek = getDayOfWeekForHourly(originalTime);
+        return dayOfTheWeek + " " + hourString;
+    }
+
+    public static string getDayOfWeekForHourly(string originalTime) {
+        var originalTimeComponents = originalTime.replace("T", "-").split("-");
+        var year = Too.Int(originalTimeComponents[0]);
+        var month = Too.Int(originalTimeComponents[1]);
+        var day = Too.Int(originalTimeComponents[2]);
+        var hour = Too.Int(originalTimeComponents[3].replace(":00:00", ""));
+        return ObjectDateTime.dayOfWeekAbbreviation(year, month, day, hour);
     }
 }

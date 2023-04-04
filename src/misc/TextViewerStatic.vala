@@ -11,7 +11,7 @@ class TextViewerStatic : Window {
 
     public TextViewerStatic(string data) {
         maximize();
-        box.addWidget(text.get());
+        box.addWidget(text);
         new ScrolledWindow(this, box);
         text.setText(data);
     }
