@@ -30,11 +30,19 @@ class Metar {
             var obsAlAviationColor = new ArrayList<int>();
             fileStorage.obsOldRadarSite = radarSite;
             var obsList = getNearbyObsSites(radarSite);
-            var url = GlobalVariables.nwsAWCwebsitePrefix + "/adds/metars/index?submit=1&station_ids=" + obsList + "&chk_metars=on";
+
+            // OLD
+            //  var url = GlobalVariables.nwsAWCwebsitePrefix + "/adds/metars/index?submit=1&station_ids=" + obsList + "&chk_metars=on";
+            //  var html = UtilityIO.getHtml(url);
+            //  html = html.replace("\n", "");
+            //  html = html.replace("\r", "");
+            //  var metarArrTmp = UtilityString.parseColumn(html, "<FONT FACE=\"Monospace,Courier\">(.*?)</FONT><BR>");
+
+            // NEW
+            var url = "https://www.aviationweather.gov/cgi-bin/data/metar.php?ids=" + obsList;
             var html = UtilityIO.getHtml(url);
-            html = html.replace("\n", "");
-            html = html.replace("\r", "");
-            var metarArrTmp = UtilityString.parseColumn(html, "<FONT FACE=\"Monospace,Courier\">(.*?)</FONT><BR>");
+            var metarArrTmp = html.split(GlobalVariables.newline);
+
             var metarArr = condenseObs(metarArrTmp);
             if (!initializedObsMap) {
                 var lines = UtilityIO.rawFileToStringArrayFromResource(GlobalVariables.resDir + metarFileName);
@@ -211,7 +219,8 @@ class Metar {
 
     // used to condense a list of metar that contains multiple entries for one site,
     // newest is first so simply grab first/append
-    public static ArrayList<string> condenseObs(ArrayList<string> list) {
+    //  public static ArrayList<string> condenseObs(ArrayList<string> list) {
+    public static ArrayList<string> condenseObs(string[] list) {
         var siteMap = new HashMap<string, bool>();
         var goodObsList = new ArrayList<string>();
         foreach (var item in list) {
