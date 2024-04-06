@@ -90,7 +90,7 @@ class RadarSites {
         name["KLZK"] = "AR, Little Rock";
         name["KPOE"] = "LA, Fort Polk";
         name["KLCH"] = "LA, Lake Charles";
-        name["KLIX"] = "LA, New Orleans";
+        name["KHDC"] = "LA, Hammond";
         name["KSHV"] = "LA, Shreveport";
         name["KAMA"] = "TX, Amarillo";
         name["KEWX"] = "TX, Austin/San Antonio";
@@ -325,7 +325,7 @@ class RadarSites {
         lat["KVAX"] = "30.89";
         lat["KMHX"] = "34.776";
         lat["KOHX"] = "36.247";
-        lat["KLIX"] = "30.337";
+        lat["KHDC"] = "30.519";
         lat["KOKX"] = "40.865";
         lat["PAEC"] = "64.512";
         lat["KAKQ"] = "36.984";
@@ -526,7 +526,7 @@ class RadarSites {
         lon["KVAX"] = "83.002";
         lon["KMHX"] = "76.876";
         lon["KOHX"] = "86.563";
-        lon["KLIX"] = "89.825";
+        lon["KHDC"] = "90.407";
         lon["KOKX"] = "72.864";
         lon["PAEC"] = "165.293";
         lon["KAKQ"] = "77.008";
