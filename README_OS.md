@@ -106,12 +106,13 @@ brew install gtk4
 ```
 pacman -Syu
 pacman -S --needed base-devel mingw-w64-x86_64-toolchain
-pacman -S mingw-w64-x64_64-meson
-pacman -S mingw-w64-x64_64-cmake
+pacman -S mingw-w64-x86_64-meson
+pacman -S mingw-w64-x86_64-cmake
 pacman -S mingw-w64-x86_64-vala
-pacman -S mingw-w64-x64_64-libgee
-pacman -S mingw-w64-x64_64-libsoup
+pacman -S mingw-w64-x86_64-libgee
+pacman -S mingw-w64-x86_64-libsoup
 pacman -S mingw-w64-x86_64-gtk3
+pacman -S mingw-w64-x86_64-gtk4
 pacman -S mingw-w64-x86_64-glib2
 pacman -S mingw-w64-x86_64-python3
 
